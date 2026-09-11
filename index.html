@@ -3644,7 +3644,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 /* ── Scheduler toolbar ───────────────────────────────────────────── */
 .sched-toolbar {
   flex-shrink: 0; display: flex; align-items: center; gap: var(--spacing-2);
-  padding: var(--spacing-3) var(--spacing-6);
+  padding: var(--spacing-3) var(--spacing-6); flex-wrap: wrap;
 }
 .sched-btn {
   display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 var(--spacing-3);
@@ -3667,7 +3667,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 .sched-range svg { width: 14px; height: 14px; color: var(--color-text-subtle); }
 .sched-toolbar-right { margin-left: auto; display: flex; align-items: center; gap: var(--spacing-2); }
 .sched-add-btn {
-  display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 var(--spacing-3);
+  display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 var(--spacing-3); white-space: nowrap;
   border: none; border-radius: var(--border-rounded-full);
   background: var(--color-action-primary-default); color: var(--palette-white);
   font-size: 13px; font-weight: 600; cursor: pointer;
@@ -3686,8 +3686,9 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
   border-radius: var(--border-rounded-lg);
 }
 .sched-insights.hidden { display: none; }
+.sched-insights { overflow-x: auto; }
 .sched-insight {
-  display: flex; align-items: center; gap: var(--spacing-3);
+  display: flex; align-items: center; gap: var(--spacing-3); flex-shrink: 0;
   padding: 0 var(--spacing-5); border-right: var(--border-width-1) solid var(--color-border-separator);
 }
 .sched-insight:first-child { padding-left: 0; }
@@ -4766,7 +4767,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
                       <svg class="fg-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
                     <div class="filter-group-options" id="clientOpts">
-                      <label class="filter-option"><input type="checkbox" value="Acme Corp" onchange="applyFilters()"> <span>Acme Corp</span></label>
+                      <label class="filter-option"><input type="checkbox" value="Halcyon Logistics" onchange="applyFilters()"> <span>Halcyon Logistics</span></label>
                       <label class="filter-option"><input type="checkbox" value="TechStart" onchange="applyFilters()"> <span>TechStart</span></label>
                       <label class="filter-option"><input type="checkbox" value="RetailCo" onchange="applyFilters()"> <span>RetailCo</span></label>
                     </div>
@@ -4833,7 +4834,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
         <span class="breadcrumb-sep">/</span>
         <a href="#" onclick="return false;">Projects</a>
         <span class="breadcrumb-sep">/</span>
-        <a href="#" onclick="return false;">Acme Website Redesign</a>
+        <a href="#" onclick="return false;">Enterprise AI Rollout</a>
         <span class="breadcrumb-sep">/</span>
         <span class="breadcrumb-current" id="projectCrumbTab">List</span>
       </div>
@@ -4848,8 +4849,8 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
     <div class="project-page" id="projectPage">
       <div class="project-head">
         <div class="project-title-row">
-          <div class="project-avatar">P</div>
-          <div class="project-name">Acme Website Redesign</div>
+          <div class="project-avatar">H</div>
+          <div class="project-name">Enterprise AI Rollout</div>
           <button class="project-head-icon" title="Favourite">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           </button>
@@ -4911,7 +4912,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
       </div>
 
       <div class="project-toolbar">
-        <span class="project-task-count">12 tasks</span>
+        <span class="project-task-count" id="projectTaskCount">11 tasks</span>
         <div class="project-toolbar-right">
           <button class="project-tool-btn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="m11 11 2.5 2.5"/></svg> Search</button>
           <button class="project-tool-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg> Filter</button>
@@ -5193,7 +5194,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
       </svg>
     </div>
     <div class="ai-drawer-context-text">
-      <div class="ai-drawer-context-label" id="aiDrawerContextLabel">Working in <strong id="aiDrawerContextName">Acme Website Redesign</strong></div>
+      <div class="ai-drawer-context-label" id="aiDrawerContextLabel">Working in <strong id="aiDrawerContextName">Enterprise AI Rollout</strong></div>
       <div class="ai-drawer-context-sub" id="aiDrawerContextSub">Answers are scoped to this project</div>
     </div>
     <button class="ai-drawer-context-all" onclick="askAiAllProjects()">Ask across all projects</button>
@@ -5431,7 +5432,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
             Write with AI
           </button>
         </div>
-        <textarea class="cs-prompt-input" id="createSkillPrompt" placeholder="Describe what this skill should do — e.g. Pull last week's logged time for Acme, compare to budget, flag overruns"></textarea>
+        <textarea class="cs-prompt-input" id="createSkillPrompt" placeholder="Describe what this skill should do — e.g. Pull last week's logged time for Halcyon, compare to budget, flag overruns"></textarea>
       </div>
       <div class="cs-visibility">
         <span class="cs-label">Visibility</span>
@@ -6567,72 +6568,183 @@ function showProject() {
   if (projectTab === 'schedule') renderSchedule(); else renderProjectBody();
 }
 
-/* Fake task-list / task data for Project A */
+/* Engagement data — Enterprise AI Rollout for Halcyon Logistics,
+   delivered by Meridian Transformation Partners. Fixed fee $150,000,
+   12 weeks (Mon 6 Jan – Fri 28 Mar 2025), 820 planned hours.
+   One task list per phase, one task per billable deliverable. */
 const projectTaskLists = [
   {
-    name: 'Discovery & planning', count: 6, time: '0h / 0h',
+    name: 'Phase 1 · Readiness & Discovery', count: 3, time: '252h / 252h',
     tasks: [
-      { name: 'Stakeholder interviews', assignee: { initials: 'AK', bg: 'var(--palette-teal-40)' }, tag: { label: 'In review', dot: 'var(--palette-neutral-40)', bg: 'var(--color-surface-default)', color: 'var(--color-text-subtle)' },
+      { name: 'Stakeholder interviews & workshop synthesis', assignee: { initials: 'SD', bg: 'var(--palette-green-40)' }, tag: { label: 'Done', dot: 'var(--palette-green-40)', bg: 'var(--palette-green-10)', color: 'var(--palette-green-60)' },
+        dates: { start: 'Mon, 6 Jan 2025', end: 'Fri, 17 Jan 2025', due: false },
+        priority: { label: 'High', color: 'var(--palette-red-50)', bg: 'var(--palette-red-10)' },
+        timeLogged: '96h logged', estimate: '96h estimated',
+        description: `<p>Structured interviews across Halcyon's operating functions to establish where AI could realistically land, and a facilitated synthesis workshop to converge on shared priorities. Consistent question set throughout so responses can be themed and compared.</p>
+      <p><strong>Functions covered</strong></p>
+      <ul><li>Operations &amp; despatch — Marcus Boyd (Head of Operations)</li><li>Fleet &amp; maintenance planning</li><li>Customer service &amp; claims handling</li><li>Finance &amp; commercial</li><li>IT / security (constraints and data handling)</li></ul>
+      <p><strong>Deliverable:</strong> interview write-ups, a consolidated themes pack, and the workshop output shared with the Halcyon steering group.</p>`,
+        subtasks: [
+          { name: 'Agree interview list with Halcyon Ops', done: true },
+          { name: 'Draft question set & consent notes', done: true },
+          { name: 'Run 14 stakeholder interviews', done: true },
+          { name: 'Facilitate synthesis workshop', done: true },
+          { name: 'Issue consolidated themes pack', done: true },
+        ] },
+      { name: 'Use-case discovery', assignee: { initials: 'SD', bg: 'var(--palette-green-40)' }, tag: { label: 'Done', dot: 'var(--palette-green-40)', bg: 'var(--palette-green-10)', color: 'var(--palette-green-60)' },
+        dates: { start: 'Mon, 13 Jan 2025', end: 'Fri, 24 Jan 2025', due: false },
+        priority: { label: 'High', color: 'var(--palette-red-50)', bg: 'var(--palette-red-10)' },
+        timeLogged: '84h logged', estimate: '84h estimated',
+        description: `<p>Turn the interview themes into a scored long-list of candidate AI use cases, each sized on value and feasibility so the roadmap in Phase 2 has something defensible to prioritise against.</p>
+      <p><strong>Scoring dimensions</strong></p>
+      <ul><li>Annual value at stake (hours or cost avoided)</li><li>Data readiness and quality</li><li>Integration effort against existing systems</li><li>Change burden on frontline teams</li><li>Risk / regulatory exposure</li></ul>
+      <p><strong>Deliverable:</strong> 23 candidate use cases scored and ranked, with the top 8 written up in detail.</p>`,
+        subtasks: [
+          { name: 'Build use-case long-list from interview themes', done: true },
+          { name: 'Agree scoring model with Halcyon', done: true },
+          { name: 'Score and rank all candidates', done: true },
+          { name: 'Write up top 8 in detail', done: true },
+        ] },
+      { name: 'AI Readiness Assessment', assignee: { initials: 'TO', bg: 'var(--palette-blue-40)' }, tag: { label: 'Done', dot: 'var(--palette-green-40)', bg: 'var(--palette-green-10)', color: 'var(--palette-green-60)' },
+        dates: { start: 'Wed, 15 Jan 2025', end: 'Fri, 24 Jan 2025', due: false },
+        priority: { label: 'High', color: 'var(--palette-red-50)', bg: 'var(--palette-red-10)' },
+        timeLogged: '72h logged', estimate: '72h estimated',
+        description: `<p>Assess Halcyon against the readiness framework across data, technology, people and governance, producing a baseline score the engagement can be measured against at close.</p>
+      <p><strong>Headline findings</strong></p>
+      <ul><li>Data foundations stronger than expected — telematics and TMS data are clean and centralised</li><li>Governance is the weakest dimension; no acceptable-use position exists today</li><li>Appetite is high in operations, markedly more cautious in finance</li><li>No current inventory of tools already in informal use</li></ul>
+      <p><strong>Baseline score:</strong> 2.4 / 5 overall, to be re-run at the end of Phase 4.</p>`,
+        subtasks: [
+          { name: 'Run readiness survey across 40 staff', done: true },
+          { name: 'Technical review of data & systems', done: true },
+          { name: 'Shadow-AI tool audit', done: true },
+          { name: 'Score against framework & issue report', done: true },
+        ] },
+    ]
+  },
+  {
+    name: 'Phase 2 · Roadmap & Business Case', count: 2, time: '176h / 180h',
+    tasks: [
+      { name: 'Prioritised transformation roadmap', assignee: { initials: 'TO', bg: 'var(--palette-blue-40)' }, tag: { label: 'Done', dot: 'var(--palette-green-40)', bg: 'var(--palette-green-10)', color: 'var(--palette-green-60)' },
+        dates: { start: 'Mon, 27 Jan 2025', end: 'Fri, 7 Feb 2025', due: false },
+        priority: { label: 'High', color: 'var(--palette-red-50)', bg: 'var(--palette-red-10)' },
+        timeLogged: '100h logged', estimate: '100h estimated',
+        description: `<p>Sequence the scored use cases into a phased 18-month roadmap, balancing early wins against the dependencies that only resolve once governance and data work lands.</p>
+      <p><strong>Roadmap shape</strong></p>
+      <ul><li><strong>Horizon 1 (0–6 months)</strong> — claims triage assistant, despatch summarisation</li><li><strong>Horizon 2 (6–12 months)</strong> — predictive maintenance scheduling</li><li><strong>Horizon 3 (12–18 months)</strong> — dynamic route optimisation</li></ul>
+      <p>Signed off by the Halcyon steering group on 7 Feb.</p>`,
+        subtasks: [
+          { name: 'Map dependencies across top 8 use cases', done: true },
+          { name: 'Draft three-horizon sequencing', done: true },
+          { name: 'Pressure-test with IT and Ops', done: true },
+          { name: 'Steering group sign-off', done: true },
+        ] },
+      { name: 'ROI business case', assignee: { initials: 'PR', bg: 'var(--palette-purple-40)' }, tag: { label: 'In review', dot: 'var(--palette-neutral-40)', bg: 'var(--color-surface-default)', color: 'var(--color-text-subtle)' },
         dates: { start: 'Mon, 3 Feb 2025', end: 'Fri, 14 Feb 2025', due: false },
         priority: { label: 'High', color: 'var(--palette-red-50)', bg: 'var(--palette-red-10)' },
-        timeLogged: '6h 30m logged', estimate: '8h estimated',
-        description: `<p>Run structured 1:1 interviews with the key stakeholders to capture goals, constraints and success criteria for the redesign. Aim for a consistent question set so responses can be compared and themed afterwards.</p>
-      <p><strong>Who to interview</strong></p>
-      <ul><li>Sarah M. — Head of Product (priorities &amp; KPIs)</li><li>James K. — Engineering Lead (technical constraints)</li><li>Amy T. — Marketing (brand &amp; campaign needs)</li><li>2× customer-facing reps (day-to-day pain points)</li></ul>
-      <p><strong>Deliverable:</strong> a short write-up per interview plus a consolidated themes doc shared in the project Notebook ahead of the synthesis session.</p>`,
+        timeLogged: '76h logged', estimate: '80h estimated',
+        description: `<p>Build the investment case for the Horizon 1 and 2 use cases — benefit modelling, cost to serve, and a payback profile the Halcyon board can approve against.</p>
+      <p><strong>Headline case</strong></p>
+      <ul><li>Modelled annual benefit: £1.8m across Horizons 1–2</li><li>Run cost including platform and model spend: £310k / year</li><li>Payback: 11 months on the Horizon 1 scope alone</li></ul>
+      <p>Currently with Halcyon finance for challenge before it goes to the board on 26 Feb.</p>`,
         subtasks: [
-          { name: 'Draft interview script & question bank', done: true },
-          { name: 'Schedule 6 stakeholder sessions', done: true },
-          { name: 'Run interviews & take notes', done: false },
-          { name: 'Write up consolidated themes doc', done: false },
+          { name: 'Model benefits per use case', done: true },
+          { name: 'Cost the platform and run model', done: true },
+          { name: 'Sensitivity analysis on adoption rates', done: true },
+          { name: 'Finance challenge session', done: false },
+          { name: 'Board pack final draft', done: false },
         ] },
-      { name: 'Competitor analysis', assignee: { initials: 'OM', bg: 'var(--palette-purple-40)' }, tag: { label: 'In review', dot: 'var(--palette-neutral-40)', bg: 'var(--color-surface-default)', color: 'var(--color-text-subtle)' },
-        dates: { start: 'Wed, 5 Feb 2025', end: 'Wed, 19 Feb 2025', due: false },
-        priority: { label: 'Medium', color: 'var(--palette-orange-50)', bg: 'var(--palette-yellow-10)' },
-        timeLogged: '4h logged', estimate: '6h estimated',
-        description: `<p>Benchmark our experience against 4–5 direct competitors and 2 best-in-class products from adjacent industries. Focus on onboarding, core workflows, information density and pricing presentation.</p>
-      <p><strong>Comparison dimensions</strong></p>
-      <ul><li>First-run / onboarding flow</li><li>Navigation &amp; information architecture</li><li>Key task completion (time &amp; clicks)</li><li>Visual design &amp; accessibility</li><li>Pricing &amp; upgrade prompts</li></ul>
-      <p>Capture annotated screenshots in the shared board and summarise the top 5 opportunities we can act on.</p>`,
-        subtasks: [
-          { name: 'Pick competitor set & confirm with PM', done: true },
-          { name: 'Capture annotated screenshots', done: true },
-          { name: 'Score each against comparison matrix', done: false },
-          { name: 'Summarise top 5 opportunities', done: false },
-        ] },
-      { name: 'Define project scope', assignee: { initials: 'OM', bg: 'var(--palette-purple-40)' }, tag: { label: 'Needs input', dot: 'var(--palette-pink-45)', bg: 'var(--palette-pink-10)', color: 'var(--palette-pink-45)' },
-        dates: { start: 'Mon, 17 Feb 2025', end: 'Fri, 21 Feb 2025', due: true },
+    ]
+  },
+  {
+    name: 'Phase 3 · Governance & Enablement', count: 3, time: '34h / 200h',
+    tasks: [
+      { name: 'Acceptable-use / governance policy', assignee: { initials: 'EM', bg: 'var(--palette-pink-40)' }, tag: { label: 'Needs input', dot: 'var(--palette-pink-45)', bg: 'var(--palette-pink-10)', color: 'var(--palette-pink-45)' },
+        dates: { start: 'Mon, 17 Feb 2025', end: 'Wed, 26 Feb 2025', due: true },
         priority: { label: 'High', color: 'var(--palette-red-50)', bg: 'var(--palette-red-10)' },
-        timeLogged: '1h 15m logged', estimate: '4h estimated',
-        description: `<p>Turn the interview findings and competitor insights into an agreed scope statement for phase one. Clearly separate what is <strong>in scope</strong> from what is explicitly <strong>out of scope</strong> so the team has a shared definition of done.</p>
+        timeLogged: '22h logged', estimate: '70h estimated',
+        description: `<p>Draft the acceptable-use position and supporting governance model — what staff may use, with which data, under what approval, and who owns the decision when something new appears.</p>
       <p><strong>Open questions blocking sign-off</strong></p>
-      <ul><li>Are we including the mobile breakpoint in phase one, or fast-following?</li><li>Is the legacy reporting module in or out?</li><li>Who is the final approver — Sarah or the steering group?</li></ul>
-      <p style="color:var(--palette-pink-45)"><strong>Needs input:</strong> waiting on a decision from the steering group before this can move to <em>In progress</em>.</p>`,
+      <ul><li>Does customer manifest data count as restricted under Halcyon's existing classification?</li><li>Who approves new tools — IT alone, or a joint panel with Ops?</li><li>Is the policy contractual for subcontracted drivers, or guidance only?</li></ul>
+      <p style="color:var(--palette-pink-45)"><strong>Needs input:</strong> waiting on Halcyon legal for the data classification question before the draft can go to review.</p>`,
         subtasks: [
-          { name: 'Draft in-scope / out-of-scope list', done: true },
-          { name: 'Circulate for stakeholder feedback', done: false },
-          { name: 'Resolve open questions with steering group', done: false },
-          { name: 'Get final sign-off', done: false },
+          { name: 'Benchmark against three comparable logistics policies', done: true },
+          { name: 'Draft acceptable-use position', done: true },
+          { name: 'Resolve data classification with legal', done: false },
+          { name: 'Define tool approval route', done: false },
+          { name: 'Steering group review', done: false },
         ] },
-      { name: 'Draft requirements doc', assignee: null, tag: { label: 'Todo', dot: 'var(--palette-orange-40)', bg: 'var(--palette-yellow-10)', color: 'var(--palette-orange-50)' } },
-      { name: 'User research synthesis', assignee: { initials: 'PT', bg: 'var(--palette-pink-40)' }, dates: { start: 'Wed, 19 Feb 2025', end: 'Fri, 28 Feb 2025', due: true } },
-      { name: 'Kickoff workshop prep', assignee: { initials: 'PT', bg: 'var(--palette-pink-40)' }, dates: { start: 'Wed, 19 Feb 2025', end: 'Fri, 28 Feb 2025', due: true } },
+      { name: 'Champion programme playbook', assignee: { initials: 'EM', bg: 'var(--palette-pink-40)' }, tag: { label: 'Todo', dot: 'var(--palette-orange-40)', bg: 'var(--palette-yellow-10)', color: 'var(--palette-orange-50)' },
+        dates: { start: 'Thu, 20 Feb 2025', end: 'Tue, 4 Mar 2025', due: false },
+        priority: { label: 'Medium', color: 'var(--palette-orange-50)', bg: 'var(--palette-yellow-10)' },
+        timeLogged: '0h logged', estimate: '60h estimated',
+        description: `<p>A repeatable playbook for standing up and running the champion network — how champions are selected, what they are accountable for, how they are supported, and how the network is sustained past the engagement.</p>
+      <p><strong>Contents</strong></p>
+      <ul><li>Champion role description and time commitment</li><li>Selection criteria and nomination route by depot</li><li>Onboarding pack and monthly cadence</li><li>Escalation path into the governance panel</li><li>Recognition and retention approach</li></ul>`,
+        subtasks: [
+          { name: 'Agree champion model with Halcyon Ops', done: false },
+          { name: 'Write role description & selection criteria', done: false },
+          { name: 'Build onboarding pack', done: false },
+          { name: 'Define cadence and escalation route', done: false },
+        ] },
+      { name: 'Training curriculum & prompt library', assignee: { initials: 'SD', bg: 'var(--palette-green-40)' }, tag: { label: 'In progress', dot: 'var(--palette-blue-40)', bg: 'var(--palette-blue-10)', color: 'var(--palette-blue-50)' },
+        dates: { start: 'Wed, 19 Feb 2025', end: 'Fri, 7 Mar 2025', due: false },
+        priority: { label: 'High', color: 'var(--palette-red-50)', bg: 'var(--palette-red-10)' },
+        timeLogged: '12h logged', estimate: '70h estimated',
+        description: `<p>Role-based curriculum plus a starter prompt library grounded in Halcyon's actual work — despatch notes, claims correspondence, maintenance records — rather than generic examples.</p>
+      <p><strong>Curriculum tracks</strong></p>
+      <ul><li>All-staff foundation (60 mins)</li><li>Operations &amp; despatch deep-dive</li><li>Customer service &amp; claims</li><li>Managers — oversight, review and escalation</li></ul>
+      <p>The Readiness Agent is drafting first-pass prompt entries from the Phase 1 use-case write-ups; Sam is editing and Tom reviewing before anything enters the library.</p>`,
+        subtasks: [
+          { name: 'Define role-based tracks', done: true },
+          { name: 'Agent first-pass prompt drafting', done: false },
+          { name: 'Edit and verify prompt entries', done: false },
+          { name: 'Build foundation session deck', done: false },
+          { name: 'Pilot with champion cohort', done: false },
+        ] },
     ]
   },
   {
-    name: 'Design', count: 3, time: '4h / 6h',
+    name: 'Phase 4 · Rollout & Adoption', count: 3, time: '0h / 188h',
     tasks: [
-      { name: 'Wireframe the dashboard layout', assignee: { initials: 'OM', bg: 'var(--palette-purple-40)' }, tag: { label: 'In progress', dot: 'var(--palette-blue-40)', bg: 'var(--palette-blue-10)', color: 'var(--palette-blue-50)' } },
-      { name: 'Design system audit', assignee: { initials: 'AK', bg: 'var(--palette-teal-40)' }, dates: { start: 'Mon, 3 Mar 2025', end: 'Fri, 7 Mar 2025', due: false } },
-      { name: 'Icon set v2', assignee: null, tag: { label: 'Backlog', dot: 'var(--palette-neutral-40)', bg: 'var(--color-surface-default)', color: 'var(--color-text-subtle)' } },
-    ]
-  },
-  {
-    name: 'Development', count: 3, time: '12h / 20h',
-    tasks: [
-      { name: 'Set up CI pipeline', assignee: { initials: 'JD', bg: 'var(--palette-green-40)' }, tag: { label: 'Done', dot: 'var(--palette-green-40)', bg: 'var(--palette-green-10)', color: 'var(--palette-green-60)' } },
-      { name: 'Implement auth flow', assignee: { initials: 'JD', bg: 'var(--palette-green-40)' }, dates: { start: 'Tue, 4 Mar 2025', end: 'Thu, 13 Mar 2025', due: false } },
-      { name: 'API rate limiting', assignee: { initials: 'OM', bg: 'var(--palette-purple-40)' }, tag: { label: 'Blocked', dot: 'var(--palette-red-40)', bg: 'var(--palette-red-10)', color: 'var(--palette-red-60)' } },
+      { name: 'Launch communication plan', assignee: { initials: 'EM', bg: 'var(--palette-pink-40)' }, tag: { label: 'Backlog', dot: 'var(--palette-neutral-40)', bg: 'var(--color-surface-default)', color: 'var(--color-text-subtle)' },
+        dates: { start: 'Mon, 10 Mar 2025', end: 'Tue, 18 Mar 2025', due: false },
+        priority: { label: 'Medium', color: 'var(--palette-orange-50)', bg: 'var(--palette-yellow-10)' },
+        timeLogged: '0h logged', estimate: '60h estimated',
+        description: `<p>Sequenced communications across the three depots and head office, covering the launch itself and the first six weeks of adoption — including the awkward questions about job security that surfaced repeatedly in Phase 1 interviews.</p>
+      <p><strong>Channels</strong></p>
+      <ul><li>Depot briefings delivered by champions</li><li>Ops Director all-hands</li><li>Driver app notifications and toolbox talks</li><li>Line-manager FAQ pack</li></ul>`,
+        subtasks: [
+          { name: 'Draft narrative & key messages', done: false },
+          { name: 'Build line-manager FAQ pack', done: false },
+          { name: 'Sequence depot briefings', done: false },
+          { name: 'Agree launch date with Halcyon', done: false },
+        ] },
+      { name: 'Adoption dashboard', assignee: { initials: 'SD', bg: 'var(--palette-green-40)' }, tag: { label: 'Backlog', dot: 'var(--palette-neutral-40)', bg: 'var(--color-surface-default)', color: 'var(--color-text-subtle)' },
+        dates: { start: 'Wed, 12 Mar 2025', end: 'Mon, 24 Mar 2025', due: false },
+        priority: { label: 'Medium', color: 'var(--palette-orange-50)', bg: 'var(--palette-yellow-10)' },
+        timeLogged: '0h logged', estimate: '68h estimated',
+        description: `<p>A dashboard Halcyon runs themselves after handover, tracking adoption depth rather than licence counts — who is using what, on which work, and whether the modelled benefits are materialising.</p>
+      <p><strong>Measures</strong></p>
+      <ul><li>Weekly active users by depot and function</li><li>Use-case coverage against the Horizon 1 list</li><li>Hours saved, sampled against the benefit model</li><li>Policy exceptions and escalations raised</li></ul>`,
+        subtasks: [
+          { name: 'Agree measure set with Halcyon Ops', done: false },
+          { name: 'Confirm data sources & refresh', done: false },
+          { name: 'Build dashboard', done: false },
+          { name: 'Handover session with Halcyon analytics', done: false },
+        ] },
+      { name: 'ROI report', assignee: { initials: 'PR', bg: 'var(--palette-purple-40)' }, tag: { label: 'Backlog', dot: 'var(--palette-neutral-40)', bg: 'var(--color-surface-default)', color: 'var(--color-text-subtle)' },
+        dates: { start: 'Wed, 19 Mar 2025', end: 'Fri, 28 Mar 2025', due: false },
+        priority: { label: 'High', color: 'var(--palette-red-50)', bg: 'var(--palette-red-10)' },
+        timeLogged: '0h logged', estimate: '60h estimated',
+        description: `<p>Closing report for the Halcyon board — what was delivered, what it cost, what has landed so far against the Phase 2 business case, and a re-run of the readiness assessment against the 2.4 baseline.</p>
+      <p><strong>Sections</strong></p>
+      <ul><li>Delivery summary against the 820-hour plan</li><li>Readiness re-score vs. baseline</li><li>Early benefit realisation from the adoption dashboard</li><li>Recommendations and Horizon 2 next steps</li></ul>`,
+        subtasks: [
+          { name: 'Re-run readiness assessment', done: false },
+          { name: 'Pull adoption data & early benefits', done: false },
+          { name: 'Draft board report', done: false },
+          { name: 'Present to Halcyon board', done: false },
+        ] },
     ]
   },
 ];
@@ -6673,8 +6785,11 @@ function renderProjectBody() {
           ${t.dates ? `<span class="project-task-dates">${calIcon} ${t.dates.start} <span class="arrow">→</span> <span class="${t.dates.due ? 'due' : ''}">${t.dates.end}</span></span>` : ''}
         </div>`).join('')}
       <div class="project-add-task">${plus} Add a task</div>
-    </div>`).join('') +
-    `<div class="project-show-completed">${caret} Show 2 completed tasks</div>`;
+    </div>`).join('');
+
+  const total = projectTaskLists.reduce((n, l) => n + l.tasks.length, 0);
+  const el = document.getElementById('projectTaskCount');
+  if (el) el.textContent = total + ' tasks';
 }
 
 
@@ -6703,38 +6818,56 @@ function switchProjectTab(tab, el) {
  * ───────────────────────────────────────────────────────────────── */
 
 const SCHED_DAY_CAPACITY = 8;          /* standard working day        */
-const SCHED_BILL_RATE    = 150;        /* $/h, for potential revenue  */
+const SCHED_FEE          = 150000;     /* fixed fee for the engagement */
+const SCHED_TIME_BUDGET  = 820;        /* planned hours               */
 
+/* Meridian's delivery team on the Halcyon engagement. Billable and cost
+   rates come from the engagement plan; the Readiness Agent is modelled
+   as a resource user with its own job role and a manually entered cost
+   rate, so Scheduler and profitability reporting treat it like any
+   other resource. */
 const schedPeople = [
-  { name: "Olan O'Mahony", initials: 'OM', bg: 'var(--palette-purple-40)', role: 'Product Designer' },
-  { name: 'Aoife Kelly',   initials: 'AK', bg: 'var(--palette-teal-40)',   role: 'Design Lead' },
-  { name: 'Pat Tester',    initials: 'PT', bg: 'var(--palette-pink-40)',   role: 'QA Analyst' },
-  { name: 'John Doe',      initials: 'JD', bg: 'var(--palette-green-40)',  role: 'Senior Developer' },
-  { name: 'Niamh Byrne',   initials: 'NB', bg: 'var(--palette-blue-40)',   role: 'Product Designer' },
-  { name: 'Seán Walsh',    initials: 'SW', bg: 'var(--palette-indigo-40)', role: 'Platform Engineer' },
+  { name: 'Priya Raman', initials: 'PR', bg: 'var(--palette-purple-40)', role: 'Engagement Partner', rate: 350, cost: 200 },
+  { name: 'Tom Okafor',  initials: 'TO', bg: 'var(--palette-blue-40)',   role: 'Senior Consultant',  rate: 250, cost: 150 },
+  { name: 'Elena Marsh', initials: 'EM', bg: 'var(--palette-pink-40)',   role: 'Change Manager',     rate: 200, cost: 120 },
+  { name: 'Sam Delaney', initials: 'SD', bg: 'var(--palette-green-40)',  role: 'Junior Consultant',  rate: 150, cost: 90  },
+  { name: 'Readiness Agent', initials: 'RA', bg: 'var(--palette-indigo-40)', role: 'Delivery Agent (AI)', rate: 150, cost: 10, agent: true },
 ];
 
-/* Mirrors the task dates in projectTaskLists so the schedule and the
-   List view tell the same story. */
+/* Allocation is planned at phase level by role, so each entry is a
+   person on a phase deliverable across that phase's dates. Per-day
+   hours are derived from the phase role totals. */
 const schedAllocations = [
-  { person: 'AK', name: 'Stakeholder interviews',         start: '2025-02-03', end: '2025-02-14', perDay: 5, color: 'teal'   },
-  { person: 'OM', name: 'Competitor analysis',            start: '2025-02-05', end: '2025-02-19', perDay: 3, color: 'blue'   },
-  { person: 'OM', name: 'Define project scope',           start: '2025-02-17', end: '2025-02-21', perDay: 4, color: 'purple' },
-  { person: 'NB', name: 'Design QA support',              start: '2025-02-17', end: '2025-02-21', perDay: 2, color: 'blue'   },
-  { person: 'SW', name: 'Environment setup',              start: '2025-02-18', end: '2025-02-20', perDay: 6, color: 'purple' },
-  { person: 'PT', name: 'Draft requirements doc',         start: '2025-02-19', end: '2025-02-28', perDay: 3, color: 'pink'   },
-  { person: 'PT', name: 'User research synthesis',        start: '2025-02-19', end: '2025-02-28', perDay: 3, color: 'yellow' },
-  { person: 'PT', name: 'Kickoff workshop prep',          start: '2025-02-20', end: '2025-02-28', perDay: 3, color: 'green'  },
-  { person: 'OM', name: 'Wireframe the dashboard layout', start: '2025-03-03', end: '2025-03-07', perDay: 6, color: 'purple' },
-  { person: 'AK', name: 'Design system audit',            start: '2025-03-03', end: '2025-03-07', perDay: 5, color: 'teal'   },
-  { person: 'JD', name: 'Set up CI pipeline',             start: '2025-03-04', end: '2025-03-13', perDay: 3, color: 'blue'   },
-  { person: 'JD', name: 'Implement auth flow',            start: '2025-03-04', end: '2025-03-13', perDay: 4, color: 'green'  },
-  { person: 'JD', name: 'Icon set v2',                    start: '2025-03-04', end: '2025-03-13', perDay: 2, color: 'yellow' },
+  /* Phase 1 · Readiness & Discovery — Junior 200h · Senior 40h · Partner 12h */
+  { person: 'SD', name: 'Stakeholder interviews & synthesis', start: '2025-01-06', end: '2025-01-17', perDay: 8, color: 'green'  },
+  { person: 'PR', name: 'Discovery oversight',                start: '2025-01-06', end: '2025-01-13', perDay: 2, color: 'purple' },
+  { person: 'SD', name: 'Use-case discovery',                 start: '2025-01-13', end: '2025-01-24', perDay: 8, color: 'blue'   },
+  { person: 'TO', name: 'AI Readiness Assessment',            start: '2025-01-15', end: '2025-01-24', perDay: 5, color: 'teal'   },
+
+  /* Phase 2 · Roadmap & Business Case — Senior 80h · Junior 80h · Partner 20h */
+  { person: 'TO', name: 'Prioritised transformation roadmap', start: '2025-01-27', end: '2025-02-07', perDay: 8, color: 'blue'   },
+  { person: 'SD', name: 'Roadmap analysis support',           start: '2025-01-27', end: '2025-02-07', perDay: 4, color: 'green'  },
+  { person: 'PR', name: 'ROI business case',                  start: '2025-02-03', end: '2025-02-14', perDay: 2, color: 'purple' },
+  { person: 'SD', name: 'Business case modelling',            start: '2025-02-03', end: '2025-02-14', perDay: 4, color: 'yellow' },
+
+  /* Phase 3 · Governance & Enablement — Change 100h · Junior 60h · Senior 40h */
+  { person: 'EM', name: 'Acceptable-use / governance policy', start: '2025-02-17', end: '2025-02-26', perDay: 7, color: 'pink'   },
+  { person: 'EM', name: 'Champion programme playbook',        start: '2025-02-20', end: '2025-03-04', perDay: 5, color: 'yellow' },
+  { person: 'SD', name: 'Training curriculum & prompt library', start: '2025-02-19', end: '2025-03-07', perDay: 5, color: 'blue' },
+  { person: 'TO', name: 'Curriculum & prompt review',         start: '2025-02-19', end: '2025-03-07', perDay: 3, color: 'teal'   },
+  { person: 'RA', name: 'Prompt library first-pass drafting', start: '2025-02-19', end: '2025-03-07', perDay: 4, color: 'purple' },
+
+  /* Phase 4 · Rollout & Adoption — Change 60h · Junior 60h · Senior 40h · Partner 28h */
+  { person: 'EM', name: 'Launch communication plan',          start: '2025-03-10', end: '2025-03-18', perDay: 8, color: 'pink'   },
+  { person: 'SD', name: 'Adoption dashboard',                 start: '2025-03-12', end: '2025-03-24', perDay: 7, color: 'green'  },
+  { person: 'TO', name: 'Dashboard technical review',         start: '2025-03-12', end: '2025-03-24', perDay: 4, color: 'teal'   },
+  { person: 'PR', name: 'ROI report',                         start: '2025-03-19', end: '2025-03-28', perDay: 3, color: 'purple' },
 ];
 
 const schedUnavailable = [
-  { person: 'AK', name: 'Annual leave', start: '2025-02-19', end: '2025-02-21' },
-  { person: 'SW', name: 'Training',     start: '2025-02-21', end: '2025-02-21' },
+  { person: 'PR', name: 'Client board — Northbridge', start: '2025-02-17', end: '2025-02-21' },
+  { person: 'TO', name: 'Annual leave',               start: '2025-02-24', end: '2025-02-28' },
+  { person: 'EM', name: 'Training',                   start: '2025-03-06', end: '2025-03-07' },
 ];
 
 const schedBarColors = {
@@ -6829,10 +6962,12 @@ function _schedDonut(pct, color) {
 }
 
 function renderSchedInsights(days) {
-  let capacity = 0, allocated = 0;
+  let capacity = 0, allocated = 0, revenue = 0;
   schedPeople.forEach(p => days.forEach(d => {
+    const h = _schedDayHours(p.initials, d);
     capacity  += _schedDayCapacity(p.initials, d);
-    allocated += _schedDayHours(p.initials, d);
+    allocated += h;
+    revenue   += h * p.rate;
   }));
   const available = Math.max(0, capacity - allocated);
   const pct = n => capacity ? Math.round(n / capacity * 100) : 0;
@@ -6856,19 +6991,19 @@ function renderSchedInsights(days) {
     <div class="sched-insight">
       <div>
         <div class="sched-insight-label">Potential revenue ${info}</div>
-        <div class="sched-insight-value">$${(allocated * SCHED_BILL_RATE).toLocaleString()}</div>
+        <div class="sched-insight-value">$${revenue.toLocaleString()}</div>
       </div>
     </div>
     <div class="sched-insight">
       <div>
         <div class="sched-insight-label">Total financial budgets ${info}</div>
-        <div class="sched-insight-value">$9,961</div>
+        <div class="sched-insight-value">$${SCHED_FEE.toLocaleString()}</div>
       </div>
     </div>
     <div class="sched-insight">
       <div>
         <div class="sched-insight-label">Total time budgets ${info}</div>
-        <div class="sched-insight-value">0h</div>
+        <div class="sched-insight-value">${SCHED_TIME_BUDGET}h</div>
       </div>
     </div>`;
 }
@@ -6913,7 +7048,7 @@ function _schedPersonRow(p, days) {
         <button class="sched-caret${open ? ' open' : ''}" onclick="schedToggleRow('${p.initials}')">${caret}</button>
         <span class="sched-avatar" style="background:${p.bg}">${p.initials}</span>
         <div class="sched-person-meta">
-          <div class="sched-person-name">${p.name}</div>
+          <div class="sched-person-name">${p.name}${p.agent ? ' ' + _aiSparkSvg : ''}</div>
           <div class="sched-person-role">${p.role}</div>
         </div>
         <div class="sched-person-hours">
@@ -6975,10 +7110,10 @@ function _schedProjectRows(days) {
   const head = `<div class="sched-person-row">
       <div class="sched-cell-left">
         <button class="sched-caret${open ? ' open' : ''}" onclick="schedToggleRow('${key}')">${caret}</button>
-        <span class="sched-avatar" style="background:var(--palette-yellow-45);color:var(--palette-neutral-60)">A</span>
+        <span class="sched-avatar" style="background:var(--palette-yellow-45);color:var(--palette-neutral-60)">H</span>
         <div class="sched-person-meta">
-          <div class="sched-person-name">Acme Website Redesign</div>
-          <div class="sched-person-role">${schedPeople.length} people</div>
+          <div class="sched-person-name">Enterprise AI Rollout</div>
+          <div class="sched-person-role">Halcyon Logistics &middot; ${schedPeople.length} resources</div>
         </div>
         <div class="sched-person-hours">${_schedHrs(Math.max(0, cap - alloc))}<span class="sep">|</span><b>${_schedHrs(alloc)}</b></div>
       </div>
@@ -7027,7 +7162,7 @@ function toggleSchedInsights(btn) {
 }
 
 /* Open the first few people so the bars are visible straight away. */
-['OM', 'AK', 'PT'].forEach(k => schedExpanded[k] = true);
+['EM', 'SD', 'RA'].forEach(k => schedExpanded[k] = true);
 
 /* ── Project AI menu + actions ─────────────────────────────────── */
 function toggleProjectAiMenu(e) {
@@ -7048,9 +7183,9 @@ function askAiAboutProject() {
   const drawer = document.getElementById('aiDrawer');
   if (!drawer.classList.contains('open')) toggleAiDrawer();
   activeChat = 'drawer';
-  setProjectContext('Acme Website Redesign');
+  setProjectContext('Enterprise AI Rollout');
   const input = document.getElementById('aiDrawerInput');
-  input.value = "What’s the status of Acme Website Redesign? Summarise progress, blockers and what needs my attention.";
+  input.value = "What’s the status of Enterprise AI Rollout? Summarise progress, blockers and what needs my attention.";
   aiAutoResize(input);
   setTimeout(() => { input.focus(); input.setSelectionRange(input.value.length, input.value.length); }, 260);
 }
@@ -7064,9 +7199,9 @@ const _projAiIcons = {
   users: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
 };
 const projectAiSuggestions = {
-  'Acme Website Redesign': [
+  'Enterprise AI Rollout': [
     { q: 'Will we hit the next milestone?',        icon: 'trend' },
-    { q: 'Who hasn’t logged time this week?',       icon: 'clock' },
+    { q: 'How is margin tracking on this fee?',     icon: 'trend' },
     { q: 'What are the current blockers?',          icon: 'alert' },
     { q: 'Summarise progress this week',            icon: 'file'  },
   ],
@@ -7099,7 +7234,7 @@ function setProjectContext(projectName) {
     if (introTitle) introTitle.textContent = 'Ask Teamwork';
     if (introText)  introText.textContent = `Ask about ${projectName} — its tasks, time and team — or anything across your projects.`;
 
-    const items = projectAiSuggestions[projectName] || projectAiSuggestions['Acme Website Redesign'];
+    const items = projectAiSuggestions[projectName] || projectAiSuggestions['Enterprise AI Rollout'];
     if (suggestions) {
       suggestions.classList.add('scoped');
       suggestions.style.display = '';
@@ -7274,7 +7409,7 @@ function askAiAllProjects() {
   setProjectContext(null);
   const input = document.getElementById('aiDrawerInput');
   if (input) {
-    const scoped = "What’s the status of Acme Website Redesign? Summarise progress, blockers and what needs my attention.";
+    const scoped = "What’s the status of Enterprise AI Rollout? Summarise progress, blockers and what needs my attention.";
     if (input.value.trim() === scoped) {
       input.value = 'Catch me up across all my projects — progress, blockers and what needs my attention.';
       aiAutoResize(input);
@@ -7294,11 +7429,11 @@ function openProjectCatchup() {
   activeChat = 'drawer';
   _drawerUpdateScope = null;         // route through catch-up intent, not update-scoped Q&A
   _currentTask = null;
-  setProjectContext('Acme Website Redesign');
+  setProjectContext('Enterprise AI Rollout');
   // Let the open transition begin, then post the catch-up as a chat response
   setTimeout(() => {
     activeChat = 'drawer';
-    aiSendSuggestion('Give me a catch-up on Acme Website Redesign');
+    aiSendSuggestion('Give me a catch-up on Enterprise AI Rollout');
   }, wasOpen ? 0 : 280);
 }
 
@@ -7334,11 +7469,18 @@ function closeTaskDrawer() {
 
 /* ── Task comment composer: @mentions + /commands ─────────────── */
 const _mentionPeople = [
-  { name: "Olan O'Mahony", initials: 'OM', bg: 'var(--palette-purple-40)', sub: 'You · Testers' },
-  { name: 'John Doe',      initials: 'JD', bg: 'var(--palette-green-40)',  sub: 'Development' },
-  { name: 'Aoife Kelly',   initials: 'AK', bg: 'var(--palette-teal-40)',   sub: 'Design' },
-  { name: 'Pat Tester',    initials: 'PT', bg: 'var(--palette-pink-40)',   sub: 'Testers' },
+  { name: 'Dana Whitfield', initials: 'DW', bg: 'var(--palette-indigo-40)', sub: 'You \u00b7 Ops Director' },
+  { name: 'Priya Raman',    initials: 'PR', bg: 'var(--palette-purple-40)', sub: 'Engagement Partner' },
+  { name: 'Tom Okafor',     initials: 'TO', bg: 'var(--palette-blue-40)',   sub: 'Senior Consultant' },
+  { name: 'Elena Marsh',    initials: 'EM', bg: 'var(--palette-pink-40)',   sub: 'Change Manager' },
+  { name: 'Sam Delaney',    initials: 'SD', bg: 'var(--palette-green-40)',  sub: 'Junior Consultant' },
 ];
+
+/* Single source for initials -> display name across the project views. */
+const PEOPLE_BY_INITIALS = {
+  DW: 'Dana Whitfield', PR: 'Priya Raman', TO: 'Tom Okafor',
+  EM: 'Elena Marsh', SD: 'Sam Delaney', RA: 'Readiness Agent',
+};
 const _mentionTeams = [
   { name: 'Design',      sub: '3 members' },
   { name: 'Development', sub: '4 members' },
@@ -7498,7 +7640,7 @@ function runJobFromComment(teammateName, jobType) {
   _savedSelectedTeammate = prev ? prev.name : null;
   teammates.forEach(t => t.selected = (t.name === teammateName));
   _pendingJobType = jobType;
-  _pendingJobProject = 'Acme Website Redesign';
+  _pendingJobProject = 'Enterprise AI Rollout';
   openAddJobDialog();
 }
 
@@ -7509,7 +7651,7 @@ function taskCommentSubmit(btn) {
   const text = el.value.trim();
   if (!text) return;
   const aiMentions = el._aiMentions ? [...el._aiMentions].filter(n => text.includes('@' + n)) : [];
-  postComment("Olan O'Mahony", 'OM', 'var(--palette-blue-30, #aac6ff)', 'Testers', text, false);
+  postComment('Dana Whitfield', 'DW', 'var(--palette-indigo-40)', 'Ops Director', text, false);
   el.value = '';
   el._aiMentions = null;
   requestAnimationFrame(updateTaskCommentDock);
@@ -7585,7 +7727,7 @@ function renderTaskDrawerBody(t, list, listIdx, taskIdx) {
   const taskNum = '#' + (listIdx * 100 + taskIdx + 101);
 
   const assigneeHtml = t.assignee
-    ? `<span class="task-meta-assignee" style="background:${t.assignee.bg}">${t.assignee.initials}</span>${t.assignee.initials === 'OM' ? 'Olan O’Mahony' : t.assignee.initials === 'JD' ? 'John Doe' : t.assignee.initials === 'AK' ? 'Aoife Kelly' : t.assignee.initials === 'PT' ? 'Pat Tester' : t.assignee.initials}`
+    ? `<span class="task-meta-assignee" style="background:${t.assignee.bg}">${t.assignee.initials}</span>${PEOPLE_BY_INITIALS[t.assignee.initials] || t.assignee.initials}`
     : `<span class="task-meta-assignee empty">${userIcon}</span>Unassigned`;
 
   const statusHtml = t.tag
@@ -7620,7 +7762,7 @@ function renderTaskDrawerBody(t, list, listIdx, taskIdx) {
 
   return `
     <div class="task-breadcrumb">
-      <span>Acme Website Redesign</span><span class="sep">/</span>
+      <span>Enterprise AI Rollout</span><span class="sep">/</span>
       <span>${list.name}</span><span class="sep">/</span>
       <span class="crumb-id">${taskNum}</span>
     </div>
@@ -7731,7 +7873,7 @@ function renderTaskDrawerBody(t, list, listIdx, taskIdx) {
         <span class="task-tl-avatar">OO</span>
         <div class="task-comment-content">
           <div class="task-comment-meta">
-            <span class="task-comment-author">Olan O'Mahony</span>
+            <span class="task-comment-author">Dana Whitfield</span>
             <span class="task-comment-time">6 seconds ago</span>
           </div>
           <div class="task-comment-role">Testers</div>
@@ -8262,7 +8404,7 @@ function writeSkillWithAi() {
   const prompt = document.getElementById('createSkillPrompt');
   prompt.value = name
     ? `For "${name}": gather the relevant Teamwork data, summarise the key numbers and changes, and flag anything that needs my attention. Format as a short, skimmable update.`
-    : `Pull last week's logged time for Acme, compare to budget, and flag any overruns.`;
+    : `Pull last week's logged time for Halcyon, compare to budget, and flag any overruns.`;
   prompt.focus();
 }
 /* "Test skill" — run the current prompt in the Ask AI drawer */
@@ -8722,7 +8864,7 @@ function addRecurringJob(tm, type) {
   _savedSelectedTeammate = (teammates.find(t => t.selected) || {}).name || null;
   teammates.forEach(t => t.selected = (t.name === tm));
   _pendingJobType = type;
-  _pendingJobProject = 'Acme Website Redesign';
+  _pendingJobProject = 'Enterprise AI Rollout';
   _pendingJobRecurring = true;
   closeAiDrawer();
   openAddJobDialog();
@@ -8776,7 +8918,7 @@ function _tasksCreatedReply(pending) {
    action via the matching Teamwork MCP write/read operation. */
 function _actionFlowReply(kind, u) {
   const haystack = `${(u.content && u.content.body) || ''} ${u.title || ''}`;
-  const proj = /Website Redesign/i.test(haystack) ? 'Acme Website Redesign'
+  const proj = /Enterprise AI Rollout/i.test(haystack) ? 'Enterprise AI Rollout'
     : (u.title && u.title.split(/[:—]/)[0].trim()) || 'the project';
   switch (kind) {
     case 'create_task':
@@ -9516,10 +9658,10 @@ function openJobTypeMenu(event, jobType) {
 
 /* ── Project picker ─────────────────────────────────────────────── */
 const pickerProjects = [
-  { id: 'acme',     client: 'Acme Corp',       projects: [
-    { id: 'a1', name: 'Website Redesign',        recent: true,  starred: true,  owned: true  },
-    { id: 'a2', name: 'Mobile App Launch',       recent: true,  starred: false, owned: false },
-    { id: 'a3', name: 'Brand Refresh',           recent: false, starred: false, owned: false },
+  { id: 'halcyon',  client: 'Halcyon Logistics', projects: [
+    { id: 'a1', name: 'Enterprise AI Rollout',   recent: true,  starred: true,  owned: true  },
+    { id: 'a2', name: 'Depot Network Review',    recent: true,  starred: false, owned: false },
+    { id: 'a3', name: 'TMS Data Migration',      recent: false, starred: false, owned: false },
   ]},
   { id: 'blue',     client: 'Blue Horizon',     projects: [
     { id: 'b1', name: 'CRM Migration',           recent: true,  starred: true,  owned: true  },
@@ -10382,7 +10524,7 @@ function _firstMentionedTeammate(text) {
 
 /* A teammate's conversational reply when @mentioned in the Ask AI drawer */
 function _drawerTeammateReply(name, q) {
-  const proj = document.getElementById('projectPage')?.classList.contains('visible') ? 'Acme Website Redesign' : 'your projects';
+  const proj = document.getElementById('projectPage')?.classList.contains('visible') ? 'Enterprise AI Rollout' : 'your projects';
   const map = {
     Flo:   `Sure — I'll review ${proj}, check progress, dependencies and blockers, and post a short summary of what needs your attention.`,
     Scout: `On it. I'll pull the latest activity and notifications across ${proj} and surface anything important.`,
@@ -10395,7 +10537,7 @@ function _drawerTeammateReply(name, q) {
 }
 
 /* ── Selection → Create task(s) ─────────────────────────────────── */
-const _attProjects = ['Acme Website Redesign', 'CRM Migration', 'Mobile App Launch', 'Q3 Marketing Campaign', 'Infrastructure Upgrade'];
+const _attProjects = ['Enterprise AI Rollout', 'CRM Migration', 'Mobile App Launch', 'Q3 Marketing Campaign', 'Infrastructure Upgrade'];
 const _attLists = ['Discovery & planning', 'Design', 'Development', 'Design work', 'QA & testing', 'Backlog'];
 const _teammateOutputSel = '.chat-msg.ai, .chat-msg.teammate, .ai-content, .task-comment-item.from-ai, .chat-job-preview-body';
 let _selTaskText = '';
@@ -10448,7 +10590,7 @@ function _attMatchName(text, names) {
 }
 function _attPrefill(text) {
   let project = _attMatchName(text, _attProjects);
-  if (!project && document.getElementById('projectPage')?.classList.contains('visible')) project = 'Acme Website Redesign';
+  if (!project && document.getElementById('projectPage')?.classList.contains('visible')) project = 'Enterprise AI Rollout';
   const list = _attMatchName(text, _attLists);
   return { project, list };
 }
@@ -10531,45 +10673,56 @@ function _projectScopedReply(text) {
   const q = text.toLowerCase();
 
   if (q.includes('milestone') || q.includes('hit the next')) {
-    return `<p>The next milestone for <strong>Acme Website Redesign</strong> is <strong>Design sign-off</strong>, due <strong>Fri 21 Feb</strong> — <strong>6 days away</strong>.</p>
+    return `<p>The next milestone for <strong>Enterprise AI Rollout</strong> is <strong>Phase 3 governance sign-off</strong>, due <strong>Wed 26 Feb</strong> — <strong>7 days away</strong>.</p>
 <p>Based on current progress, this is <strong>at risk</strong>:</p>
 <ul>
-  <li><strong>Homepage final design sign-off</strong> is unresolved — Sarah M. has had no activity in 4 days.</li>
-  <li><strong>Mobile breakpoint QA</strong> is blocked on design approval and can't start until sign-off lands.</li>
-  <li>At the current pace, there's a <strong>~70% chance</strong> the milestone slips by 3–5 days.</li>
+  <li><strong>Acceptable-use / governance policy</strong> is waiting on Halcyon legal for the data classification question — no response in 4 days.</li>
+  <li><strong>Champion programme playbook</strong> hasn't started and shares the same owner, Elena Marsh, who is already at 12h/day Thu–Fri this week.</li>
+  <li>At the current pace there's a <strong>~65% chance</strong> Phase 3 sign-off slips into the week of 3 Mar.</li>
 </ul>
-<p>Recommended action: chase Sarah M. for an update today and consider moving the milestone to <strong>Wed 26 Feb</strong> to give QA enough runway.</p>`;
+<p>Recommended action: chase Halcyon legal today, and move part of the playbook to Tom Okafor — he has 31h unallocated this week.</p>`;
   }
 
   if (q.includes('logged time') || q.includes('time this week')) {
-    return `<p>Of the <strong>8 team members</strong> active on Acme Website Redesign this week, <strong>3 haven't logged any time</strong>:</p>
+    return `<p>Of the <strong>5 resources</strong> allocated to Enterprise AI Rollout this week, <strong>2 haven't logged any time</strong>:</p>
 <ul>
-  <li><strong>Pat Tester</strong> — assigned to 4 tasks, 0h logged (last active Mon)</li>
-  <li><strong>John Doe</strong> — assigned to 2 tasks, 0h logged (last active Tue)</li>
-  <li><strong>Draft requirements doc</strong> — unassigned, no time logged since creation</li>
+  <li><strong>Tom Okafor</strong> — 9h allocated to curriculum review, 0h logged (last active Mon)</li>
+  <li><strong>Priya Raman</strong> — no allocation this week, at the Northbridge client board all week</li>
+  <li><strong>Readiness Agent</strong> — 12h-equivalent recorded automatically against prompt drafting</li>
 </ul>
-<p>The project has <strong>16h logged this week</strong> against an estimate of <strong>38h</strong>, putting it at 42% of expected effort. You may want to send a reminder to the team to log their hours before Friday.</p>`;
+<p>The engagement has <strong>34h logged against Phase 3</strong> so far versus a phase budget of <strong>200h</strong>. Against the 820-hour plan overall, <strong>462h</strong> are logged with 9 weeks elapsed — tracking close to plan.</p>`;
   }
 
   if (q.includes('blocker') || q.includes('blocked')) {
-    return `<p>There are <strong>3 active blockers</strong> on Acme Website Redesign right now:</p>
+    return `<p>There are <strong>3 active blockers</strong> on Enterprise AI Rollout right now:</p>
 <ul>
-  <li><strong>API rate limiting</strong> — the auth flow implementation is blocked until the backend team resolves the rate-limit config. No ETA provided. <em>Owner: Dev team.</em></li>
-  <li><strong>Design sign-off</strong> — Mobile breakpoint QA and CMS content migration are both waiting on Homepage final design approval. <em>Owner: Sarah M.</em></li>
-  <li><strong>CMS content migration</strong> — marked as not started; assigned to you with a due date of 20 Feb. No progress logged.</li>
+  <li><strong>Acceptable-use / governance policy</strong> — blocked on Halcyon legal confirming whether customer manifest data is restricted. Nothing else in Phase 3 can be signed off until this lands. <em>Owner: Elena Marsh.</em></li>
+  <li><strong>ROI business case</strong> — with Halcyon finance for challenge since 14 Feb, and it needs to be final for the board on 26 Feb. <em>Owner: Priya Raman.</em></li>
+  <li><strong>Elena Marsh is over-allocated</strong> — 12h/day Thursday and Friday across the policy and the playbook, against an 8h day.</li>
 </ul>
-<p>Unblocking the API rate limit and the design sign-off would immediately free up <strong>4 downstream tasks</strong> and reduce the schedule risk significantly.</p>`;
+<p>Clearing the legal question and rebalancing Elena's Thursday–Friday load would take the Phase 3 slip risk from ~65% down to roughly 25%.</p>`;
+  }
+
+  if (q.includes('margin') || q.includes('profit')) {
+    return `<p><strong>Enterprise AI Rollout</strong> is a fixed-fee engagement at <strong>$150,000</strong> over 820 planned hours.</p>
+<ul>
+  <li><strong>Blended billable value delivered so far:</strong> $96,400 against 462h logged</li>
+  <li><strong>Cost to serve so far:</strong> $58,900 — margin <strong>38.9%</strong></li>
+  <li>The <strong>Readiness Agent</strong> carries a $10/hr cost rate against a $150/hr equivalent, so the 12h it drafted this week contributes <strong>$1,680</strong> of margin on <strong>$120</strong> of cost.</li>
+  <li>Risk: Phase 1 consumed <strong>252h</strong> against a junior-heavy plan that assumed 200h from one consultant in three weeks. That over-run is the main pressure on the fixed fee.</li>
+</ul>
+<p>At the current burn the engagement lands around <strong>36% margin</strong>, roughly 4 points under the portfolio target.</p>`;
   }
 
   if (q.includes('summarise') || q.includes('summarize') || q.includes('progress')) {
-    return `<p>Here's a progress summary for <strong>Acme Website Redesign</strong> this week:</p>
+    return `<p>Here's a progress summary for <strong>Enterprise AI Rollout</strong> — week 7 of 12:</p>
 <ul>
-  <li>✅ <strong>3 tasks completed</strong> — Product listing page (Dev), Checkout flow sign-off (Design), Performance audit (Dev)</li>
-  <li>🔄 <strong>4 tasks in progress</strong> — Wireframe dashboard layout, Design system audit, Implement auth flow, Set up CI pipeline</li>
-  <li>🔴 <strong>2 tasks overdue</strong> — Homepage design sign-off (4 days late), Mobile breakpoint QA (blocked)</li>
-  <li>⏳ <strong>3 tasks not started</strong> — CMS content migration, Icon set v2, UAT kickoff</li>
+  <li>✅ <strong>Phases 1 and 2 complete</strong> — readiness assessment delivered at a 2.4/5 baseline, roadmap signed off 7 Feb</li>
+  <li>🔄 <strong>Phase 3 in progress</strong> — governance policy drafting, training curriculum and prompt library underway</li>
+  <li>🔴 <strong>1 task needs input</strong> — acceptable-use policy blocked on Halcyon legal, due Wed 26 Feb</li>
+  <li>⏳ <strong>Phase 4 not started</strong> — launch comms, adoption dashboard and ROI report open from 10 Mar</li>
 </ul>
-<p><strong>16h logged</strong> this week vs 38h estimated. Sprint 4 is running <strong>2 days behind</strong> overall — the design sign-off bottleneck is the critical path item to resolve before end of week.</p>`;
+<p><strong>462h logged</strong> of the 820-hour plan with 5 weeks to run. The ROI business case is still with Halcyon finance ahead of the board on 26 Feb, and Elena Marsh is over-allocated Thursday and Friday.</p>`;
   }
 
   return null;
@@ -10580,7 +10733,7 @@ function _taskScopedReply(text, t) {
   const q = text.toLowerCase();
   const status = t.tag ? t.tag.label : 'No status';
   const assignee = t.assignee
-    ? ({ OM: 'Olan O’Mahony', JD: 'John Doe', AK: 'Aoife Kelly', PT: 'Pat Tester' }[t.assignee.initials] || t.assignee.initials)
+    ? (PEOPLE_BY_INITIALS[t.assignee.initials] || t.assignee.initials)
     : 'nobody yet';
   const dates = t.dates ? `${t.dates.start} → ${t.dates.end}${t.dates.due ? ' (due date is at risk)' : ''}` : 'no dates set';
   const subs = t.subtasks || [];
@@ -10861,7 +11014,7 @@ const chatHistoryData = [
     messages: [
       { role: 'user', text: 'Give me my full morning catch-up' },
       { role: 'ai', text: 'Morning! Here\'s your catch-up: <strong>3 projects updated</strong> overnight, 12 tasks due today, and your 10am stand-up has 5 attendees confirmed.' },
-      { role: 'ai', text: '<strong>Acme Corp</strong> replied to the status update you sent yesterday. They\'ve approved the Q3 scope extension — I\'ve updated the project milestone accordingly.' },
+      { role: 'ai', text: '<strong>Halcyon Logistics</strong> replied to the status update you sent yesterday. They\'ve approved the Q3 scope extension — I\'ve updated the project milestone accordingly.' },
     ]
   },
 ];
@@ -11024,7 +11177,7 @@ function _appendJobPreviewWithTime(intent, timeStr) {
  * every section and the chat all read and write it.
  * ───────────────────────────────────────────────────────────────── */
 
-const AB_PROJECTS = ['Acme Website Redesign', 'CRM Migration', 'Brand Refresh', 'Client Portal v2', 'Annual Report Design'];
+const AB_PROJECTS = ['Enterprise AI Rollout', 'CRM Migration', 'Brand Refresh', 'Client Portal v2', 'Annual Report Design'];
 
 /* An agent shows the same job icon the gallery cards use. Named agents
    reuse the gallery's mapping; anything else is matched on keywords. */
