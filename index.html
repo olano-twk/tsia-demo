@@ -3630,6 +3630,216 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 }
 .project-show-completed svg { width: 14px; height: 14px; }
 
+/*
+ * ─────────────────────────────────────────────────────────────────
+ * 🧩 Project › Schedule — resource scheduler, week view
+ * ref: figma.com/design/4XFgZGSEN0NnkGk2rk9L1z node 25-15920
+ * Day columns for one week; one lane per person on the project with
+ * allocation bars spanning days. Left column is sticky.
+ * ─────────────────────────────────────────────────────────────────
+ */
+.project-schedule { flex: 1; min-height: 0; display: none; flex-direction: column; }
+.project-schedule.open { display: flex; }
+
+/* ── Scheduler toolbar ───────────────────────────────────────────── */
+.sched-toolbar {
+  flex-shrink: 0; display: flex; align-items: center; gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-6);
+}
+.sched-btn {
+  display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 var(--spacing-3);
+  border: var(--border-width-1) solid var(--color-border-default);
+  border-radius: var(--border-rounded-full); background: var(--color-background-default);
+  font-size: 13px; font-weight: 600; color: var(--color-text-default); cursor: pointer;
+}
+.sched-btn:hover { background: var(--color-background-hover); }
+.sched-btn svg { width: 15px; height: 15px; }
+.sched-btn.ghost { border: none; color: var(--color-text-subtle); font-weight: 500; }
+.sched-btn.ghost:hover { color: var(--color-text-default); }
+.sched-btn.icon { width: 32px; padding: 0; justify-content: center; border: none; color: var(--color-text-subtle); }
+.sched-btn.icon:hover { background: var(--color-background-hover); color: var(--color-text-default); }
+.sched-nav { display: flex; align-items: center; gap: 2px; }
+.sched-range {
+  display: flex; align-items: center; gap: 6px; padding: 0 var(--spacing-2);
+  font-size: 14px; font-weight: 600; color: var(--color-text-default);
+  background: none; border: none; cursor: pointer; white-space: nowrap;
+}
+.sched-range svg { width: 14px; height: 14px; color: var(--color-text-subtle); }
+.sched-toolbar-right { margin-left: auto; display: flex; align-items: center; gap: var(--spacing-2); }
+.sched-add-btn {
+  display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 var(--spacing-3);
+  border: none; border-radius: var(--border-rounded-full);
+  background: var(--color-action-primary-default); color: var(--palette-white);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.sched-add-btn:hover { background: var(--color-action-primary-hover); }
+.sched-add-btn svg { width: 14px; height: 14px; }
+.sched-add-split { width: 1px; height: 16px; background: rgba(255,255,255,0.35); margin: 0 2px; }
+
+/* ── Insights strip ──────────────────────────────────────────────── */
+.sched-insights {
+  flex-shrink: 0; display: flex; align-items: center;
+  margin: 0 var(--spacing-6) var(--spacing-3);
+  padding: var(--spacing-4) var(--spacing-5);
+  background: var(--color-background-default);
+  border: var(--border-width-1) solid var(--color-border-separator);
+  border-radius: var(--border-rounded-lg);
+}
+.sched-insights.hidden { display: none; }
+.sched-insight {
+  display: flex; align-items: center; gap: var(--spacing-3);
+  padding: 0 var(--spacing-5); border-right: var(--border-width-1) solid var(--color-border-separator);
+}
+.sched-insight:first-child { padding-left: 0; }
+.sched-insight:last-child { border-right: none; }
+.sched-insight-label {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 12px; color: var(--color-text-subtle); white-space: nowrap;
+}
+.sched-insight-label svg { width: 13px; height: 13px; color: var(--color-text-disabled); }
+.sched-insight-value { font-size: 17px; font-weight: 700; color: var(--color-text-default); margin-top: 2px; }
+.sched-donut { position: relative; width: 40px; height: 40px; flex-shrink: 0; }
+.sched-donut svg { width: 40px; height: 40px; transform: rotate(-90deg); }
+.sched-donut-pct {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: var(--color-text-default);
+}
+
+/* ── Grid ────────────────────────────────────────────────────────── */
+.sched-grid {
+  flex: 1; min-height: 0; overflow: auto;
+  border-top: var(--border-width-1) solid var(--color-border-separator);
+}
+.sched-table { min-width: 980px; }
+
+.sched-head { display: flex; position: sticky; top: 0; z-index: 5; background: var(--color-background-default); }
+.sched-head-left {
+  width: 300px; flex-shrink: 0; position: sticky; left: 0; z-index: 6;
+  display: flex; align-items: flex-end; gap: var(--spacing-1);
+  padding: 0 var(--spacing-3);
+  background: var(--color-background-default);
+  border-right: var(--border-width-1) solid var(--color-border-separator);
+  border-bottom: var(--border-width-1) solid var(--color-border-separator);
+}
+.sched-collapse-all { margin-right: 2px; padding: 0 0 var(--spacing-3); background: none; border: none; cursor: pointer; color: var(--color-text-disabled); display: flex; }
+.sched-collapse-all svg { width: 14px; height: 14px; }
+.sched-vtab {
+  padding: var(--spacing-3) var(--spacing-2); font-size: 13px; font-weight: 600;
+  color: var(--color-text-subtle); background: none; border: none; cursor: pointer;
+  border-bottom: var(--border-width-2) solid transparent; margin-bottom: -1px;
+}
+.sched-vtab:hover { color: var(--color-text-default); }
+.sched-vtab.active { color: var(--color-text-primary); border-bottom-color: var(--palette-indigo-40); }
+.sched-layers { margin-left: auto; padding: 0 0 var(--spacing-3); background: none; border: none; cursor: pointer; color: var(--color-text-subtle); display: flex; }
+.sched-layers svg { width: 16px; height: 16px; }
+
+.sched-head-right { flex: 1; display: flex; flex-direction: column; }
+.sched-month {
+  padding: 5px var(--spacing-3); font-size: 10px; font-weight: 700; letter-spacing: 0.07em;
+  color: var(--color-text-subtle);
+}
+.sched-days { display: grid; grid-template-columns: repeat(7, 1fr); border-bottom: var(--border-width-1) solid var(--color-border-separator); }
+.sched-day-h {
+  padding: 4px 0 var(--spacing-2); text-align: center;
+  border-left: var(--border-width-1) solid var(--color-border-separator);
+}
+.sched-day-h.weekend { background: var(--color-surface-default); }
+.sched-day-dow { font-size: 11px; font-weight: 600; color: var(--color-text-subtle); }
+.sched-day-num { font-size: 13px; font-weight: 700; color: var(--color-text-default); }
+.sched-day-h.today .sched-day-dow, .sched-day-h.today .sched-day-num { color: var(--color-text-primary); }
+
+/* ── Person rows ─────────────────────────────────────────────────── */
+.sched-person-row { display: flex; border-bottom: var(--border-width-1) solid var(--color-border-separator); }
+.sched-cell-left {
+  width: 300px; flex-shrink: 0; position: sticky; left: 0; z-index: 2;
+  display: flex; align-items: center; gap: var(--spacing-2);
+  padding: var(--spacing-3);
+  background: var(--color-background-default);
+  border-right: var(--border-width-1) solid var(--color-border-separator);
+}
+.sched-person-row:hover .sched-cell-left { background: var(--color-background-hover); }
+.sched-caret {
+  width: 18px; height: 18px; flex-shrink: 0; padding: 0; border: none; background: none;
+  cursor: pointer; color: var(--color-text-subtle); display: flex; align-items: center; justify-content: center;
+}
+.sched-caret svg { width: 13px; height: 13px; transition: transform 0.15s ease; }
+.sched-caret.open svg { transform: rotate(90deg); }
+.sched-avatar {
+  width: 28px; height: 28px; flex-shrink: 0; border-radius: var(--border-rounded-full);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: var(--palette-white);
+}
+.sched-person-meta { min-width: 0; }
+.sched-person-name {
+  font-size: 13px; font-weight: 600; color: var(--color-text-default);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sched-person-role { font-size: 11px; color: var(--color-text-subtle); }
+.sched-person-hours { margin-left: auto; font-size: 12px; color: var(--color-text-disabled); white-space: nowrap; }
+.sched-person-hours b { font-weight: 600; color: var(--color-text-default); }
+.sched-person-hours .sep { margin: 0 3px; }
+.sched-person-hours .over { color: var(--palette-red-50); font-weight: 700; }
+.sched-kebab { padding: 2px; border: none; background: none; cursor: pointer; color: var(--color-text-disabled); display: flex; }
+.sched-kebab svg { width: 14px; height: 14px; }
+
+.sched-lane { flex: 1; display: grid; grid-template-columns: repeat(7, 1fr); }
+.sched-daycell {
+  min-height: 52px; display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: var(--color-text-subtle);
+  border-left: var(--border-width-1) solid var(--color-border-separator);
+}
+.sched-daycell.weekend { background: var(--color-surface-default); }
+.sched-daycell.zero { color: var(--color-text-disabled); }
+.sched-daycell.full { background: var(--palette-green-10); color: var(--palette-green-60); font-weight: 700; }
+.sched-daycell.over { background: var(--palette-red-10); color: var(--palette-red-50); font-weight: 700; }
+
+/* ── Sub rows (allocations / unavailable) ────────────────────────── */
+.sched-sub { display: none; }
+.sched-sub.open { display: block; }
+.sched-sub-row { display: flex; border-bottom: var(--border-width-1) solid var(--color-border-separator); }
+.sched-sub-label {
+  width: 300px; flex-shrink: 0; position: sticky; left: 0; z-index: 2;
+  display: flex; align-items: center; gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-3) var(--spacing-3) 38px;
+  background: var(--color-background-default);
+  border-right: var(--border-width-1) solid var(--color-border-separator);
+  font-size: 12px; color: var(--color-text-subtle);
+}
+.sched-sub-label svg { width: 15px; height: 15px; color: var(--color-text-disabled); flex-shrink: 0; }
+.sched-bars { flex: 1; position: relative; min-height: 46px; }
+.sched-bars-bg { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(7, 1fr); }
+.sched-bg-cell { border-left: var(--border-width-1) solid var(--color-border-separator); }
+.sched-bg-cell.weekend { background: var(--color-surface-default); }
+.sched-bars-stack {
+  position: relative; display: grid; grid-template-columns: repeat(7, 1fr);
+  gap: 4px 0; padding: 8px 0; align-content: start;
+}
+.sched-bar {
+  height: 26px; margin: 0 4px; border-radius: var(--border-rounded-full);
+  display: flex; align-items: center; gap: 6px; padding: 0 10px 0 3px;
+  font-size: 12px; font-weight: 600; color: var(--color-text-default);
+  overflow: hidden; white-space: nowrap; cursor: pointer;
+}
+.sched-bar:hover { filter: brightness(0.96); }
+.sched-bar-hrs {
+  flex-shrink: 0; background: rgba(255,255,255,0.75); border-radius: var(--border-rounded-full);
+  padding: 2px 7px; font-size: 11px; font-weight: 700;
+}
+.sched-bar-name { overflow: hidden; text-overflow: ellipsis; }
+.sched-bar-rate { margin-left: auto; font-size: 11px; font-weight: 500; opacity: 0.7; }
+.sched-unavail {
+  height: 26px; margin: 8px 4px; border-radius: var(--border-rounded-sm);
+  background: repeating-linear-gradient(45deg,
+    var(--color-surface-selected) 0 5px, var(--color-background-default) 5px 10px);
+  border: var(--border-width-1) solid var(--color-border-separator);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: var(--color-text-subtle);
+}
+.sched-empty-note {
+  padding: var(--spacing-3) var(--spacing-3) var(--spacing-3) 0;
+  font-size: 12px; color: var(--color-text-disabled);
+}
+
 
 /*
  * ─────────────────────────────────────────────────────────────────
@@ -4625,7 +4835,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
         <span class="breadcrumb-sep">/</span>
         <a href="#" onclick="return false;">Acme Website Redesign</a>
         <span class="breadcrumb-sep">/</span>
-        <span class="breadcrumb-current">List</span>
+        <span class="breadcrumb-current" id="projectCrumbTab">List</span>
       </div>
       <button class="send-feedback-btn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -4687,13 +4897,13 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 
         <div class="project-tabs">
           <button class="project-tab">Dashboard</button>
-          <button class="project-tab active">List</button>
+          <button class="project-tab active" onclick="switchProjectTab('list', this)">List</button>
           <button class="project-tab">Board</button>
           <button class="project-tab">Table</button>
           <button class="project-tab">Timeline</button>
           <button class="project-tab">Time</button>
           <button class="project-tab">Finance</button>
-          <button class="project-tab">Schedule <span class="project-tab-new">NEW</span></button>
+          <button class="project-tab" onclick="switchProjectTab('schedule', this)">Schedule <span class="project-tab-new">NEW</span></button>
           <button class="project-tab">More…</button>
           <button class="project-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> <span class="project-tab-new">NEW</span></button>
           <button class="project-tab project-tabs-reports">Reports</button>
@@ -4715,6 +4925,77 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
       </div>
 
       <div class="project-body" id="projectBody"></div>
+
+      <!-- ── Project › Schedule (resource scheduler, week view) ──────
+           ref: figma.com/design/4XFgZGSEN0NnkGk2rk9L1z node 25-15920 -->
+      <div class="project-schedule" id="projectSchedule">
+
+        <div class="sched-toolbar">
+          <button class="sched-btn" onclick="toggleSchedInsights(this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 17v-5M12 17V7M16 17v-8"/></svg>
+            Insights
+            <svg class="sched-insights-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+          </button>
+          <button class="sched-btn" onclick="schedToday()">Today</button>
+          <div class="sched-nav">
+            <button class="sched-btn icon" onclick="schedShiftWeek(-1)" title="Previous week">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button class="sched-btn icon" onclick="schedShiftWeek(1)" title="Next week">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+          <button class="sched-range" id="schedRange">
+            17 &ndash; 23 Feb 2025
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+
+          <div class="sched-toolbar-right">
+            <button class="sched-btn ghost"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="m11 11 2.5 2.5"/></svg> Search</button>
+            <button class="sched-btn ghost"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg> Filter</button>
+            <button class="sched-btn icon" title="Expand">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            </button>
+            <button class="sched-btn">
+              Week
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <button class="sched-add-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              Add allocation
+              <span class="sched-add-split"></span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <button class="sched-btn icon" title="More">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="sched-insights" id="schedInsights"></div>
+
+        <div class="sched-grid">
+          <div class="sched-table">
+            <div class="sched-head">
+              <div class="sched-head-left">
+                <button class="sched-collapse-all" onclick="schedToggleAll()" title="Expand / collapse all">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 15 12 20 17 15"/><polyline points="7 9 12 4 17 9"/></svg>
+                </button>
+                <button class="sched-vtab" onclick="schedSwitchView('projects', this)">Projects</button>
+                <button class="sched-vtab active" onclick="schedSwitchView('people', this)">People</button>
+                <button class="sched-layers" title="Display options">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                </button>
+              </div>
+              <div class="sched-head-right">
+                <div class="sched-month" id="schedMonth"></div>
+                <div class="sched-days" id="schedDays"></div>
+              </div>
+            </div>
+            <div id="schedRows"></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div><!-- /right-area -->
 </div>
@@ -6283,7 +6564,7 @@ function showProject() {
   document.getElementById('projectPage').classList.add('visible');
   document.getElementById('navProjectsBtn').classList.add('active');
   document.getElementById('navTeamworkAiBtn').classList.remove('active');
-  renderProjectBody();
+  if (projectTab === 'schedule') renderSchedule(); else renderProjectBody();
 }
 
 /* Fake task-list / task data for Project A */
@@ -6395,6 +6676,358 @@ function renderProjectBody() {
     </div>`).join('') +
     `<div class="project-show-completed">${caret} Show 2 completed tasks</div>`;
 }
+
+
+/* ── Project tabs ──────────────────────────────────────────────────
+   Only List and Schedule are built out; the rest stay decorative. */
+let projectTab = 'list';
+function switchProjectTab(tab, el) {
+  projectTab = tab;
+  document.querySelectorAll('#projectPage .project-tabs .project-tab').forEach(b => b.classList.remove('active'));
+  if (el) el.classList.add('active');
+  const isList = tab === 'list';
+  const crumb = document.getElementById('projectCrumbTab');
+  if (crumb) crumb.textContent = isList ? 'List' : 'Schedule';
+  document.querySelector('#projectPage .project-toolbar').style.display = isList ? '' : 'none';
+  document.getElementById('projectBody').style.display = isList ? '' : 'none';
+  document.getElementById('projectSchedule').classList.toggle('open', !isList);
+  if (isList) renderProjectBody(); else renderSchedule();
+}
+
+/* ─────────────────────────────────────────────────────────────────
+ * 🧩 Project › Schedule — resource scheduler, week view
+ * ref: figma.com/design/4XFgZGSEN0NnkGk2rk9L1z node 25-15920
+ * People on the project down the left, one column per day, allocation
+ * bars spanning the days they cover. Hours/insights are derived from
+ * the allocation data so paging between weeks stays truthful.
+ * ───────────────────────────────────────────────────────────────── */
+
+const SCHED_DAY_CAPACITY = 8;          /* standard working day        */
+const SCHED_BILL_RATE    = 150;        /* $/h, for potential revenue  */
+
+const schedPeople = [
+  { name: "Olan O'Mahony", initials: 'OM', bg: 'var(--palette-purple-40)', role: 'Product Designer' },
+  { name: 'Aoife Kelly',   initials: 'AK', bg: 'var(--palette-teal-40)',   role: 'Design Lead' },
+  { name: 'Pat Tester',    initials: 'PT', bg: 'var(--palette-pink-40)',   role: 'QA Analyst' },
+  { name: 'John Doe',      initials: 'JD', bg: 'var(--palette-green-40)',  role: 'Senior Developer' },
+  { name: 'Niamh Byrne',   initials: 'NB', bg: 'var(--palette-blue-40)',   role: 'Product Designer' },
+  { name: 'Seán Walsh',    initials: 'SW', bg: 'var(--palette-indigo-40)', role: 'Platform Engineer' },
+];
+
+/* Mirrors the task dates in projectTaskLists so the schedule and the
+   List view tell the same story. */
+const schedAllocations = [
+  { person: 'AK', name: 'Stakeholder interviews',         start: '2025-02-03', end: '2025-02-14', perDay: 5, color: 'teal'   },
+  { person: 'OM', name: 'Competitor analysis',            start: '2025-02-05', end: '2025-02-19', perDay: 3, color: 'blue'   },
+  { person: 'OM', name: 'Define project scope',           start: '2025-02-17', end: '2025-02-21', perDay: 4, color: 'purple' },
+  { person: 'NB', name: 'Design QA support',              start: '2025-02-17', end: '2025-02-21', perDay: 2, color: 'blue'   },
+  { person: 'SW', name: 'Environment setup',              start: '2025-02-18', end: '2025-02-20', perDay: 6, color: 'purple' },
+  { person: 'PT', name: 'Draft requirements doc',         start: '2025-02-19', end: '2025-02-28', perDay: 3, color: 'pink'   },
+  { person: 'PT', name: 'User research synthesis',        start: '2025-02-19', end: '2025-02-28', perDay: 3, color: 'yellow' },
+  { person: 'PT', name: 'Kickoff workshop prep',          start: '2025-02-20', end: '2025-02-28', perDay: 3, color: 'green'  },
+  { person: 'OM', name: 'Wireframe the dashboard layout', start: '2025-03-03', end: '2025-03-07', perDay: 6, color: 'purple' },
+  { person: 'AK', name: 'Design system audit',            start: '2025-03-03', end: '2025-03-07', perDay: 5, color: 'teal'   },
+  { person: 'JD', name: 'Set up CI pipeline',             start: '2025-03-04', end: '2025-03-13', perDay: 3, color: 'blue'   },
+  { person: 'JD', name: 'Implement auth flow',            start: '2025-03-04', end: '2025-03-13', perDay: 4, color: 'green'  },
+  { person: 'JD', name: 'Icon set v2',                    start: '2025-03-04', end: '2025-03-13', perDay: 2, color: 'yellow' },
+];
+
+const schedUnavailable = [
+  { person: 'AK', name: 'Annual leave', start: '2025-02-19', end: '2025-02-21' },
+  { person: 'SW', name: 'Training',     start: '2025-02-21', end: '2025-02-21' },
+];
+
+const schedBarColors = {
+  purple: 'var(--palette-purple-20)',
+  blue:   'var(--palette-blue-20)',
+  yellow: 'var(--palette-yellow-20)',
+  pink:   'var(--palette-pink-30)',
+  green:  'var(--palette-green-20)',
+  teal:   'var(--palette-teal-40)',
+};
+
+const SCHED_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const SCHED_DOW    = ['S','M','T','W','T','F','S'];
+
+/* The prototype's "today" — the project sits in Feb 2025. */
+const SCHED_TODAY  = new Date(2025, 1, 19);
+
+let schedWeekStart = _schedMonday(SCHED_TODAY);
+let schedView      = 'people';
+let schedExpanded  = {};               /* person initials -> bool     */
+let schedInsightsOpen = true;
+
+function _schedDate(str) { const [y, m, d] = str.split('-').map(Number); return new Date(y, m - 1, d); }
+function _schedAdd(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
+function _schedMonday(d) { const x = new Date(d); const wd = (x.getDay() + 6) % 7; return _schedAdd(x, -wd); }
+function _schedWeekend(d) { return d.getDay() === 0 || d.getDay() === 6; }
+function _schedSame(a, b) { return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate(); }
+function _schedDays() { return [0,1,2,3,4,5,6].map(i => _schedAdd(schedWeekStart, i)); }
+function _schedHrs(h) { return (Math.round(h * 10) / 10) + 'h'; }
+
+/* Hours a person is actually allocated on a given day. */
+function _schedDayHours(initials, day) {
+  if (_schedWeekend(day)) return 0;
+  return schedAllocations
+    .filter(a => a.person === initials && day >= _schedDate(a.start) && day <= _schedDate(a.end))
+    .reduce((t, a) => t + a.perDay, 0);
+}
+/* Hours a person is available on a given day — 0 at weekends and when off. */
+function _schedDayCapacity(initials, day) {
+  if (_schedWeekend(day)) return 0;
+  const off = schedUnavailable.some(u => u.person === initials && day >= _schedDate(u.start) && day <= _schedDate(u.end));
+  return off ? 0 : SCHED_DAY_CAPACITY;
+}
+/* Where an allocation/absence sits in the visible week, or null. */
+function _schedSpan(item, days, skipWeekends) {
+  const s = _schedDate(item.start), e = _schedDate(item.end);
+  let first = -1, last = -1;
+  days.forEach((d, i) => {
+    if (skipWeekends && _schedWeekend(d)) return;
+    if (d >= s && d <= e) { if (first < 0) first = i; last = i; }
+  });
+  return first < 0 ? null : { col: first + 1, span: last - first + 1 };
+}
+
+function _schedRangeLabel(days) {
+  const a = days[0], b = days[6];
+  const m1 = SCHED_MONTHS[a.getMonth()].slice(0, 3), m2 = SCHED_MONTHS[b.getMonth()].slice(0, 3);
+  return a.getMonth() === b.getMonth()
+    ? `${a.getDate()} – ${b.getDate()} ${m2} ${b.getFullYear()}`
+    : `${a.getDate()} ${m1} – ${b.getDate()} ${m2} ${b.getFullYear()}`;
+}
+
+/* ── Render ──────────────────────────────────────────────────────── */
+function renderSchedule() {
+  const days = _schedDays();
+
+  document.getElementById('schedRange').childNodes[0].nodeValue = _schedRangeLabel(days) + ' ';
+  const months = [...new Set(days.map(d => SCHED_MONTHS[d.getMonth()] + ' ' + d.getFullYear()))];
+  document.getElementById('schedMonth').textContent = months.join('  /  ').toUpperCase();
+
+  document.getElementById('schedDays').innerHTML = days.map(d => `
+    <div class="sched-day-h${_schedWeekend(d) ? ' weekend' : ''}${_schedSame(d, SCHED_TODAY) ? ' today' : ''}">
+      <div class="sched-day-dow">${SCHED_DOW[d.getDay()]}</div>
+      <div class="sched-day-num">${d.getDate()}</div>
+    </div>`).join('');
+
+  renderSchedInsights(days);
+  document.getElementById('schedRows').innerHTML =
+    schedView === 'people' ? _schedPeopleRows(days) : _schedProjectRows(days);
+}
+
+function _schedDonut(pct, color) {
+  const r = 16, c = 2 * Math.PI * r;
+  return `<div class="sched-donut">
+    <svg viewBox="0 0 40 40">
+      <circle cx="20" cy="20" r="${r}" fill="none" stroke="var(--color-surface-selected)" stroke-width="5"/>
+      <circle cx="20" cy="20" r="${r}" fill="none" stroke="${color}" stroke-width="5" stroke-linecap="round"
+              stroke-dasharray="${(c * pct / 100).toFixed(1)} ${c.toFixed(1)}"/>
+    </svg>
+    <div class="sched-donut-pct">${pct}%</div>
+  </div>`;
+}
+
+function renderSchedInsights(days) {
+  let capacity = 0, allocated = 0;
+  schedPeople.forEach(p => days.forEach(d => {
+    capacity  += _schedDayCapacity(p.initials, d);
+    allocated += _schedDayHours(p.initials, d);
+  }));
+  const available = Math.max(0, capacity - allocated);
+  const pct = n => capacity ? Math.round(n / capacity * 100) : 0;
+  const info = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round"/></svg>`;
+
+  document.getElementById('schedInsights').innerHTML = `
+    <div class="sched-insight">
+      ${_schedDonut(pct(available), 'var(--palette-green-40)')}
+      <div>
+        <div class="sched-insight-label">Total available ${info}</div>
+        <div class="sched-insight-value">${_schedHrs(available)}</div>
+      </div>
+    </div>
+    <div class="sched-insight">
+      ${_schedDonut(pct(allocated), 'var(--palette-indigo-40)')}
+      <div>
+        <div class="sched-insight-label">Total allocated ${info}</div>
+        <div class="sched-insight-value">${_schedHrs(allocated)}</div>
+      </div>
+    </div>
+    <div class="sched-insight">
+      <div>
+        <div class="sched-insight-label">Potential revenue ${info}</div>
+        <div class="sched-insight-value">$${(allocated * SCHED_BILL_RATE).toLocaleString()}</div>
+      </div>
+    </div>
+    <div class="sched-insight">
+      <div>
+        <div class="sched-insight-label">Total financial budgets ${info}</div>
+        <div class="sched-insight-value">$9,961</div>
+      </div>
+    </div>
+    <div class="sched-insight">
+      <div>
+        <div class="sched-insight-label">Total time budgets ${info}</div>
+        <div class="sched-insight-value">0h</div>
+      </div>
+    </div>`;
+}
+
+function _schedBar(a, days) {
+  const pos = _schedSpan(a, days, true);
+  if (!pos) return '';
+  let worked = 0;
+  days.forEach((d, i) => { if (i >= pos.col - 1 && i < pos.col - 1 + pos.span && !_schedWeekend(d)) worked++; });
+  return `<div class="sched-bar" style="grid-column:${pos.col} / span ${pos.span};background:${schedBarColors[a.color]}"
+               title="${a.name} — ${_schedHrs(a.perDay)}/day">
+      <span class="sched-bar-hrs">${_schedHrs(a.perDay * worked)}</span>
+      <span class="sched-bar-name">${a.name}</span>
+      <span class="sched-bar-rate">${_schedHrs(a.perDay)} /day</span>
+    </div>`;
+}
+
+function _schedLaneBg(days) {
+  return `<div class="sched-bars-bg">${days.map(d =>
+    `<div class="sched-bg-cell${_schedWeekend(d) ? ' weekend' : ''}"></div>`).join('')}</div>`;
+}
+
+function _schedPersonRow(p, days) {
+  let cap = 0, alloc = 0;
+  const cells = days.map(d => {
+    const c = _schedDayCapacity(p.initials, d), h = _schedDayHours(p.initials, d);
+    cap += c; alloc += h;
+    let cls = '';
+    if (_schedWeekend(d))       cls = ' weekend';
+    else if (h > c)             cls = ' over';
+    else if (h > 0 && h >= c)   cls = ' full';
+    else if (h === 0)           cls = ' zero';
+    return `<div class="sched-daycell${cls}">${_schedHrs(h)}</div>`;
+  }).join('');
+  const avail = cap - alloc;
+  const open  = !!schedExpanded[p.initials];
+  const caret = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`;
+  const kebab = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>`;
+
+  return `<div class="sched-person-row">
+      <div class="sched-cell-left">
+        <button class="sched-caret${open ? ' open' : ''}" onclick="schedToggleRow('${p.initials}')">${caret}</button>
+        <span class="sched-avatar" style="background:${p.bg}">${p.initials}</span>
+        <div class="sched-person-meta">
+          <div class="sched-person-name">${p.name}</div>
+          <div class="sched-person-role">${p.role}</div>
+        </div>
+        <div class="sched-person-hours">
+          <span class="${avail < 0 ? 'over' : ''}">${_schedHrs(Math.max(0, avail))}</span>
+          <span class="sep">|</span><b>${_schedHrs(alloc)}</b>
+        </div>
+        <button class="sched-kebab">${kebab}</button>
+      </div>
+      <div class="sched-lane">${cells}</div>
+    </div>`;
+}
+
+function _schedSubRows(p, days) {
+  const folder = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>`;
+  const clock  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`;
+
+  const bars = schedAllocations.filter(a => a.person === p.initials).map(a => _schedBar(a, days)).join('');
+  const offs = schedUnavailable.filter(u => u.person === p.initials).map(u => {
+    const pos = _schedSpan(u, days, false);
+    return pos ? `<div class="sched-unavail" style="grid-column:${pos.col} / span ${pos.span}">${u.name}</div>` : '';
+  }).join('');
+
+  return `<div class="sched-sub${schedExpanded[p.initials] ? ' open' : ''}">
+      <div class="sched-sub-row">
+        <div class="sched-sub-label">${folder} Allocations for this project</div>
+        <div class="sched-bars">
+          ${_schedLaneBg(days)}
+          <div class="sched-bars-stack">${bars || '<div class="sched-empty-note" style="grid-column:1 / span 7">No allocations this week</div>'}</div>
+        </div>
+      </div>
+      <div class="sched-sub-row">
+        <div class="sched-sub-label">${clock} Unavailable time</div>
+        <div class="sched-bars">
+          ${_schedLaneBg(days)}
+          <div class="sched-bars-stack">${offs}</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function _schedPeopleRows(days) {
+  return schedPeople.map(p => _schedPersonRow(p, days) + _schedSubRows(p, days)).join('');
+}
+
+/* Projects view — same week, grouped under the project instead. */
+function _schedProjectRows(days) {
+  const key = 'PROJECT';
+  let cap = 0, alloc = 0;
+  schedPeople.forEach(p => days.forEach(d => {
+    cap += _schedDayCapacity(p.initials, d); alloc += _schedDayHours(p.initials, d);
+  }));
+  const cells = days.map(d => {
+    const h = schedPeople.reduce((t, p) => t + _schedDayHours(p.initials, d), 0);
+    return `<div class="sched-daycell${_schedWeekend(d) ? ' weekend' : h === 0 ? ' zero' : ''}">${_schedHrs(h)}</div>`;
+  }).join('');
+  const open  = !!schedExpanded[key];
+  const caret = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`;
+
+  const head = `<div class="sched-person-row">
+      <div class="sched-cell-left">
+        <button class="sched-caret${open ? ' open' : ''}" onclick="schedToggleRow('${key}')">${caret}</button>
+        <span class="sched-avatar" style="background:var(--palette-yellow-45);color:var(--palette-neutral-60)">A</span>
+        <div class="sched-person-meta">
+          <div class="sched-person-name">Acme Website Redesign</div>
+          <div class="sched-person-role">${schedPeople.length} people</div>
+        </div>
+        <div class="sched-person-hours">${_schedHrs(Math.max(0, cap - alloc))}<span class="sep">|</span><b>${_schedHrs(alloc)}</b></div>
+      </div>
+      <div class="sched-lane">${cells}</div>
+    </div>`;
+
+  const body = schedPeople.map(p => {
+    const bars = schedAllocations.filter(a => a.person === p.initials).map(a => _schedBar(a, days)).join('');
+    if (!bars) return '';
+    return `<div class="sched-sub-row">
+        <div class="sched-sub-label">
+          <span class="sched-avatar" style="background:${p.bg};width:22px;height:22px;font-size:9px">${p.initials}</span>
+          ${p.name}
+        </div>
+        <div class="sched-bars">
+          ${_schedLaneBg(days)}
+          <div class="sched-bars-stack">${bars}</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  return head + `<div class="sched-sub${open ? ' open' : ''}">${body}</div>`;
+}
+
+/* ── Controls ────────────────────────────────────────────────────── */
+function schedToggleRow(key) { schedExpanded[key] = !schedExpanded[key]; renderSchedule(); }
+function schedToggleAll() {
+  const keys = schedView === 'people' ? schedPeople.map(p => p.initials) : ['PROJECT'];
+  const anyOpen = keys.some(k => schedExpanded[k]);
+  keys.forEach(k => schedExpanded[k] = !anyOpen);
+  renderSchedule();
+}
+function schedShiftWeek(n) { schedWeekStart = _schedAdd(schedWeekStart, n * 7); renderSchedule(); }
+function schedToday() { schedWeekStart = _schedMonday(SCHED_TODAY); renderSchedule(); }
+function schedSwitchView(view, el) {
+  schedView = view;
+  document.querySelectorAll('.sched-vtab').forEach(b => b.classList.remove('active'));
+  if (el) el.classList.add('active');
+  renderSchedule();
+}
+function toggleSchedInsights(btn) {
+  schedInsightsOpen = !schedInsightsOpen;
+  document.getElementById('schedInsights').classList.toggle('hidden', !schedInsightsOpen);
+  const caret = btn.querySelector('.sched-insights-caret');
+  if (caret) caret.style.transform = schedInsightsOpen ? '' : 'rotate(180deg)';
+}
+
+/* Open the first few people so the bars are visible straight away. */
+['OM', 'AK', 'PT'].forEach(k => schedExpanded[k] = true);
 
 /* ── Project AI menu + actions ─────────────────────────────────── */
 function toggleProjectAiMenu(e) {
