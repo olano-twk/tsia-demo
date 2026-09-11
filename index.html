@@ -330,15 +330,6 @@ body {
 }
 .nav-badge.info { background: var(--palette-indigo-40); }
 
-/* 🧩 Avatar — size=sm, type=initials */
-.nav-avatar-placeholder {
-  width: 32px; height: 32px;
-  border-radius: var(--border-rounded-full);
-  background: var(--palette-purple-40);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--palette-white); font-weight: 600; font-size: 12px;
-  cursor: pointer; margin-top: var(--spacing-2); flex-shrink: 0;
-}
 
 /* ─────────────────────────────────────────────────────────────────
  * Teammate list panel
@@ -2646,7 +2637,7 @@ body {
 /* User avatar button */
 .global-nav-avatar-btn {
   width: 24px; height: 24px; border-radius: 50%;
-  background: var(--palette-neutral-10); border: none; cursor: pointer;
+  background: var(--palette-indigo-40); border: none; cursor: pointer;
   overflow: hidden; flex-shrink: 0; position: relative;
   display: flex; align-items: center; justify-content: center;
 }
@@ -4322,8 +4313,6 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
         <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5" fill="currentColor"/>
       </svg>
     </button>
-    <!-- 🧩 Avatar — size=sm, type=initials, palette/purple/40 -->
-    <div class="nav-avatar-placeholder">O</div>
   </nav>
 
   <!-- ── Right area: breadcrumb spans full width, then workspace ─── -->
@@ -4441,8 +4430,8 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
         </button>
 
         <!-- User avatar -->
-        <button class="global-nav-avatar-btn" title="Your profile">
-          <span style="font-size:11px;font-weight:700;color:#64697d">O</span>
+        <button class="global-nav-avatar-btn" title="Dana Whitfield">
+          <span style="font-size:10px;font-weight:700;color:var(--palette-white)">DW</span>
           <span class="global-nav-user-dot"></span>
         </button>
 
@@ -4503,7 +4492,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
             <div class="askai-messages" id="askAiMessages">
               <div class="askai-hero" id="askAiHero">
                 <div class="askai-greeting">
-                  <span class="askai-greet-hello">Hello Olan,</span>
+                  <span class="askai-greet-hello">Hello Dana,</span>
                   <span class="askai-greet-help">How can I help you today?</span>
                 </div>
 
@@ -5221,7 +5210,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
   <div class="ai-drawer-messages" id="aiDrawerMessages">
     <div class="ai-drawer-intro" id="aiDrawerIntro">
       <div class="ai-drawer-greeting">
-        <span class="ai-greet-hello" id="aiDrawerIntroTitle">Hello Olan,</span>
+        <span class="ai-greet-hello" id="aiDrawerIntroTitle">Hello Dana,</span>
         <span class="ai-greet-help" id="aiDrawerIntroText">How can I help you today?</span>
       </div>
       <div class="ai-for-you" id="aiDrawerForYou">
@@ -7252,7 +7241,7 @@ function setProjectContext(projectName) {
     banner.style.display = 'none';
 
     // Default (unscoped) state — the Figma greeting + built-in "For you" prompts
-    if (introTitle) introTitle.textContent = 'Hello Olan,';
+    if (introTitle) introTitle.textContent = 'Hello Dana,';
     if (introText)  introText.textContent = 'How can I help you today?';
 
     if (suggestions) {
@@ -7329,7 +7318,7 @@ function setUpdateContext(u) {
 
   // Standard start screen: same greeting and same suggested-action design as
   // the default drawer — only the prompts themselves are update-specific.
-  if (introTitle) introTitle.textContent = 'Hello Olan,';
+  if (introTitle) introTitle.textContent = 'Hello Dana,';
   if (introText)  introText.textContent = 'How can I help you today?';
 
   const items = (u.customQuestions || getQuestionChips(u)).map(q => ({
@@ -10254,7 +10243,7 @@ function toggleAiDrawer() {
   if (isOpen) {
     activeChat = 'drawer';
     // Opening the drawer from the top nav always shows the default greeting state
-    // ("Hello Olan, …" + For you). Context-scoped drawers are reached through the
+    // ("Hello Dana, …" + For you). Context-scoped drawers are reached through the
     // dedicated "Ask AI about this update/task" buttons, which call their own
     // context functions directly rather than going through here.
     setProjectContext(null);
@@ -11086,7 +11075,7 @@ function startNewChat(surface) {
   [...msgs.children].forEach(c => { if (c.id !== 'aiDrawerIntro') c.remove(); });
   intro.style.display = '';
   // Reset to the default greeting + built-in "For you" prompts
-  document.getElementById('aiDrawerIntroTitle').textContent = 'Hello Olan,';
+  document.getElementById('aiDrawerIntroTitle').textContent = 'Hello Dana,';
   document.getElementById('aiDrawerIntroText').textContent = 'How can I help you today?';
   _restoreForYou();
   _toggleForYou(true);
