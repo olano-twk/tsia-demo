@@ -5219,11 +5219,11 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
           For you
         </div>
         <div class="ai-for-you-list">
-          <button class="ai-foryou-chip" onclick="activeChat='drawer'; aiSendSuggestion('Log my time')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg> Log my time</button>
-          <button class="ai-foryou-chip" onclick="activeChat='drawer'; aiSendSuggestion('What should I work on next?')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg> What should I work on next?</button>
-          <button class="ai-foryou-chip" onclick="activeChat='drawer'; aiSendSuggestion('Plan my day')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg> Plan my day</button>
-          <button class="ai-foryou-chip" onclick="activeChat='drawer'; aiSendSuggestion('Prioritise my tasks')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg> Prioritise my tasks</button>
-          <button class="ai-foryou-chip" onclick="activeChat='drawer'; aiSendSuggestion('How much work do I have left this week?')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg> How much work do I have left this week?</button>
+          <button class="ai-foryou-chip" onclick="activeChat='drawer'; aiSendSuggestion('What is the planned margin on this project?')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg> What is the planned margin on this project?</button>
+          <button class="ai-foryou-chip" onclick="activeChat='drawer'; aiSendSuggestion('Which projects are drifting on margin?')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg> Which projects are drifting on margin?</button>
+          <button class="ai-foryou-chip" onclick="activeChat='drawer'; aiSendSuggestion('How much unbilled time is sitting there?')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg> How much unbilled time is sitting there?</button>
+          <button class="ai-foryou-chip" onclick="activeChat='drawer'; aiSendSuggestion('Show me budget burn before month-end')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg> Show me budget burn before month-end</button>
+          <button class="ai-foryou-chip" onclick="activeChat='drawer'; aiSendSuggestion('Which clients are most profitable this quarter?')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg> Which clients are most profitable this quarter?</button>
         </div>
       </div>
     </div>
@@ -10493,7 +10493,7 @@ function aiSend() {
     const projReply = (surface === 'drawer' && inProject) ? _projectScopedReply(text) : null;
     // Task-scoped reply when the drawer is focused on a specific task
     const taskReply = (!projReply && surface === 'drawer' && _currentTask) ? _taskScopedReply(text, _currentTask) : null;
-    const reply = projReply || taskReply;
+    const reply = projReply || taskReply || _financeReply(text);
     const thinkingId = aiAppendThinking();
     _aiIsProcessing = true;
     setTimeout(() => {
@@ -10692,7 +10692,7 @@ function _projectScopedReply(text) {
 <p>Clearing the legal question and rebalancing Elena's Thursday–Friday load would take the Phase 3 slip risk from ~65% down to roughly 25%.</p>`;
   }
 
-  if (q.includes('margin') || q.includes('profit')) {
+  if ((q.includes('margin') || q.includes('profit')) && !q.includes('planned')) {
     return `<p><strong>Enterprise AI Rollout</strong> is a fixed-fee engagement at <strong>$150,000</strong> over 820 planned hours.</p>
 <ul>
   <li><strong>Blended billable value delivered so far:</strong> $96,400 against 462h logged</li>
@@ -10700,7 +10700,7 @@ function _projectScopedReply(text) {
   <li>The <strong>Readiness Agent</strong> carries a $10/hr cost rate against a $150/hr equivalent, so the 12h it drafted this week contributes <strong>$1,680</strong> of margin on <strong>$120</strong> of cost.</li>
   <li>Risk: Phase 1 consumed <strong>252h</strong> against a junior-heavy plan that assumed 200h from one consultant in three weeks. That over-run is the main pressure on the fixed fee.</li>
 </ul>
-<p>At the current burn the engagement lands around <strong>36% margin</strong>, roughly 4 points under the portfolio target.</p>`;
+<p>At the current burn the engagement lands around <strong>33.8% margin</strong>, 1.4 points under the 35.2% planned on the fixed fee.</p>`;
   }
 
   if (q.includes('summarise') || q.includes('summarize') || q.includes('progress')) {
@@ -10712,6 +10712,70 @@ function _projectScopedReply(text) {
   <li>⏳ <strong>Phase 4 not started</strong> — launch comms, adoption dashboard and ROI report open from 10 Mar</li>
 </ul>
 <p><strong>462h logged</strong> of the 820-hour plan with 5 weeks to run. The ROI business case is still with Halcyon finance ahead of the board on 26 Feb, and Elena Marsh is over-allocated Thursday and Friday.</p>`;
+  }
+
+  return null;
+}
+
+/* Financial-management answers for the Ask AI drawer. These work with or
+   without a project in context, so the "For you" chips answer from the
+   default drawer as well as from inside the project. */
+function _financeReply(text) {
+  const q = text.toLowerCase();
+
+  if (q.includes('planned margin') || (q.includes('margin') && q.includes('this project'))) {
+    return `<p><strong>Enterprise AI Rollout</strong> is fixed fee at <strong>$150,000</strong> over <strong>820 planned hours</strong>. Planned cost to serve at the team's cost rates:</p>
+<ul>
+  <li>Engagement Partner — 60h × $200 = <strong>$12,000</strong></li>
+  <li>Senior Consultant — 200h × $150 = <strong>$30,000</strong></li>
+  <li>Change Manager — 160h × $120 = <strong>$19,200</strong></li>
+  <li>Junior Consultant — 400h × $90 = <strong>$36,000</strong></li>
+  <li>Readiness Agent — 0h at baseline × $10 = <strong>$0</strong></li>
+</ul>
+<p><strong>Planned margin: $52,800 — 35.2%.</strong></p>
+<p>Two things worth knowing. At rate card those 820 hours would bill at <strong>$163,000</strong>, so the fixed fee already concedes <strong>$13,000</strong>. And every hour moved from the junior consultant to the Readiness Agent swaps <strong>$90</strong> of cost for <strong>$10</strong> — the 12h it drafted this week is <strong>$960</strong> of margin that wasn't in the plan.</p>
+<p>Current forecast is <strong>33.8%</strong>, 1.4 points under plan, driven by the Phase 1 over-run.</p>`;
+  }
+
+  if (q.includes('drifting') || (q.includes('margin') && (q.includes('which project') || q.includes('portfolio')))) {
+    return `<p><strong>3 of 11 active projects</strong> are drifting more than 2 points below their planned margin:</p>
+<ul>
+  <li><strong>Depot Network Review</strong> (Halcyon Logistics) — 24.1% against 32% planned. 118h over plan with two weeks left; the overage is all senior time.</li>
+  <li><strong>CRM Migration</strong> (Blue Horizon) — 27.6% against 34% planned. Scope added in January was never re-quoted.</li>
+  <li><strong>Enterprise AI Rollout</strong> (Halcyon Logistics) — 33.8% against 35.2% planned. Phase 1 used 252h against a plan that assumed one junior could deliver 200h in three weeks.</li>
+</ul>
+<p>The other eight are at or above plan. <strong>Depot Network Review</strong> is the one to act on — it's the only one where the gap is still widening.</p>`;
+  }
+
+  if (q.includes('unbilled')) {
+    return `<p>There's <strong>$84,200 of unbilled time</strong> across the portfolio right now, <strong>$31,900</strong> of it more than 30 days old.</p>
+<ul>
+  <li><strong>Blue Horizon</strong> — $38,400 across CRM Migration and Client Portal v2. Both are time and materials; nothing has been invoiced since 31 Jan.</li>
+  <li><strong>Halcyon Logistics</strong> — $29,700, but Enterprise AI Rollout is fixed fee, so only the $9,100 on Depot Network Review is actually billable.</li>
+  <li><strong>Global Media</strong> — $16,100, all within terms.</li>
+</ul>
+<p>The oldest item is <strong>$12,300 on CRM Migration</strong> from work done in December. Want me to draft the invoice schedule for Blue Horizon before month-end?</p>`;
+  }
+
+  if (q.includes('budget burn') || q.includes('month-end') || q.includes('month end')) {
+    return `<p>With <strong>7 working days to month-end</strong>, here's where budgets land if the current burn holds:</p>
+<ul>
+  <li>🔴 <strong>Depot Network Review</strong> — 94% of budget consumed, 3 weeks of work left. Will breach around 6 Mar.</li>
+  <li>🟠 <strong>Enterprise AI Rollout</strong> — 56% of the 820 hours used at week 7 of 12. On plan, but Phase 3 is running hot on change-management time.</li>
+  <li>🟠 <strong>CRM Migration</strong> — 88% consumed with the UAT phase not started.</li>
+  <li>🟢 <strong>8 other projects</strong> tracking at or under plan.</li>
+</ul>
+<p>Two projects need a conversation before the month closes: <strong>Depot Network Review</strong> needs a change request, and <strong>CRM Migration</strong> needs the January scope re-quoted.</p>`;
+  }
+
+  if (q.includes('profitable') || q.includes('most profitable')) {
+    return `<p>Client profitability for the quarter to date, by realised margin:</p>
+<ul>
+  <li><strong>Global Media</strong> — $71,400 on $198,000 billed, <strong>36.1%</strong>. Consistently the cleanest delivery; almost no write-offs.</li>
+  <li><strong>Halcyon Logistics</strong> — $64,900 on $205,000 billed, <strong>31.7%</strong>. Enterprise AI Rollout is carrying it; Depot Network Review is dragging it down.</li>
+  <li><strong>Blue Horizon</strong> — $38,200 on $164,000 billed, <strong>23.3%</strong>. Two projects over plan and the slowest to invoice.</li>
+</ul>
+<p>Halcyon is the account to watch — it's the largest by revenue and the Enterprise AI Rollout engagement is the template you'd want to repeat, particularly the agent resource model.</p>`;
   }
 
   return null;
