@@ -3976,6 +3976,12 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 .fin-name { font-size: 14px; color: var(--color-text-default); }
 .fin-name .ai-spark { width: 13px; height: 13px; vertical-align: -2px; margin-left: 2px; }
 
+/* Task drawer — resources booked on a task */
+.task-alloc-list { display: flex; flex-direction: column; gap: 6px; }
+.task-alloc { display: flex; align-items: center; gap: var(--spacing-2); }
+.task-alloc b { margin-left: auto; font-weight: 700; color: var(--color-text-default); }
+.task-alloc .ai-spark { width: 13px; height: 13px; margin-left: 2px; }
+
 /* Rate-type select, styled to match the design's bordered control */
 .fin-select {
   width: 100%; display: flex; align-items: center; gap: var(--spacing-2);
@@ -7413,9 +7419,10 @@ const projectTaskLists = [
   {
     name: 'Phase 1 · Readiness & Discovery', count: 3, time: '0h / 252h',
     tasks: [
-      { name: 'Stakeholder interviews & workshop synthesis', assignee: { initials: 'SD', bg: 'var(--palette-green-40)' }, tag: TODO_TAG,
+      { name: 'Stakeholder interviews & workshop synthesis', assignee: { initials: 'TO', bg: 'var(--palette-blue-40)' }, tag: TODO_TAG,
         dates: { start: 'Mon, 5 Oct 2026', end: 'Fri, 16 Oct 2026', due: false },
-        priority: HIGH_PRI, timeLogged: '0h logged', estimate: '96h estimated',
+        priority: HIGH_PRI, timeLogged: '0h logged', estimate: '40h estimated',
+        allocations: [{ initials: 'TO', hours: 40 }],
         description: `<p>Structured interviews across Halcyon's operating functions to establish where AI could realistically land, followed by a facilitated synthesis workshop to converge on shared priorities. A consistent question set throughout so responses can be themed and compared.</p>
       <p><strong>Functions to cover</strong></p>
       <ul><li>Operations &amp; despatch — Marcus Boyd (Head of Operations)</li><li>Fleet &amp; maintenance planning</li><li>Customer service &amp; claims handling</li><li>Finance &amp; commercial</li><li>IT / security (constraints and data handling)</li></ul>
@@ -7427,9 +7434,10 @@ const projectTaskLists = [
           { name: 'Facilitate synthesis workshop', done: false },
           { name: 'Issue consolidated themes pack', done: false },
         ] },
-      { name: 'Use-case discovery', assignee: { initials: 'SD', bg: 'var(--palette-green-40)' }, tag: TODO_TAG,
-        dates: { start: 'Mon, 12 Oct 2026', end: 'Fri, 23 Oct 2026', due: false },
-        priority: HIGH_PRI, timeLogged: '0h logged', estimate: '84h estimated',
+      { name: 'Use-case discovery', assignee: { initials: 'PR', bg: 'var(--palette-purple-40)' }, tag: TODO_TAG,
+        dates: { start: 'Mon, 19 Oct 2026', end: 'Fri, 23 Oct 2026', due: false },
+        priority: HIGH_PRI, timeLogged: '0h logged', estimate: '12h estimated',
+        allocations: [{ initials: 'PR', hours: 12 }],
         description: `<p>Turn the interview themes into a scored long-list of candidate AI use cases, each sized on value and feasibility so the roadmap in Phase 2 has something defensible to prioritise against.</p>
       <p><strong>Scoring dimensions</strong></p>
       <ul><li>Annual value at stake (hours or cost avoided)</li><li>Data readiness and quality</li><li>Integration effort against existing systems</li><li>Change burden on frontline teams</li><li>Risk / regulatory exposure</li></ul>
@@ -7440,9 +7448,12 @@ const projectTaskLists = [
           { name: 'Score and rank all candidates', done: false },
           { name: 'Write up top 8 in detail', done: false },
         ] },
-      { name: 'AI Readiness Assessment', assignee: { initials: 'TO', bg: 'var(--palette-blue-40)' }, tag: TODO_TAG,
-        dates: { start: 'Wed, 14 Oct 2026', end: 'Fri, 23 Oct 2026', due: false },
-        priority: HIGH_PRI, timeLogged: '0h logged', estimate: '72h estimated',
+      { name: 'AI Readiness Assessment', assignee: { initials: 'SD', bg: 'var(--palette-green-40)' }, tag: TODO_TAG,
+        dates: { start: 'Mon, 5 Oct 2026', end: 'Fri, 23 Oct 2026', due: false },
+        priority: HIGH_PRI, timeLogged: '0h logged', estimate: '200h estimated',
+        /* The deliverable Remi's suggestion acts on. Approving it swaps
+           Sam out for the Readiness Agent plus senior review from Tom. */
+        allocations: [{ initials: 'SD', hours: 200 }],
         description: `<p>Assess Halcyon against the readiness framework across data, technology, people and governance, producing a baseline score the engagement can be measured against at close.</p>
       <p><strong>Assessment covers</strong></p>
       <ul><li>Data foundations — telematics and TMS data quality and access</li><li>Governance — whether any acceptable-use position exists today</li><li>Appetite and confidence by function</li><li>Shadow-AI audit: tools already in informal use</li></ul>
@@ -7650,7 +7661,7 @@ function switchProjectTab(tab, el) {
 
 const SCHED_DAY_CAPACITY = 8;          /* standard working day        */
 const SCHED_FEE          = 150000;     /* fixed fee for the engagement */
-const SCHED_TIME_BUDGET  = 820;        /* planned hours               */
+let   SCHED_TIME_BUDGET  = 820;        /* planned hours               */
 
 /* Meridian's delivery team on the Halcyon engagement. Billable and cost
    rates come from the engagement plan; the Readiness Agent is modelled
@@ -7670,10 +7681,9 @@ const schedPeople = [
    hours are derived from the phase role totals. */
 const schedAllocations = [
   /* Phase 1 · Readiness & Discovery — Junior 200h · Senior 40h · Partner 12h */
-  { person: 'SD', name: 'Stakeholder interviews & synthesis', start: '2026-10-05', end: '2026-10-16', perDay: 8, color: 'green'  },
-  { person: 'PR', name: 'Discovery oversight',                start: '2026-10-05', end: '2026-10-12', perDay: 2, color: 'purple' },
-  { person: 'SD', name: 'Use-case discovery',                 start: '2026-10-12', end: '2026-10-23', perDay: 8, color: 'blue'   },
-  { person: 'TO', name: 'AI Readiness Assessment',            start: '2026-10-14', end: '2026-10-23', perDay: 5, color: 'teal'   },
+  { id: 'assess-sam', person: 'SD', name: 'AI Readiness Assessment', start: '2026-10-05', end: '2026-10-23', perDay: 13.33, color: 'green' },
+  { person: 'TO', name: 'Stakeholder interviews & synthesis', start: '2026-10-05', end: '2026-10-16', perDay: 4, color: 'teal'   },
+  { person: 'PR', name: 'Use-case discovery',                 start: '2026-10-19', end: '2026-10-23', perDay: 2.4, color: 'purple' },
 
   /* Phase 2 · Roadmap & Business Case — Senior 80h · Junior 80h · Partner 20h */
   { person: 'TO', name: 'Prioritised transformation roadmap', start: '2026-10-26', end: '2026-11-06', perDay: 8, color: 'blue'   },
@@ -7823,7 +7833,7 @@ function renderSchedInsights(days) {
     <div class="sched-insight">
       <div>
         <div class="sched-insight-label">Potential revenue ${info}</div>
-        <div class="sched-insight-value">$${revenue.toLocaleString()}</div>
+        <div class="sched-insight-value">$${Math.round(revenue).toLocaleString()}</div>
       </div>
     </div>
     <div class="sched-insight">
@@ -7865,6 +7875,7 @@ function _schedPersonRow(p, days) {
     cap += c; alloc += h;
     let cls = '';
     if (_schedWeekend(d))       cls = ' weekend';
+    else if (p.agent)           cls = h === 0 ? ' zero' : '';   /* no working day to exceed */
     else if (h > c)             cls = ' over';
     else if (h > 0 && h >= c)   cls = ' full';
     else if (h === 0)           cls = ' zero';
@@ -7884,8 +7895,8 @@ function _schedPersonRow(p, days) {
           <div class="sched-person-role">${p.role}</div>
         </div>
         <div class="sched-person-hours">
-          <span class="${avail < 0 ? 'over' : ''}">${_schedHrs(Math.max(0, avail))}</span>
-          <span class="sep">|</span><b>${_schedHrs(alloc)}</b>
+          ${p.agent ? '' : `<span class="${avail < 0 ? 'over' : ''}">${_schedHrs(Math.max(0, avail))}</span><span class="sep">|</span>`}
+          <b>${_schedHrs(alloc)}</b>
         </div>
         <button class="sched-kebab">${kebab}</button>
       </div>
@@ -8048,11 +8059,54 @@ function remiChip(kind) {
   chips.style.display = 'none';
 }
 
+/* Applying Remi's suggestion rewrites the AI Readiness Assessment across
+   the whole prototype: the task's assignee and allocations, the bars on
+   the Schedule, and the plan the Budgets page reports against. */
+let _remiApplied = false;
+
+function _applyRemiSuggestion() {
+  if (_remiApplied) return;
+  _remiApplied = true;
+
+  // 1. The task itself — Sam out, agent in, senior review added.
+  const task = projectTaskLists[0].tasks.find(t => t.name === 'AI Readiness Assessment');
+  if (task) {
+    task.assignee = { initials: 'RA', bg: 'var(--palette-indigo-40)' };
+    task.estimate = '216h estimated';
+    task.allocations = [{ initials: 'RA', hours: 200 }, { initials: 'TO', hours: 16 }];
+  }
+
+  // 2. The Schedule — replace Sam's bar with the agent's, plus Tom's review.
+  const i = schedAllocations.findIndex(a => a.id === 'assess-sam');
+  if (i > -1) {
+    schedAllocations.splice(i, 1,
+      { id: 'assess-agent', person: 'RA', name: 'AI Readiness Assessment', start: '2026-10-05', end: '2026-10-23', perDay: 13.33, color: 'purple' },
+      { id: 'assess-review', person: 'TO', name: 'AI Readiness Assessment — review', start: '2026-10-20', end: '2026-10-23', perDay: 4, color: 'teal' },
+    );
+  }
+
+  // 3. The plan the budget measures against — $13,600 of cost comes out.
+  BUD.costTarget   = 83600;
+  BUD.profitTarget = 66400;
+  BUD.marginTarget = 44.3;
+  BUD.hoursBudget  = 836;
+  SCHED_TIME_BUDGET = 836;
+  BUD.forecast     = [0, 4267, 8533, 12800, 20533, 28267, 36000, 43800, 51600, 59400, 67467, 75533, 83600];
+  budPhases[0].budget = 268;
+  projectTaskLists[0].time = '0h / 268h';
+
+  // 4. Repaint whatever is on screen.
+  if (projectTab === 'schedule')     renderSchedule();
+  else if (projectTab === 'finance') renderFinance();
+  else                               renderProjectBody();
+}
+
 function approveRemiSuggestion() {
   const btn = document.getElementById('remiApprove');
   btn.textContent = 'Approved';
   btn.disabled = true;
-  showToast("Remi applied the change — Sam's 200h moved to the Readiness Agent");
+  _applyRemiSuggestion();
+  showToast("Remi applied the change — the assessment is now the Readiness Agent plus 16h of Tom's review");
   setTimeout(() => {
     closeRemiModal();
     btn.textContent = 'Approve suggestion';
@@ -9006,6 +9060,18 @@ function renderTaskDrawerBody(t, list, listIdx, taskIdx) {
     ? `<span class="task-meta-tag" style="background:${t.priority.bg};color:${t.priority.color}"><span class="dot" style="background:${t.priority.color}"></span>${t.priority.label}</span>`
     : `<span style="color:var(--color-text-subtle)">None</span>`;
 
+  /* Who is booked on the task and for how many hours. A task can carry
+     more than one resource — the Readiness Agent plus a senior reviewer,
+     for instance — so this is a list rather than a single assignee. */
+  const allocHtml = (t.allocations || []).map(a => {
+    const p = schedPeople.find(x => x.initials === a.initials) || {};
+    return `<span class="task-alloc">
+        <span class="task-meta-assignee" style="background:${p.bg || 'var(--palette-neutral-30)'}">${a.initials}</span>
+        ${PEOPLE_BY_INITIALS[a.initials] || a.initials}${p.agent ? _aiSparkSvg : ''}
+        <b>${a.hours}h</b>
+      </span>`;
+  }).join('');
+
   const timeHtml = (t.timeLogged || t.estimate)
     ? `${[t.timeLogged, t.estimate].filter(Boolean).join(' · ')}`
     : '0h logged · no estimate';
@@ -9047,6 +9113,8 @@ function renderTaskDrawerBody(t, list, listIdx, taskIdx) {
       <div class="task-meta-value">${priorityHtml}</div>
       <div class="task-meta-label">${clockIcon} Time logged</div>
       <div class="task-meta-value">${timeHtml}</div>
+      ${allocHtml ? `<div class="task-meta-label">${userIcon} Allocated</div>
+      <div class="task-meta-value"><div class="task-alloc-list">${allocHtml}</div></div>` : ''}
     </div>
     <div class="task-section-title">Description</div>
     <div class="task-description">
@@ -12008,7 +12076,8 @@ function _financeReply(text) {
 </ul>
 <p><strong>Planned margin: $52,800 — 35.2%.</strong></p>
 <p>Two things worth knowing. At rate card those 820 hours would bill at <strong>$163,000</strong>, so the fixed fee already concedes <strong>$13,000</strong>. And the Readiness Agent is at zero at baseline — every hour moved to it from the junior consultant swaps <strong>$90</strong> of cost for <strong>$10</strong>.</p>
-<p>Nothing is logged against the engagement yet, so the plan is also the forecast.</p>`;
+<p>Nothing is logged against the engagement yet, so the plan is also the forecast.</p>
+${_remiApplied ? `<p><strong>Since you approved Remi's suggestion</strong>, the AI Readiness Assessment runs on the Readiness Agent with 16h of senior review instead of 200 junior hours — planned cost is now <strong>$83,600</strong> and margin <strong>44.3%</strong>.</p>` : ''}`;
   }
 
   if (q.includes('phase') && (q.includes('cost') || q.includes('expensive') || q.includes('most'))) {
