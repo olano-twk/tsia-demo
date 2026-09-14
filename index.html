@@ -3997,6 +3997,207 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
   font-size: 12px; color: var(--color-text-subtle);
 }
 
+/* ── Finance › Budgets ───────────────────────────────────────────── */
+.bud-head {
+  display: flex; align-items: center; gap: var(--spacing-3);
+  padding: 0 0 var(--spacing-3); flex-wrap: wrap;
+}
+.bud-title {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 15px; font-weight: 700; color: var(--color-text-default);
+  background: none; border: none; cursor: pointer;
+}
+.bud-title svg { width: 14px; height: 14px; color: var(--color-text-subtle); }
+.bud-nav { display: flex; align-items: center; gap: 2px; margin-left: var(--spacing-2); }
+.bud-nav button {
+  width: 26px; height: 26px; border: none; background: none; cursor: pointer;
+  color: var(--color-text-subtle); border-radius: var(--border-rounded-md);
+  display: flex; align-items: center; justify-content: center;
+}
+.bud-nav button:hover { background: var(--color-background-hover); color: var(--color-text-default); }
+.bud-nav svg { width: 15px; height: 15px; }
+.bud-range {
+  display: flex; align-items: center; gap: 6px; border: none; background: none; cursor: pointer;
+  font-size: 14px; font-weight: 600; color: var(--color-text-default); white-space: nowrap;
+}
+.bud-range svg { width: 14px; height: 14px; color: var(--color-text-subtle); }
+.bud-chip {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
+  padding: 4px 8px; border-radius: var(--border-rounded-sm); white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.bud-chip.fee  { background: var(--palette-yellow-20); color: var(--palette-orange-50); }
+.bud-chip.rep  { background: var(--color-surface-default); color: var(--color-text-subtle); }
+.bud-chip svg { width: 11px; height: 11px; }
+
+.bud-banner {
+  display: flex; align-items: center; gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-4); margin-bottom: var(--spacing-4);
+  border-radius: var(--border-rounded-lg);
+  background: var(--palette-indigo-10);
+  font-size: 13px; color: var(--color-text-default);
+}
+.bud-banner svg { width: 15px; height: 15px; color: var(--color-text-subtle); flex-shrink: 0; }
+.bud-banner-btn {
+  margin-left: auto; border: none; cursor: pointer;
+  background: var(--color-surface-selected); color: var(--color-text-default);
+  font-size: 13px; font-weight: 600; padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--border-rounded-md); white-space: nowrap;
+}
+.bud-banner-btn:hover { background: var(--palette-neutral-25); }
+
+.bud-grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: var(--spacing-4); }
+.bud-card {
+  border: var(--border-width-1) solid var(--color-border-separator);
+  border-radius: var(--border-rounded-lg);
+  background: var(--color-background-default);
+  padding: var(--spacing-5);
+}
+.bud-card + .bud-card { margin-top: var(--spacing-4); }
+.bud-card-head {
+  display: flex; align-items: center; gap: var(--spacing-2); margin-bottom: var(--spacing-4);
+}
+.bud-card-icon {
+  width: 28px; height: 28px; border-radius: var(--border-rounded-full);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.bud-card-icon svg { width: 15px; height: 15px; }
+.bud-card-icon.teal { background: var(--palette-green-20); color: var(--palette-green-60); }
+.bud-card-icon.mint { background: var(--palette-green-20); color: var(--palette-green-70); }
+.bud-card-icon.pink { background: var(--palette-pink-10); color: var(--palette-pink-45); }
+.bud-card-title { font-size: 15px; font-weight: 700; color: var(--color-text-default); }
+
+.bud-fee-row { display: flex; align-items: flex-start; gap: var(--spacing-6); }
+.bud-fee-label { font-size: 13px; color: var(--color-text-subtle); }
+.bud-fee-value { font-size: 26px; font-weight: 700; color: var(--color-text-default); margin-top: 2px; }
+.bud-bar-wrap { flex: 1; min-width: 0; padding-top: var(--spacing-1); }
+.bud-bar-top {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 14px; font-weight: 700; color: var(--color-text-default); margin-bottom: 6px;
+}
+.bud-bar-top span span { font-weight: 500; color: var(--color-text-subtle); }
+.bud-bar {
+  height: 8px; border-radius: var(--border-rounded-full);
+  background: var(--palette-indigo-20); overflow: hidden;
+}
+.bud-bar-fill { height: 100%; background: var(--palette-indigo-40); border-radius: var(--border-rounded-full); }
+.bud-bar-legend {
+  display: flex; justify-content: space-between;
+  font-size: 12px; color: var(--color-text-subtle); margin-top: 6px;
+}
+
+.bud-chart { margin-top: var(--spacing-5); }
+.bud-chart svg { width: 100%; height: 230px; display: block; overflow: visible; }
+.bud-chart-legend {
+  display: flex; gap: var(--spacing-4); margin-top: var(--spacing-3);
+  font-size: 12px; color: var(--color-text-subtle);
+}
+.bud-legend-key { display: inline-flex; align-items: center; gap: 6px; }
+.bud-legend-swatch { width: 12px; height: 3px; border-radius: 2px; background: var(--palette-indigo-40); }
+.bud-legend-swatch.forecast { background: var(--palette-neutral-30); }
+.bud-legend-swatch.fee { background: var(--palette-green-40); }
+
+.bud-stat-row { display: flex; gap: var(--spacing-5); }
+.bud-stat { flex: 1; min-width: 0; }
+.bud-stat-label {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 12px; color: var(--color-text-subtle); white-space: nowrap;
+}
+.bud-stat-label svg { width: 12px; height: 12px; color: var(--color-text-disabled); flex-shrink: 0; }
+.bud-stat-value { font-size: 22px; font-weight: 700; color: var(--color-text-default); margin-top: 2px; }
+.bud-stat-value.sm { font-size: 18px; }
+.bud-stat-target { font-size: 12px; color: var(--color-text-subtle); margin-top: 2px; }
+.bud-stat-sub { font-size: 12px; color: var(--color-text-subtle); margin-top: 2px; }
+.bud-card-links { margin-top: var(--spacing-4); display: flex; flex-direction: column; gap: var(--spacing-2); align-items: flex-start; }
+.bud-link {
+  border: none; background: none; cursor: pointer; padding: 0;
+  font-size: 13px; font-weight: 600; color: var(--color-text-primary);
+}
+.bud-link:hover { text-decoration: underline; }
+.bud-divider { height: 1px; background: var(--color-border-separator); margin: var(--spacing-4) 0; }
+
+/* ── Lower panel ─────────────────────────────────────────────────── */
+.bud-panel {
+  margin-top: var(--spacing-4);
+  border: var(--border-width-1) solid var(--color-border-separator);
+  border-radius: var(--border-rounded-lg);
+  background: var(--color-background-default);
+}
+.bud-panel-head {
+  display: flex; align-items: center; gap: var(--spacing-1);
+  padding: var(--spacing-3) var(--spacing-4);
+  border-bottom: var(--border-width-1) solid var(--color-border-separator);
+  flex-wrap: wrap;
+}
+.bud-panel-tab {
+  padding: var(--spacing-2) var(--spacing-3); border: var(--border-width-1) solid transparent;
+  background: none; border-radius: var(--border-rounded-md); cursor: pointer;
+  font-size: 13px; font-weight: 500; color: var(--color-text-subtle); white-space: nowrap;
+}
+.bud-panel-tab:hover { color: var(--color-text-default); background: var(--color-background-hover); }
+.bud-panel-tab.active {
+  background: var(--color-background-default); color: var(--color-text-default);
+  border-color: var(--color-border-default); font-weight: 600;
+}
+.bud-panel-right { margin-left: auto; display: flex; align-items: center; gap: var(--spacing-2); }
+.bud-panel-btn {
+  display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 var(--spacing-2);
+  border: none; background: none; cursor: pointer;
+  font-size: 13px; color: var(--color-text-subtle); border-radius: var(--border-rounded-md);
+}
+.bud-panel-btn:hover { background: var(--color-background-hover); color: var(--color-text-default); }
+.bud-panel-btn svg { width: 15px; height: 15px; }
+.bud-log-btn {
+  display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 var(--spacing-3);
+  border: none; border-radius: var(--border-rounded-full);
+  background: var(--color-action-primary-default); color: var(--palette-white);
+  font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;
+}
+.bud-log-btn:hover { background: var(--color-action-primary-hover); }
+.bud-log-btn svg { width: 14px; height: 14px; }
+.bud-panel-body { padding: 0; }
+
+.bud-table { width: 100%; border-collapse: collapse; }
+.bud-table th {
+  text-align: left; font-size: 12px; font-weight: 600; color: var(--color-text-subtle);
+  padding: var(--spacing-3) var(--spacing-4);
+  border-bottom: var(--border-width-1) solid var(--color-border-separator);
+  white-space: nowrap;
+}
+.bud-table th.num, .bud-table td.num { text-align: right; }
+.bud-table td {
+  padding: var(--spacing-3) var(--spacing-4); font-size: 14px; color: var(--color-text-default);
+  border-bottom: var(--border-width-1) solid var(--color-border-separator);
+}
+.bud-table tbody tr:last-child td { border-bottom: none; }
+.bud-table tbody tr:hover td { background: var(--color-background-hover); }
+.bud-tl-name { font-weight: 600; }
+.bud-mini-bar {
+  width: 120px; height: 6px; border-radius: var(--border-rounded-full);
+  background: var(--color-surface-selected); overflow: hidden; display: inline-block; vertical-align: middle;
+}
+.bud-mini-fill { height: 100%; background: var(--palette-indigo-40); border-radius: var(--border-rounded-full); display: block; }
+.bud-mini-fill.full { background: var(--palette-green-40); }
+.bud-mini-fill.over { background: var(--palette-red-40); }
+.bud-pct { font-size: 12px; color: var(--color-text-subtle); margin-left: var(--spacing-2); }
+.bud-avatar {
+  width: 24px; height: 24px; border-radius: var(--border-rounded-full); flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 700; color: var(--palette-white); margin-right: var(--spacing-2);
+  vertical-align: middle;
+}
+.bud-totals {
+  display: flex; justify-content: flex-end; gap: var(--spacing-6);
+  padding: var(--spacing-4); border-top: var(--border-width-1) solid var(--color-border-separator);
+  font-size: 13px; color: var(--color-text-subtle); flex-wrap: wrap;
+}
+.bud-totals b { color: var(--color-text-default); font-weight: 700; margin-left: 6px; }
+.bud-empty { padding: var(--spacing-8) var(--spacing-4); text-align: center; color: var(--color-text-subtle); font-size: 13px; }
+
+@media (max-width: 1080px) {
+  .bud-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
 
 /*
  * ─────────────────────────────────────────────────────────────────
@@ -7349,6 +7550,7 @@ function _finMoney(n) { return '$' + n.toLocaleString(); }
 
 function renderFinance() {
   const body = document.getElementById('finBody');
+  if (financeTab === 'budgets') { body.innerHTML = _budgetsHTML(); return; }
   if (financeTab !== 'rates') {
     body.innerHTML = `<div class="fin-foot-note">${financeTab[0].toUpperCase() + financeTab.slice(1)} is stubbed in this prototype.</div>`;
     return;
@@ -7395,6 +7597,299 @@ function renderFinance() {
     <div class="fin-foot-note">
       Rates are set per job role for this project. The Readiness Agent's cost rate covers model and
       platform spend, so profitability reporting treats it like any other resource.
+    </div>`;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────
+ * 🧩 Project › Finance › Budgets
+ * One fixed-fee budget for the whole engagement. Everything below is
+ * derived from the engagement plan so the numbers agree with the
+ * Rates table, the Schedule and the Ask AI answers:
+ *   fee $150,000 · planned cost $97,200 · target profit $52,800 (35.2%)
+ * Actuals are at week 7 of 12 — 462h logged, $58,900 of cost.
+ * ───────────────────────────────────────────────────────────────── */
+const BUD = {
+  fee: 150000,
+  costToDate: 58900,
+  costTarget: 97200,
+  profitTarget: 52800,
+  marginTarget: 35.2,
+  hoursLogged: 462,
+  hoursBudget: 820,
+  billableToDate: 96400,
+  expenses: 0,
+  week: 7, weeks: 12,
+  /* Cumulative cost by week — weeks 1-7 actual, 8-12 forecast.
+     The forecast lands at $99,300, i.e. 33.8% margin, 1.4 points
+     under plan because Phase 1 over-ran. */
+  actual:   [0, 8800, 17600, 26400, 34133, 41867, 49600, 58900],
+  forecast: [58900, 66980, 75060, 83140, 91220, 99300],
+};
+
+const budPhases = [
+  { name: 'Phase 1 · Readiness & Discovery',  budget: 252, logged: 252 },
+  { name: 'Phase 2 · Roadmap & Business Case', budget: 180, logged: 176 },
+  { name: 'Phase 3 · Governance & Enablement', budget: 200, logged: 34  },
+  { name: 'Phase 4 · Rollout & Adoption',      budget: 188, logged: 0   },
+];
+
+const budTimeLogs = [
+  { who: 'EM', task: 'Acceptable-use / governance policy', date: 'Wed, 19 Feb', hours: 7,  billable: 1400, cost: 840 },
+  { who: 'SD', task: 'Training curriculum & prompt library', date: 'Wed, 19 Feb', hours: 5,  billable: 750,  cost: 450 },
+  { who: 'RA', task: 'Prompt library first-pass drafting',   date: 'Wed, 19 Feb', hours: 4,  billable: 600,  cost: 40  },
+  { who: 'EM', task: 'Acceptable-use / governance policy', date: 'Tue, 18 Feb', hours: 7,  billable: 1400, cost: 840 },
+  { who: 'PR', task: 'ROI business case',                  date: 'Fri, 14 Feb', hours: 2,  billable: 700,  cost: 400 },
+  { who: 'TO', task: 'Prioritised transformation roadmap', date: 'Fri, 7 Feb',  hours: 8,  billable: 2000, cost: 1200 },
+];
+
+let budPanelTab = 'tasklists';
+
+function _budMoney(n, dp) {
+  return '$' + n.toLocaleString('en-US', { minimumFractionDigits: dp || 0, maximumFractionDigits: dp || 0 });
+}
+function _budPerson(init) {
+  const p = schedPeople.find(x => x.initials === init) || { bg: 'var(--palette-neutral-30)', name: init };
+  return `<span class="bud-avatar" style="background:${p.bg}">${init}</span>${p.name}`;
+}
+
+/* Burn-up: cumulative cost against the fixed fee, actual then forecast. */
+function _budChart() {
+  const W = 760, H = 230, padL = 52, padR = 12, padT = 12, padB = 26;
+  const maxY = 150000, weeks = BUD.weeks;
+  const x = w => padL + (w / weeks) * (W - padL - padR);
+  const y = v => padT + (1 - v / maxY) * (H - padT - padB);
+
+  const pts  = BUD.actual.map((v, i) => `${x(i)},${y(v)}`).join(' ');
+  const fpts = BUD.forecast.map((v, i) => `${x(BUD.week + i)},${y(v)}`).join(' ');
+  const area = `${padL},${y(0)} ${pts} ${x(BUD.week)},${y(0)}`;
+
+  const grid = [0, 37500, 75000, 112500, 150000].map(v => `
+    <line x1="${padL}" y1="${y(v)}" x2="${W - padR}" y2="${y(v)}" stroke="var(--color-border-separator)" stroke-width="1"/>
+    <text x="${padL - 8}" y="${y(v) + 4}" text-anchor="end" font-size="10" fill="var(--color-text-subtle)">$${(v / 1000)}k</text>`).join('');
+
+  const ticks = [0, 2, 4, 6, 8, 10, 12].map(w => `
+    <text x="${x(w)}" y="${H - 8}" text-anchor="middle" font-size="10" fill="var(--color-text-subtle)">${w === 0 ? 'W1' : 'W' + w}</text>`).join('');
+
+  return `
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Cumulative cost against the fixed fee">
+      ${grid}${ticks}
+      <line x1="${padL}" y1="${y(BUD.costTarget)}" x2="${W - padR}" y2="${y(BUD.costTarget)}"
+            stroke="var(--palette-green-40)" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <text x="${W - padR}" y="${y(BUD.costTarget) - 6}" text-anchor="end" font-size="10" fill="var(--palette-green-60)">Planned cost $97,200</text>
+      <polygon points="${area}" fill="var(--palette-indigo-40)" opacity="0.10"/>
+      <polyline points="${pts}" fill="none" stroke="var(--palette-indigo-40)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      <polyline points="${fpts}" fill="none" stroke="var(--palette-neutral-30)" stroke-width="2.5"
+                stroke-dasharray="6 5" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="${x(BUD.week)}" cy="${y(BUD.costToDate)}" r="4" fill="var(--palette-indigo-40)"/>
+    </svg>`;
+}
+
+function _budPanelBody() {
+  if (budPanelTab === 'tasklists') {
+    return `
+      <table class="bud-table">
+        <thead><tr>
+          <th>Task list</th><th class="num">Budget</th><th class="num">Logged</th>
+          <th class="num">Remaining</th><th>Used</th>
+        </tr></thead>
+        <tbody>
+          ${budPhases.map(p => {
+            const pct = Math.round(p.logged / p.budget * 100);
+            const cls = pct > 100 ? 'over' : pct === 100 ? 'full' : '';
+            return `<tr>
+              <td class="bud-tl-name">${p.name}</td>
+              <td class="num">${p.budget}h</td>
+              <td class="num">${p.logged}h</td>
+              <td class="num">${p.budget - p.logged}h</td>
+              <td>
+                <span class="bud-mini-bar"><span class="bud-mini-fill ${cls}" style="width:${Math.min(100, pct)}%"></span></span>
+                <span class="bud-pct">${pct}%</span>
+              </td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+      <div class="bud-totals">
+        <span>Total budget <b>${BUD.hoursBudget}h</b></span>
+        <span>Logged <b>${BUD.hoursLogged}h</b></span>
+        <span>Remaining <b>${BUD.hoursBudget - BUD.hoursLogged}h</b></span>
+      </div>`;
+  }
+
+  if (budPanelTab === 'timelogs') {
+    return `
+      <table class="bud-table">
+        <thead><tr>
+          <th>Who</th><th>Task</th><th>Date</th>
+          <th class="num">Hours</th><th class="num">Billable</th><th class="num">Cost</th>
+        </tr></thead>
+        <tbody>
+          ${budTimeLogs.map(l => `<tr>
+            <td>${_budPerson(l.who)}</td>
+            <td>${l.task}</td>
+            <td>${l.date}</td>
+            <td class="num">${l.hours}h</td>
+            <td class="num">${_budMoney(l.billable)}</td>
+            <td class="num">${_budMoney(l.cost)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+      <div class="bud-totals">
+        <span>Total hours <b>${BUD.hoursLogged}</b></span>
+        <span>Total billable <b>${_budMoney(BUD.billableToDate)}</b></span>
+        <span>Total cost <b>${_budMoney(BUD.costToDate)}</b></span>
+      </div>`;
+  }
+
+  if (budPanelTab === 'expenses') {
+    return `<div class="bud-empty">No expenses recorded against this budget.</div>`;
+  }
+  return `<div class="bud-empty">Budget notifications are stubbed in this prototype.</div>`;
+}
+
+function switchBudPanel(tab, el) {
+  budPanelTab = tab;
+  document.querySelectorAll('.bud-panel-tab').forEach(b => b.classList.remove('active'));
+  if (el) el.classList.add('active');
+  document.getElementById('budPanelBody').innerHTML = _budPanelBody();
+}
+
+function _budgetsHTML() {
+  const info    = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round"/></svg>`;
+  const caret   = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
+  const prev    = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>`;
+  const next    = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`;
+  const doc     = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>`;
+  const trend   = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="15 7 21 7 21 13"/></svg>`;
+  const dollar  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`;
+  const repeat  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>`;
+  const filter  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg>`;
+  const plus    = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`;
+
+  const costPct   = BUD.costToDate / BUD.fee * 100;
+  const profit    = BUD.fee - BUD.costToDate;
+  const margin    = profit / BUD.fee * 100;
+  const forecast  = BUD.forecast[BUD.forecast.length - 1];
+  const fcMargin  = (BUD.fee - forecast) / BUD.fee * 100;
+
+  return `
+    <div class="bud-head">
+      <button class="bud-title">Fixed fee budget ${caret}</button>
+      <div class="bud-nav"><button>${prev}</button><button>${next}</button></div>
+      <button class="bud-range">6 Jan – 28 Mar 2025 ${caret}</button>
+      <span class="bud-chip fee">FIXED FEE</span>
+      <span class="bud-chip rep">${repeat} DOES NOT REPEAT</span>
+    </div>
+
+    <div class="bud-banner">
+      ${info}
+      <span>Week <strong>${BUD.week}</strong> of ${BUD.weeks} — this budget covers the full engagement and closes on 28 Mar 2025.</span>
+      <button class="bud-banner-btn">View budget history</button>
+    </div>
+
+    <div class="bud-grid">
+      <div>
+        <div class="bud-card">
+          <div class="bud-card-head">
+            <span class="bud-card-icon teal">${doc}</span>
+            <span class="bud-card-title">Budget overview</span>
+          </div>
+          <div class="bud-fee-row">
+            <div>
+              <div class="bud-fee-label">Fixed fee</div>
+              <div class="bud-fee-value">${_budMoney(BUD.fee, 2)}</div>
+            </div>
+            <div class="bud-bar-wrap">
+              <div class="bud-bar-top">
+                <span>${_budMoney(BUD.costToDate, 2)} <span>(${costPct.toFixed(0)}%)</span></span>
+                <span>${_budMoney(profit, 2)} <span>(${(100 - costPct).toFixed(0)}%)</span></span>
+              </div>
+              <div class="bud-bar"><div class="bud-bar-fill" style="width:${costPct}%"></div></div>
+              <div class="bud-bar-legend"><span>Costs (to date)</span><span>Remaining</span></div>
+            </div>
+          </div>
+          <div class="bud-chart">
+            ${_budChart()}
+            <div class="bud-chart-legend">
+              <span class="bud-legend-key"><span class="bud-legend-swatch"></span> Cost to date</span>
+              <span class="bud-legend-key"><span class="bud-legend-swatch forecast"></span> Forecast to completion</span>
+              <span class="bud-legend-key"><span class="bud-legend-swatch fee"></span> Planned cost</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="bud-card">
+          <div class="bud-card-head">
+            <span class="bud-card-icon mint">${trend}</span>
+            <span class="bud-card-title">Profitability</span>
+          </div>
+          <div class="bud-stat-row">
+            <div class="bud-stat">
+              <div class="bud-stat-label">Profit (to date) ${info}</div>
+              <div class="bud-stat-value sm">${_budMoney(profit)}</div>
+              <div class="bud-stat-target">Target: ${_budMoney(BUD.profitTarget)}</div>
+            </div>
+            <div class="bud-stat">
+              <div class="bud-stat-label">Profit margin ${info}</div>
+              <div class="bud-stat-value sm">${margin.toFixed(1)}%</div>
+              <div class="bud-stat-target">Target: ${BUD.marginTarget}%</div>
+            </div>
+          </div>
+          <div class="bud-divider"></div>
+          <div class="bud-stat">
+            <div class="bud-stat-label">Forecast at completion ${info}</div>
+            <div class="bud-stat-value sm">${fcMargin.toFixed(1)}%</div>
+            <div class="bud-stat-target">${(BUD.marginTarget - fcMargin).toFixed(1)} points under plan</div>
+          </div>
+          <div class="bud-card-links">
+            <button class="bud-link">View profitability report</button>
+            <button class="bud-link">Set financial targets</button>
+          </div>
+        </div>
+
+        <div class="bud-card">
+          <div class="bud-card-head">
+            <span class="bud-card-icon pink">${dollar}</span>
+            <span class="bud-card-title">Costs</span>
+          </div>
+          <div class="bud-stat">
+            <div class="bud-stat-label">Costs (to date) ${info}</div>
+            <div class="bud-stat-value">${_budMoney(BUD.costToDate)}</div>
+            <div class="bud-stat-target">Target: ${_budMoney(BUD.costTarget)}</div>
+          </div>
+          <div class="bud-divider"></div>
+          <div class="bud-stat-row">
+            <div class="bud-stat">
+              <div class="bud-stat-label">Hours ${info}</div>
+              <div class="bud-stat-value sm">${_budMoney(BUD.costToDate)}</div>
+              <div class="bud-stat-sub">${BUD.hoursLogged} of ${BUD.hoursBudget}h</div>
+            </div>
+            <div class="bud-stat">
+              <div class="bud-stat-label">Expenses ${info}</div>
+              <div class="bud-stat-value sm">${_budMoney(BUD.expenses)}</div>
+              <div class="bud-stat-sub">0 expenses</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bud-panel">
+      <div class="bud-panel-head">
+        <button class="bud-panel-tab active" onclick="switchBudPanel('tasklists', this)">Task list budgets</button>
+        <button class="bud-panel-tab" onclick="switchBudPanel('expenses', this)">Expenses</button>
+        <button class="bud-panel-tab" onclick="switchBudPanel('notifications', this)">Notifications</button>
+        <button class="bud-panel-tab" onclick="switchBudPanel('timelogs', this)">Time logs</button>
+        <div class="bud-panel-right">
+          <button class="bud-panel-btn">${filter} Filter</button>
+          <button class="bud-panel-btn">Billable time ${caret}</button>
+          <button class="bud-log-btn">${plus} Log time</button>
+        </div>
+      </div>
+      <div class="bud-panel-body" id="budPanelBody">${_budPanelBody()}</div>
     </div>`;
 }
 
