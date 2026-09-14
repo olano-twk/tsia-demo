@@ -6373,9 +6373,9 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
           </div>
 
           <div class="remi-saving">
-            Saves <strong>$13,600</strong> of cost on a $150,000 fixed fee — margin moves from
-            <strong>33.8%</strong> to <strong>42.9%</strong>, and Sam gets 200 hours back for
-            Phase 3 and 4 delivery.
+            Saves <strong>$13,600</strong> of planned cost on a $150,000 fixed fee — margin moves from
+            <strong>35.2%</strong> to <strong>44.3%</strong>, and Sam gets 200 hours back, which also
+            clears the Phase 1 capacity problem.
           </div>
         </div>
 
@@ -7403,112 +7403,110 @@ function showProject() {
 /* Engagement data — Enterprise AI Rollout for Halcyon Logistics,
    delivered by Meridian Transformation Partners. Fixed fee $150,000,
    12 weeks (Mon 6 Jan – Fri 28 Mar 2025), 820 planned hours.
-   One task list per phase, one task per billable deliverable. */
+   One task list per phase, one task per billable deliverable.
+   Nothing has started yet: every task is planned, nothing is logged. */
+const TODO_TAG = { label: 'Todo', dot: 'var(--palette-orange-40)', bg: 'var(--palette-yellow-10)', color: 'var(--palette-orange-50)' };
+const HIGH_PRI = { label: 'High', color: 'var(--palette-red-50)', bg: 'var(--palette-red-10)' };
+const MED_PRI  = { label: 'Medium', color: 'var(--palette-orange-50)', bg: 'var(--palette-yellow-10)' };
+
 const projectTaskLists = [
   {
-    name: 'Phase 1 · Readiness & Discovery', count: 3, time: '252h / 252h',
+    name: 'Phase 1 · Readiness & Discovery', count: 3, time: '0h / 252h',
     tasks: [
-      { name: 'Stakeholder interviews & workshop synthesis', assignee: { initials: 'SD', bg: 'var(--palette-green-40)' }, tag: { label: 'Done', dot: 'var(--palette-green-40)', bg: 'var(--palette-green-10)', color: 'var(--palette-green-60)' },
+      { name: 'Stakeholder interviews & workshop synthesis', assignee: { initials: 'SD', bg: 'var(--palette-green-40)' }, tag: TODO_TAG,
         dates: { start: 'Mon, 6 Jan 2025', end: 'Fri, 17 Jan 2025', due: false },
-        priority: { label: 'High', color: 'var(--palette-red-50)', bg: 'var(--palette-red-10)' },
-        timeLogged: '96h logged', estimate: '96h estimated',
-        description: `<p>Structured interviews across Halcyon's operating functions to establish where AI could realistically land, and a facilitated synthesis workshop to converge on shared priorities. Consistent question set throughout so responses can be themed and compared.</p>
-      <p><strong>Functions covered</strong></p>
+        priority: HIGH_PRI, timeLogged: '0h logged', estimate: '96h estimated',
+        description: `<p>Structured interviews across Halcyon's operating functions to establish where AI could realistically land, followed by a facilitated synthesis workshop to converge on shared priorities. A consistent question set throughout so responses can be themed and compared.</p>
+      <p><strong>Functions to cover</strong></p>
       <ul><li>Operations &amp; despatch — Marcus Boyd (Head of Operations)</li><li>Fleet &amp; maintenance planning</li><li>Customer service &amp; claims handling</li><li>Finance &amp; commercial</li><li>IT / security (constraints and data handling)</li></ul>
       <p><strong>Deliverable:</strong> interview write-ups, a consolidated themes pack, and the workshop output shared with the Halcyon steering group.</p>`,
         subtasks: [
-          { name: 'Agree interview list with Halcyon Ops', done: true },
-          { name: 'Draft question set & consent notes', done: true },
-          { name: 'Run 14 stakeholder interviews', done: true },
-          { name: 'Facilitate synthesis workshop', done: true },
-          { name: 'Issue consolidated themes pack', done: true },
+          { name: 'Agree interview list with Halcyon Ops', done: false },
+          { name: 'Draft question set & consent notes', done: false },
+          { name: 'Run 14 stakeholder interviews', done: false },
+          { name: 'Facilitate synthesis workshop', done: false },
+          { name: 'Issue consolidated themes pack', done: false },
         ] },
-      { name: 'Use-case discovery', assignee: { initials: 'SD', bg: 'var(--palette-green-40)' }, tag: { label: 'Done', dot: 'var(--palette-green-40)', bg: 'var(--palette-green-10)', color: 'var(--palette-green-60)' },
+      { name: 'Use-case discovery', assignee: { initials: 'SD', bg: 'var(--palette-green-40)' }, tag: TODO_TAG,
         dates: { start: 'Mon, 13 Jan 2025', end: 'Fri, 24 Jan 2025', due: false },
-        priority: { label: 'High', color: 'var(--palette-red-50)', bg: 'var(--palette-red-10)' },
-        timeLogged: '84h logged', estimate: '84h estimated',
+        priority: HIGH_PRI, timeLogged: '0h logged', estimate: '84h estimated',
         description: `<p>Turn the interview themes into a scored long-list of candidate AI use cases, each sized on value and feasibility so the roadmap in Phase 2 has something defensible to prioritise against.</p>
       <p><strong>Scoring dimensions</strong></p>
       <ul><li>Annual value at stake (hours or cost avoided)</li><li>Data readiness and quality</li><li>Integration effort against existing systems</li><li>Change burden on frontline teams</li><li>Risk / regulatory exposure</li></ul>
-      <p><strong>Deliverable:</strong> 23 candidate use cases scored and ranked, with the top 8 written up in detail.</p>`,
+      <p><strong>Deliverable:</strong> a scored and ranked candidate list, with the top 8 written up in detail.</p>`,
         subtasks: [
-          { name: 'Build use-case long-list from interview themes', done: true },
-          { name: 'Agree scoring model with Halcyon', done: true },
-          { name: 'Score and rank all candidates', done: true },
-          { name: 'Write up top 8 in detail', done: true },
+          { name: 'Build use-case long-list from interview themes', done: false },
+          { name: 'Agree scoring model with Halcyon', done: false },
+          { name: 'Score and rank all candidates', done: false },
+          { name: 'Write up top 8 in detail', done: false },
         ] },
-      { name: 'AI Readiness Assessment', assignee: { initials: 'TO', bg: 'var(--palette-blue-40)' }, tag: { label: 'Done', dot: 'var(--palette-green-40)', bg: 'var(--palette-green-10)', color: 'var(--palette-green-60)' },
+      { name: 'AI Readiness Assessment', assignee: { initials: 'TO', bg: 'var(--palette-blue-40)' }, tag: TODO_TAG,
         dates: { start: 'Wed, 15 Jan 2025', end: 'Fri, 24 Jan 2025', due: false },
-        priority: { label: 'High', color: 'var(--palette-red-50)', bg: 'var(--palette-red-10)' },
-        timeLogged: '72h logged', estimate: '72h estimated',
+        priority: HIGH_PRI, timeLogged: '0h logged', estimate: '72h estimated',
         description: `<p>Assess Halcyon against the readiness framework across data, technology, people and governance, producing a baseline score the engagement can be measured against at close.</p>
-      <p><strong>Headline findings</strong></p>
-      <ul><li>Data foundations stronger than expected — telematics and TMS data are clean and centralised</li><li>Governance is the weakest dimension; no acceptable-use position exists today</li><li>Appetite is high in operations, markedly more cautious in finance</li><li>No current inventory of tools already in informal use</li></ul>
-      <p><strong>Baseline score:</strong> 2.4 / 5 overall, to be re-run at the end of Phase 4.</p>`,
+      <p><strong>Assessment covers</strong></p>
+      <ul><li>Data foundations — telematics and TMS data quality and access</li><li>Governance — whether any acceptable-use position exists today</li><li>Appetite and confidence by function</li><li>Shadow-AI audit: tools already in informal use</li></ul>
+      <p><strong>Deliverable:</strong> a baseline score out of 5, to be re-run at the end of Phase 4 to evidence movement.</p>`,
         subtasks: [
-          { name: 'Run readiness survey across 40 staff', done: true },
-          { name: 'Technical review of data & systems', done: true },
-          { name: 'Shadow-AI tool audit', done: true },
-          { name: 'Score against framework & issue report', done: true },
+          { name: 'Run readiness survey across 40 staff', done: false },
+          { name: 'Technical review of data & systems', done: false },
+          { name: 'Shadow-AI tool audit', done: false },
+          { name: 'Score against framework & issue report', done: false },
         ] },
     ]
   },
   {
-    name: 'Phase 2 · Roadmap & Business Case', count: 2, time: '176h / 180h',
+    name: 'Phase 2 · Roadmap & Business Case', count: 2, time: '0h / 180h',
     tasks: [
-      { name: 'Prioritised transformation roadmap', assignee: { initials: 'TO', bg: 'var(--palette-blue-40)' }, tag: { label: 'Done', dot: 'var(--palette-green-40)', bg: 'var(--palette-green-10)', color: 'var(--palette-green-60)' },
+      { name: 'Prioritised transformation roadmap', assignee: { initials: 'TO', bg: 'var(--palette-blue-40)' }, tag: TODO_TAG,
         dates: { start: 'Mon, 27 Jan 2025', end: 'Fri, 7 Feb 2025', due: false },
-        priority: { label: 'High', color: 'var(--palette-red-50)', bg: 'var(--palette-red-10)' },
-        timeLogged: '100h logged', estimate: '100h estimated',
+        priority: HIGH_PRI, timeLogged: '0h logged', estimate: '100h estimated',
         description: `<p>Sequence the scored use cases into a phased 18-month roadmap, balancing early wins against the dependencies that only resolve once governance and data work lands.</p>
-      <p><strong>Roadmap shape</strong></p>
-      <ul><li><strong>Horizon 1 (0–6 months)</strong> — claims triage assistant, despatch summarisation</li><li><strong>Horizon 2 (6–12 months)</strong> — predictive maintenance scheduling</li><li><strong>Horizon 3 (12–18 months)</strong> — dynamic route optimisation</li></ul>
-      <p>Signed off by the Halcyon steering group on 7 Feb.</p>`,
+      <p><strong>Intended shape</strong></p>
+      <ul><li><strong>Horizon 1 (0–6 months)</strong> — the quickest wins from the Phase 1 shortlist</li><li><strong>Horizon 2 (6–12 months)</strong> — items dependent on data or integration work</li><li><strong>Horizon 3 (12–18 months)</strong> — the larger operational bets</li></ul>
+      <p>To be signed off by the Halcyon steering group at the end of the phase.</p>`,
         subtasks: [
-          { name: 'Map dependencies across top 8 use cases', done: true },
-          { name: 'Draft three-horizon sequencing', done: true },
-          { name: 'Pressure-test with IT and Ops', done: true },
-          { name: 'Steering group sign-off', done: true },
+          { name: 'Map dependencies across top 8 use cases', done: false },
+          { name: 'Draft three-horizon sequencing', done: false },
+          { name: 'Pressure-test with IT and Ops', done: false },
+          { name: 'Steering group sign-off', done: false },
         ] },
-      { name: 'ROI business case', assignee: { initials: 'PR', bg: 'var(--palette-purple-40)' }, tag: { label: 'In review', dot: 'var(--palette-neutral-40)', bg: 'var(--color-surface-default)', color: 'var(--color-text-subtle)' },
+      { name: 'ROI business case', assignee: { initials: 'PR', bg: 'var(--palette-purple-40)' }, tag: TODO_TAG,
         dates: { start: 'Mon, 3 Feb 2025', end: 'Fri, 14 Feb 2025', due: false },
-        priority: { label: 'High', color: 'var(--palette-red-50)', bg: 'var(--palette-red-10)' },
-        timeLogged: '76h logged', estimate: '80h estimated',
+        priority: HIGH_PRI, timeLogged: '0h logged', estimate: '80h estimated',
         description: `<p>Build the investment case for the Horizon 1 and 2 use cases — benefit modelling, cost to serve, and a payback profile the Halcyon board can approve against.</p>
-      <p><strong>Headline case</strong></p>
-      <ul><li>Modelled annual benefit: £1.8m across Horizons 1–2</li><li>Run cost including platform and model spend: £310k / year</li><li>Payback: 11 months on the Horizon 1 scope alone</li></ul>
-      <p>Currently with Halcyon finance for challenge before it goes to the board on 26 Feb.</p>`,
+      <p><strong>The case needs to cover</strong></p>
+      <ul><li>Modelled annual benefit per use case</li><li>Run cost including platform and model spend</li><li>Payback profile on the Horizon 1 scope alone</li><li>Sensitivity analysis on adoption rates</li></ul>
+      <p>Goes to Halcyon finance for challenge before the board review.</p>`,
         subtasks: [
-          { name: 'Model benefits per use case', done: true },
-          { name: 'Cost the platform and run model', done: true },
-          { name: 'Sensitivity analysis on adoption rates', done: true },
+          { name: 'Model benefits per use case', done: false },
+          { name: 'Cost the platform and run model', done: false },
+          { name: 'Sensitivity analysis on adoption rates', done: false },
           { name: 'Finance challenge session', done: false },
           { name: 'Board pack final draft', done: false },
         ] },
     ]
   },
   {
-    name: 'Phase 3 · Governance & Enablement', count: 3, time: '34h / 200h',
+    name: 'Phase 3 · Governance & Enablement', count: 3, time: '0h / 200h',
     tasks: [
-      { name: 'Acceptable-use / governance policy', assignee: { initials: 'EM', bg: 'var(--palette-pink-40)' }, tag: { label: 'Needs input', dot: 'var(--palette-pink-45)', bg: 'var(--palette-pink-10)', color: 'var(--palette-pink-45)' },
-        dates: { start: 'Mon, 17 Feb 2025', end: 'Wed, 26 Feb 2025', due: true },
-        priority: { label: 'High', color: 'var(--palette-red-50)', bg: 'var(--palette-red-10)' },
-        timeLogged: '22h logged', estimate: '70h estimated',
+      { name: 'Acceptable-use / governance policy', assignee: { initials: 'EM', bg: 'var(--palette-pink-40)' }, tag: TODO_TAG,
+        dates: { start: 'Mon, 17 Feb 2025', end: 'Wed, 26 Feb 2025', due: false },
+        priority: HIGH_PRI, timeLogged: '0h logged', estimate: '70h estimated',
         description: `<p>Draft the acceptable-use position and supporting governance model — what staff may use, with which data, under what approval, and who owns the decision when something new appears.</p>
-      <p><strong>Open questions blocking sign-off</strong></p>
+      <p><strong>Questions this needs to settle</strong></p>
       <ul><li>Does customer manifest data count as restricted under Halcyon's existing classification?</li><li>Who approves new tools — IT alone, or a joint panel with Ops?</li><li>Is the policy contractual for subcontracted drivers, or guidance only?</li></ul>
-      <p style="color:var(--palette-pink-45)"><strong>Needs input:</strong> waiting on Halcyon legal for the data classification question before the draft can go to review.</p>`,
+      <p>Halcyon legal will need to confirm the data classification question before the draft can go to review.</p>`,
         subtasks: [
-          { name: 'Benchmark against three comparable logistics policies', done: true },
-          { name: 'Draft acceptable-use position', done: true },
+          { name: 'Benchmark against three comparable logistics policies', done: false },
+          { name: 'Draft acceptable-use position', done: false },
           { name: 'Resolve data classification with legal', done: false },
           { name: 'Define tool approval route', done: false },
           { name: 'Steering group review', done: false },
         ] },
-      { name: 'Champion programme playbook', assignee: { initials: 'EM', bg: 'var(--palette-pink-40)' }, tag: { label: 'Todo', dot: 'var(--palette-orange-40)', bg: 'var(--palette-yellow-10)', color: 'var(--palette-orange-50)' },
+      { name: 'Champion programme playbook', assignee: { initials: 'EM', bg: 'var(--palette-pink-40)' }, tag: TODO_TAG,
         dates: { start: 'Thu, 20 Feb 2025', end: 'Tue, 4 Mar 2025', due: false },
-        priority: { label: 'Medium', color: 'var(--palette-orange-50)', bg: 'var(--palette-yellow-10)' },
-        timeLogged: '0h logged', estimate: '60h estimated',
+        priority: MED_PRI, timeLogged: '0h logged', estimate: '60h estimated',
         description: `<p>A repeatable playbook for standing up and running the champion network — how champions are selected, what they are accountable for, how they are supported, and how the network is sustained past the engagement.</p>
       <p><strong>Contents</strong></p>
       <ul><li>Champion role description and time commitment</li><li>Selection criteria and nomination route by depot</li><li>Onboarding pack and monthly cadence</li><li>Escalation path into the governance panel</li><li>Recognition and retention approach</li></ul>`,
@@ -7518,16 +7516,15 @@ const projectTaskLists = [
           { name: 'Build onboarding pack', done: false },
           { name: 'Define cadence and escalation route', done: false },
         ] },
-      { name: 'Training curriculum & prompt library', assignee: { initials: 'SD', bg: 'var(--palette-green-40)' }, tag: { label: 'In progress', dot: 'var(--palette-blue-40)', bg: 'var(--palette-blue-10)', color: 'var(--palette-blue-50)' },
+      { name: 'Training curriculum & prompt library', assignee: { initials: 'SD', bg: 'var(--palette-green-40)' }, tag: TODO_TAG,
         dates: { start: 'Wed, 19 Feb 2025', end: 'Fri, 7 Mar 2025', due: false },
-        priority: { label: 'High', color: 'var(--palette-red-50)', bg: 'var(--palette-red-10)' },
-        timeLogged: '12h logged', estimate: '70h estimated',
+        priority: HIGH_PRI, timeLogged: '0h logged', estimate: '70h estimated',
         description: `<p>Role-based curriculum plus a starter prompt library grounded in Halcyon's actual work — despatch notes, claims correspondence, maintenance records — rather than generic examples.</p>
       <p><strong>Curriculum tracks</strong></p>
       <ul><li>All-staff foundation (60 mins)</li><li>Operations &amp; despatch deep-dive</li><li>Customer service &amp; claims</li><li>Managers — oversight, review and escalation</li></ul>
-      <p>The Readiness Agent is drafting first-pass prompt entries from the Phase 1 use-case write-ups; Sam is editing and Tom reviewing before anything enters the library.</p>`,
+      <p>The Readiness Agent will draft first-pass prompt entries from the Phase 1 use-case write-ups, with Sam editing and Tom reviewing before anything enters the library.</p>`,
         subtasks: [
-          { name: 'Define role-based tracks', done: true },
+          { name: 'Define role-based tracks', done: false },
           { name: 'Agent first-pass prompt drafting', done: false },
           { name: 'Edit and verify prompt entries', done: false },
           { name: 'Build foundation session deck', done: false },
@@ -7538,11 +7535,10 @@ const projectTaskLists = [
   {
     name: 'Phase 4 · Rollout & Adoption', count: 3, time: '0h / 188h',
     tasks: [
-      { name: 'Launch communication plan', assignee: { initials: 'EM', bg: 'var(--palette-pink-40)' }, tag: { label: 'Backlog', dot: 'var(--palette-neutral-40)', bg: 'var(--color-surface-default)', color: 'var(--color-text-subtle)' },
+      { name: 'Launch communication plan', assignee: { initials: 'EM', bg: 'var(--palette-pink-40)' }, tag: TODO_TAG,
         dates: { start: 'Mon, 10 Mar 2025', end: 'Tue, 18 Mar 2025', due: false },
-        priority: { label: 'Medium', color: 'var(--palette-orange-50)', bg: 'var(--palette-yellow-10)' },
-        timeLogged: '0h logged', estimate: '60h estimated',
-        description: `<p>Sequenced communications across the three depots and head office, covering the launch itself and the first six weeks of adoption — including the awkward questions about job security that surfaced repeatedly in Phase 1 interviews.</p>
+        priority: MED_PRI, timeLogged: '0h logged', estimate: '60h estimated',
+        description: `<p>Sequenced communications across the three depots and head office, covering the launch itself and the first six weeks of adoption — including the questions about job security that Phase 1 interviews are likely to surface.</p>
       <p><strong>Channels</strong></p>
       <ul><li>Depot briefings delivered by champions</li><li>Ops Director all-hands</li><li>Driver app notifications and toolbox talks</li><li>Line-manager FAQ pack</li></ul>`,
         subtasks: [
@@ -7551,10 +7547,9 @@ const projectTaskLists = [
           { name: 'Sequence depot briefings', done: false },
           { name: 'Agree launch date with Halcyon', done: false },
         ] },
-      { name: 'Adoption dashboard', assignee: { initials: 'SD', bg: 'var(--palette-green-40)' }, tag: { label: 'Backlog', dot: 'var(--palette-neutral-40)', bg: 'var(--color-surface-default)', color: 'var(--color-text-subtle)' },
+      { name: 'Adoption dashboard', assignee: { initials: 'SD', bg: 'var(--palette-green-40)' }, tag: TODO_TAG,
         dates: { start: 'Wed, 12 Mar 2025', end: 'Mon, 24 Mar 2025', due: false },
-        priority: { label: 'Medium', color: 'var(--palette-orange-50)', bg: 'var(--palette-yellow-10)' },
-        timeLogged: '0h logged', estimate: '68h estimated',
+        priority: MED_PRI, timeLogged: '0h logged', estimate: '68h estimated',
         description: `<p>A dashboard Halcyon runs themselves after handover, tracking adoption depth rather than licence counts — who is using what, on which work, and whether the modelled benefits are materialising.</p>
       <p><strong>Measures</strong></p>
       <ul><li>Weekly active users by depot and function</li><li>Use-case coverage against the Horizon 1 list</li><li>Hours saved, sampled against the benefit model</li><li>Policy exceptions and escalations raised</li></ul>`,
@@ -7564,11 +7559,10 @@ const projectTaskLists = [
           { name: 'Build dashboard', done: false },
           { name: 'Handover session with Halcyon analytics', done: false },
         ] },
-      { name: 'ROI report', assignee: { initials: 'PR', bg: 'var(--palette-purple-40)' }, tag: { label: 'Backlog', dot: 'var(--palette-neutral-40)', bg: 'var(--color-surface-default)', color: 'var(--color-text-subtle)' },
+      { name: 'ROI report', assignee: { initials: 'PR', bg: 'var(--palette-purple-40)' }, tag: TODO_TAG,
         dates: { start: 'Wed, 19 Mar 2025', end: 'Fri, 28 Mar 2025', due: false },
-        priority: { label: 'High', color: 'var(--palette-red-50)', bg: 'var(--palette-red-10)' },
-        timeLogged: '0h logged', estimate: '60h estimated',
-        description: `<p>Closing report for the Halcyon board — what was delivered, what it cost, what has landed so far against the Phase 2 business case, and a re-run of the readiness assessment against the 2.4 baseline.</p>
+        priority: HIGH_PRI, timeLogged: '0h logged', estimate: '60h estimated',
+        description: `<p>Closing report for the Halcyon board — what was delivered, what it cost, what has landed against the Phase 2 business case, and a re-run of the readiness assessment against the Phase 1 baseline.</p>
       <p><strong>Sections</strong></p>
       <ul><li>Delivery summary against the 820-hour plan</li><li>Readiness re-score vs. baseline</li><li>Early benefit realisation from the adoption dashboard</li><li>Recommendations and Horizon 2 next steps</li></ul>`,
         subtasks: [
@@ -7719,8 +7713,9 @@ const schedBarColors = {
 const SCHED_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const SCHED_DOW    = ['S','M','T','W','T','F','S'];
 
-/* The prototype's "today" — the project sits in Feb 2025. */
-const SCHED_TODAY  = new Date(2025, 1, 19);
+/* The prototype's "today" — day one of the engagement. Nothing has
+   been delivered yet, so every allocation below is still planned. */
+const SCHED_TODAY  = new Date(2025, 0, 6);
 
 let schedWeekStart = _schedMonday(SCHED_TODAY);
 let schedView      = 'people';
@@ -8139,41 +8134,34 @@ function renderFinance() {
  * derived from the engagement plan so the numbers agree with the
  * Rates table, the Schedule and the Ask AI answers:
  *   fee $150,000 · planned cost $97,200 · target profit $52,800 (35.2%)
- * Actuals are at week 7 of 12 — 462h logged, $58,900 of cost.
+ * Nothing is logged yet — the engagement starts Mon 6 Jan 2025.
  * ───────────────────────────────────────────────────────────────── */
 const BUD = {
   fee: 150000,
-  costToDate: 58900,
+  costToDate: 0,
   costTarget: 97200,
   profitTarget: 52800,
   marginTarget: 35.2,
-  hoursLogged: 462,
+  hoursLogged: 0,
   hoursBudget: 820,
-  billableToDate: 96400,
+  billableToDate: 0,
   expenses: 0,
-  week: 7, weeks: 12,
-  /* Cumulative cost by week — weeks 1-7 actual, 8-12 forecast.
-     The forecast lands at $99,300, i.e. 33.8% margin, 1.4 points
-     under plan because Phase 1 over-ran. */
-  actual:   [0, 8800, 17600, 26400, 34133, 41867, 49600, 58900],
-  forecast: [58900, 66980, 75060, 83140, 91220, 99300],
+  week: 1, weeks: 12,
+  /* Nothing is logged yet, so there is no actual line — the whole
+     curve is the planned burn to $97,200 across the four phases. */
+  actual:   [0],
+  forecast: [0, 8800, 17600, 26400, 34133, 41867, 49600, 57400, 65200, 73000, 81067, 89133, 97200],
 };
 
 const budPhases = [
-  { name: 'Phase 1 · Readiness & Discovery',  budget: 252, logged: 252 },
-  { name: 'Phase 2 · Roadmap & Business Case', budget: 180, logged: 176 },
-  { name: 'Phase 3 · Governance & Enablement', budget: 200, logged: 34  },
-  { name: 'Phase 4 · Rollout & Adoption',      budget: 188, logged: 0   },
+  { name: 'Phase 1 · Readiness & Discovery',  budget: 252, logged: 0 },
+  { name: 'Phase 2 · Roadmap & Business Case', budget: 180, logged: 0 },
+  { name: 'Phase 3 · Governance & Enablement', budget: 200, logged: 0 },
+  { name: 'Phase 4 · Rollout & Adoption',      budget: 188, logged: 0 },
 ];
 
-const budTimeLogs = [
-  { who: 'EM', task: 'Acceptable-use / governance policy', date: 'Wed, 19 Feb', hours: 7,  billable: 1400, cost: 840 },
-  { who: 'SD', task: 'Training curriculum & prompt library', date: 'Wed, 19 Feb', hours: 5,  billable: 750,  cost: 450 },
-  { who: 'RA', task: 'Prompt library first-pass drafting',   date: 'Wed, 19 Feb', hours: 4,  billable: 600,  cost: 40  },
-  { who: 'EM', task: 'Acceptable-use / governance policy', date: 'Tue, 18 Feb', hours: 7,  billable: 1400, cost: 840 },
-  { who: 'PR', task: 'ROI business case',                  date: 'Fri, 14 Feb', hours: 2,  billable: 700,  cost: 400 },
-  { who: 'TO', task: 'Prioritised transformation roadmap', date: 'Fri, 7 Feb',  hours: 8,  billable: 2000, cost: 1200 },
-];
+const budTimeLogs = [];   /* nothing logged yet */
+
 
 let budPanelTab = 'tasklists';
 
@@ -8192,9 +8180,11 @@ function _budChart() {
   const x = w => padL + (w / weeks) * (W - padL - padR);
   const y = v => padT + (1 - v / maxY) * (H - padT - padB);
 
+  const fStart = BUD.actual.length - 1;          /* forecast picks up where actual stops */
+  const hasActual = BUD.actual.length > 1;
   const pts  = BUD.actual.map((v, i) => `${x(i)},${y(v)}`).join(' ');
-  const fpts = BUD.forecast.map((v, i) => `${x(BUD.week + i)},${y(v)}`).join(' ');
-  const area = `${padL},${y(0)} ${pts} ${x(BUD.week)},${y(0)}`;
+  const fpts = BUD.forecast.map((v, i) => `${x(fStart + i)},${y(v)}`).join(' ');
+  const area = `${padL},${y(0)} ${pts} ${x(fStart)},${y(0)}`;
 
   const grid = [0, 37500, 75000, 112500, 150000].map(v => `
     <line x1="${padL}" y1="${y(v)}" x2="${W - padR}" y2="${y(v)}" stroke="var(--color-border-separator)" stroke-width="1"/>
@@ -8209,11 +8199,11 @@ function _budChart() {
       <line x1="${padL}" y1="${y(BUD.costTarget)}" x2="${W - padR}" y2="${y(BUD.costTarget)}"
             stroke="var(--palette-green-40)" stroke-width="1.5" stroke-dasharray="5 4"/>
       <text x="${W - padR}" y="${y(BUD.costTarget) - 6}" text-anchor="end" font-size="10" fill="var(--palette-green-60)">Planned cost $97,200</text>
-      <polygon points="${area}" fill="var(--palette-indigo-40)" opacity="0.10"/>
-      <polyline points="${pts}" fill="none" stroke="var(--palette-indigo-40)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      ${hasActual ? `<polygon points="${area}" fill="var(--palette-indigo-40)" opacity="0.10"/>
+      <polyline points="${pts}" fill="none" stroke="var(--palette-indigo-40)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>` : ''}
       <polyline points="${fpts}" fill="none" stroke="var(--palette-neutral-30)" stroke-width="2.5"
                 stroke-dasharray="6 5" stroke-linejoin="round" stroke-linecap="round"/>
-      <circle cx="${x(BUD.week)}" cy="${y(BUD.costToDate)}" r="4" fill="var(--palette-indigo-40)"/>
+      ${hasActual ? `<circle cx="${x(fStart)}" cy="${y(BUD.costToDate)}" r="4" fill="var(--palette-indigo-40)"/>` : ''}
     </svg>`;
 }
 
@@ -8250,6 +8240,9 @@ function _budPanelBody() {
   }
 
   if (budPanelTab === 'timelogs') {
+    if (!budTimeLogs.length) {
+      return `<div class="bud-empty">No time logged yet — the engagement starts on 6 Jan 2025.</div>`;
+    }
     return `
       <table class="bud-table">
         <thead><tr>
@@ -8316,7 +8309,9 @@ function _budgetsHTML() {
 
     <div class="bud-banner">
       ${info}
-      <span>Week <strong>${BUD.week}</strong> of ${BUD.weeks} — this budget covers the full engagement and closes on 28 Mar 2025.</span>
+      <span>${BUD.costToDate
+        ? `Week <strong>${BUD.week}</strong> of ${BUD.weeks} — this budget covers the full engagement and closes on 28 Mar 2025.`
+        : `This budget begins on <strong>6 Jan 2025</strong> and covers the full 12-week engagement. Nothing is logged against it yet.`}</span>
       <button class="bud-banner-btn">View budget history</button>
     </div>
 
@@ -8344,8 +8339,8 @@ function _budgetsHTML() {
           <div class="bud-chart">
             ${_budChart()}
             <div class="bud-chart-legend">
-              <span class="bud-legend-key"><span class="bud-legend-swatch"></span> Cost to date</span>
-              <span class="bud-legend-key"><span class="bud-legend-swatch forecast"></span> Forecast to completion</span>
+              ${BUD.costToDate ? '<span class="bud-legend-key"><span class="bud-legend-swatch"></span> Cost to date</span>' : ''}
+              <span class="bud-legend-key"><span class="bud-legend-swatch forecast"></span> ${BUD.costToDate ? 'Forecast to completion' : 'Planned burn'}</span>
               <span class="bud-legend-key"><span class="bud-legend-swatch fee"></span> Planned cost</span>
             </div>
           </div>
@@ -8374,7 +8369,8 @@ function _budgetsHTML() {
           <div class="bud-stat">
             <div class="bud-stat-label">Forecast at completion ${info}</div>
             <div class="bud-stat-value sm">${fcMargin.toFixed(1)}%</div>
-            <div class="bud-stat-target">${(BUD.marginTarget - fcMargin).toFixed(1)} points under plan</div>
+            <div class="bud-stat-target">${Math.abs(BUD.marginTarget - fcMargin) < 0.05
+              ? 'On plan' : (BUD.marginTarget - fcMargin).toFixed(1) + ' points under plan'}</div>
           </div>
           <div class="bud-card-links">
             <button class="bud-link">View profitability report</button>
@@ -11941,56 +11937,55 @@ function _projectScopedReply(text) {
   const q = text.toLowerCase();
 
   if (q.includes('milestone') || q.includes('hit the next')) {
-    return `<p>The next milestone for <strong>Enterprise AI Rollout</strong> is <strong>Phase 3 governance sign-off</strong>, due <strong>Wed 26 Feb</strong> — <strong>7 days away</strong>.</p>
-<p>Based on current progress, this is <strong>at risk</strong>:</p>
+    return `<p>The first milestone for <strong>Enterprise AI Rollout</strong> is <strong>Phase 1 sign-off</strong>, due <strong>Fri 24 Jan</strong> — three weeks out.</p>
+<p>Nothing has started yet, and one thing in the plan is worth resolving before it does:</p>
 <ul>
-  <li><strong>Acceptable-use / governance policy</strong> is waiting on Halcyon legal for the data classification question — no response in 4 days.</li>
-  <li><strong>Champion programme playbook</strong> hasn't started and shares the same owner, Elena Marsh, who is already at 12h/day Thu–Fri this week.</li>
-  <li>At the current pace there's a <strong>~65% chance</strong> Phase 3 sign-off slips into the week of 3 Mar.</li>
+  <li><strong>Stakeholder interviews</strong> and <strong>use-case discovery</strong> overlap from 13 Jan, and both sit with Sam Delaney at 8h/day — 16 hours a day across that week.</li>
+  <li>Phase 1 as planned asks <strong>200 junior hours in three weeks</strong>, which is 67 a week against a 40-hour week.</li>
+  <li>Tom Okafor has no allocation until 15 Jan, so there is senior cover available if you want it.</li>
 </ul>
-<p>Recommended action: chase Halcyon legal today, and move part of the playbook to Tom Okafor — he has 31h unallocated this week.</p>`;
+<p>Left as drawn, Phase 1 is the milestone most likely to slip. Remi has a resourcing suggestion on the Schedule tab that clears it.</p>`;
   }
 
   if (q.includes('logged time') || q.includes('time this week')) {
-    return `<p>Of the <strong>5 resources</strong> allocated to Enterprise AI Rollout this week, <strong>2 haven't logged any time</strong>:</p>
+    return `<p><strong>No time has been logged yet</strong> — the engagement starts on <strong>Mon 6 Jan</strong>.</p>
 <ul>
-  <li><strong>Tom Okafor</strong> — 9h allocated to curriculum review, 0h logged (last active Mon)</li>
-  <li><strong>Priya Raman</strong> — no allocation this week, at the Northbridge client board all week</li>
-  <li><strong>Readiness Agent</strong> — 12h-equivalent recorded automatically against prompt drafting</li>
+  <li><strong>820 hours</strong> are planned across the four phases</li>
+  <li><strong>Sam Delaney</strong> carries 400 of them, just under half the engagement</li>
+  <li><strong>Tom Okafor</strong> 200h, <strong>Elena Marsh</strong> 160h, <strong>Priya Raman</strong> 60h</li>
+  <li>The <strong>Readiness Agent</strong> is at zero at baseline — nothing is allocated to it yet</li>
 </ul>
-<p>The engagement has <strong>34h logged against Phase 3</strong> so far versus a phase budget of <strong>200h</strong>. Against the 820-hour plan overall, <strong>462h</strong> are logged with 9 weeks elapsed — tracking close to plan.</p>`;
+<p>Week one is light: Sam on stakeholder interviews and Priya on discovery oversight. I'll flag anyone drifting from plan once time starts landing.</p>`;
   }
 
   if (q.includes('blocker') || q.includes('blocked')) {
-    return `<p>There are <strong>3 active blockers</strong> on Enterprise AI Rollout right now:</p>
+    return `<p>Nothing is blocked — the engagement hasn't started. There are <strong>two risks in the plan</strong> worth clearing first:</p>
 <ul>
-  <li><strong>Acceptable-use / governance policy</strong> — blocked on Halcyon legal confirming whether customer manifest data is restricted. Nothing else in Phase 3 can be signed off until this lands. <em>Owner: Elena Marsh.</em></li>
-  <li><strong>ROI business case</strong> — with Halcyon finance for challenge since 14 Feb, and it needs to be final for the board on 26 Feb. <em>Owner: Priya Raman.</em></li>
-  <li><strong>Elena Marsh is over-allocated</strong> — 12h/day Thursday and Friday across the policy and the playbook, against an 8h day.</li>
+  <li><strong>Phase 1 is over-committed.</strong> 200 junior hours in three weeks is 67 a week against Sam Delaney's 40. The overlap week of 13 Jan puts him at 16h/day across two tasks.</li>
+  <li><strong>The governance policy has an external dependency.</strong> Halcyon legal need to confirm whether customer manifest data is restricted before the Phase 3 draft can go to review — worth raising in the Phase 1 interviews rather than waiting until February.</li>
 </ul>
-<p>Clearing the legal question and rebalancing Elena's Thursday–Friday load would take the Phase 3 slip risk from ~65% down to roughly 25%.</p>`;
+<p>The first is the one that moves money. Remi's suggestion on the Schedule tab resolves it and adds 9 points of margin.</p>`;
   }
 
   if ((q.includes('margin') || q.includes('profit')) && !q.includes('planned')) {
-    return `<p><strong>Enterprise AI Rollout</strong> is a fixed-fee engagement at <strong>$150,000</strong> over 820 planned hours.</p>
+    return `<p><strong>Enterprise AI Rollout</strong> is fixed fee at <strong>$150,000</strong> over 820 planned hours. Nothing is logged yet, so this is all plan:</p>
 <ul>
-  <li><strong>Blended billable value delivered so far:</strong> $96,400 against 462h logged</li>
-  <li><strong>Cost to serve so far:</strong> $58,900 — margin <strong>38.9%</strong></li>
-  <li>The <strong>Readiness Agent</strong> carries a $10/hr cost rate against a $150/hr equivalent, so the 12h it drafted this week contributes <strong>$1,680</strong> of margin on <strong>$120</strong> of cost.</li>
-  <li>Risk: Phase 1 consumed <strong>252h</strong> against a junior-heavy plan that assumed 200h from one consultant in three weeks. That over-run is the main pressure on the fixed fee.</li>
+  <li><strong>Planned cost to serve:</strong> $97,200</li>
+  <li><strong>Planned margin:</strong> $52,800 — <strong>35.2%</strong></li>
+  <li>The <strong>Readiness Agent</strong> carries a $10/hr cost rate against $150/hr equivalent billable, and has no hours allocated at baseline — every hour moved to it is roughly $80 of margin the plan doesn't yet count.</li>
 </ul>
-<p>At the current burn the engagement lands around <strong>33.8% margin</strong>, 1.4 points under the 35.2% planned on the fixed fee.</p>`;
+<p>The live risk is Phase 1: 200 junior hours in three weeks exceeds one consultant's capacity, and covering the overflow at senior rates would take this to 33.8%.</p>`;
   }
 
   if (q.includes('summarise') || q.includes('summarize') || q.includes('progress')) {
-    return `<p>Here's a progress summary for <strong>Enterprise AI Rollout</strong> — week 7 of 12:</p>
+    return `<p><strong>Enterprise AI Rollout</strong> hasn't started — here's the shape of it:</p>
 <ul>
-  <li>✅ <strong>Phases 1 and 2 complete</strong> — readiness assessment delivered at a 2.4/5 baseline, roadmap signed off 7 Feb</li>
-  <li>🔄 <strong>Phase 3 in progress</strong> — governance policy drafting, training curriculum and prompt library underway</li>
-  <li>🔴 <strong>1 task needs input</strong> — acceptable-use policy blocked on Halcyon legal, due Wed 26 Feb</li>
-  <li>⏳ <strong>Phase 4 not started</strong> — launch comms, adoption dashboard and ROI report open from 10 Mar</li>
+  <li>📋 <strong>11 deliverables across 4 phases</strong>, all planned, none started</li>
+  <li>📅 <strong>12 weeks</strong>, Mon 6 Jan to Fri 28 Mar 2025</li>
+  <li>⏱ <strong>820 hours</strong> planned — 252h Phase 1, 180h Phase 2, 200h Phase 3, 188h Phase 4</li>
+  <li>💰 <strong>$150,000 fixed fee</strong> against $97,200 of planned cost — 35.2% margin</li>
 </ul>
-<p><strong>462h logged</strong> of the 820-hour plan with 5 weeks to run. The ROI business case is still with Halcyon finance ahead of the board on 26 Feb, and Elena Marsh is over-allocated Thursday and Friday.</p>`;
+<p>First up is <strong>stakeholder interviews</strong> from Mon 6 Jan. Before the team starts, Phase 1's junior loading is worth a second look — it asks more of Sam Delaney than a 40-hour week allows.</p>`;
   }
 
   return null;
@@ -12012,62 +12007,61 @@ function _financeReply(text) {
   <li>Readiness Agent — 0h at baseline × $10 = <strong>$0</strong></li>
 </ul>
 <p><strong>Planned margin: $52,800 — 35.2%.</strong></p>
-<p>Two things worth knowing. At rate card those 820 hours would bill at <strong>$163,000</strong>, so the fixed fee already concedes <strong>$13,000</strong>. And every hour moved from the junior consultant to the Readiness Agent swaps <strong>$90</strong> of cost for <strong>$10</strong> — the 12h it drafted this week is <strong>$960</strong> of margin that wasn't in the plan.</p>
-<p>Current forecast is <strong>33.8%</strong>, 1.4 points under plan.</p>`;
+<p>Two things worth knowing. At rate card those 820 hours would bill at <strong>$163,000</strong>, so the fixed fee already concedes <strong>$13,000</strong>. And the Readiness Agent is at zero at baseline — every hour moved to it from the junior consultant swaps <strong>$90</strong> of cost for <strong>$10</strong>.</p>
+<p>Nothing is logged against the engagement yet, so the plan is also the forecast.</p>`;
   }
 
   if (q.includes('phase') && (q.includes('cost') || q.includes('expensive') || q.includes('most'))) {
-    return `<p><strong>Phase 1 · Readiness &amp; Discovery</strong> carries the most, at <strong>$28,500</strong> — 29% of the engagement's cost against 31% of its hours.</p>
+    return `<p><strong>Phase 1 · Readiness &amp; Discovery</strong> carries the most, at <strong>$26,400</strong> of planned cost — 27% of the engagement against 31% of its hours.</p>
 <ul>
-  <li><strong>Phase 1 — Readiness &amp; Discovery</strong> · 252h · planned $26,400 · actual <strong>$28,500</strong></li>
-  <li><strong>Phase 4 — Rollout &amp; Adoption</strong> · 188h · planned $24,200</li>
-  <li><strong>Phase 3 — Governance &amp; Enablement</strong> · 200h · planned $23,400</li>
-  <li><strong>Phase 2 — Roadmap &amp; Business Case</strong> · 180h · planned $23,200</li>
+  <li><strong>Phase 1 — Readiness &amp; Discovery</strong> · 252h · <strong>$26,400</strong></li>
+  <li><strong>Phase 4 — Rollout &amp; Adoption</strong> · 188h · $24,200</li>
+  <li><strong>Phase 3 — Governance &amp; Enablement</strong> · 200h · $23,400</li>
+  <li><strong>Phase 2 — Roadmap &amp; Business Case</strong> · 180h · $23,200</li>
 </ul>
 <p>Phase 1 is the largest block of hours in the engagement, so it tops the list even though it is the most junior-weighted phase.</p>
-<p><strong>It is also the only phase over plan, by $2,100.</strong> The plan put 200 junior hours into three weeks — 67 hours a week against a 40-hour week — so roughly <strong>35 of those hours</strong> were picked up by Tom Okafor at $150 rather than Sam Delaney at $90. That $2,100 is the entire gap between the $97,200 planned cost and the $99,300 forecast, and the whole of the 1.4-point margin shortfall.</p>
-<p>Worth noting for the phases still to run: the same overflow handled by the <strong>Readiness Agent</strong> would cost $10 an hour rather than $150.</p>`;
+<p><strong>It also carries the delivery risk worth watching.</strong> The plan puts <strong>200 junior hours into three weeks</strong> — 67 hours a week against a 40-hour week. As drawn, Sam Delaney cannot deliver it alone, so either the phase stretches or hours get picked up by Tom Okafor at $150 rather than $90. Thirty-five hours moving that way would cost $2,100 and take the margin to 33.8%.</p>
+<p>The cleaner option is the <strong>Readiness Agent</strong> at $10 an hour. Remi has a suggestion staged on the Schedule tab that does exactly that.</p>`;
   }
 
   if (q.includes('drifting') || (q.includes('margin') && (q.includes('which project') || q.includes('portfolio')))) {
-    return `<p><strong>3 of 11 active projects</strong> are drifting more than 2 points below their planned margin:</p>
+    return `<p><strong>2 of 11 active projects</strong> are drifting more than 2 points below their planned margin:</p>
 <ul>
   <li><strong>Depot Network Review</strong> (Halcyon Logistics) — 24.1% against 32% planned. 118h over plan with two weeks left; the overage is all senior time.</li>
-  <li><strong>CRM Migration</strong> (Blue Horizon) — 27.6% against 34% planned. Scope added in January was never re-quoted.</li>
-  <li><strong>Enterprise AI Rollout</strong> (Halcyon Logistics) — 33.8% against 35.2% planned. Phase 1 used 252h against a plan that assumed one junior could deliver 200h in three weeks.</li>
+  <li><strong>CRM Migration</strong> (Blue Horizon) — 27.6% against 34% planned. Scope added in December was never re-quoted.</li>
 </ul>
-<p>The other eight are at or above plan. <strong>Depot Network Review</strong> is the one to act on — it's the only one where the gap is still widening.</p>`;
+<p><strong>Enterprise AI Rollout</strong> hasn't started, so it isn't drifting yet — but it is the one to watch. Phase 1 assumes a single junior consultant can deliver 200 hours in three weeks, and covering that overflow at senior rates would take it from 35.2% to 33.8% before any work lands.</p>`;
   }
 
   if (q.includes('unbilled')) {
-    return `<p>There's <strong>$84,200 of unbilled time</strong> across the portfolio right now, <strong>$31,900</strong> of it more than 30 days old.</p>
+    return `<p>There's <strong>$63,600 of unbilled time</strong> across the portfolio right now, <strong>$31,900</strong> of it more than 30 days old.</p>
 <ul>
-  <li><strong>Blue Horizon</strong> — $38,400 across CRM Migration and Client Portal v2. Both are time and materials; nothing has been invoiced since 31 Jan.</li>
-  <li><strong>Halcyon Logistics</strong> — $29,700, but Enterprise AI Rollout is fixed fee, so only the $9,100 on Depot Network Review is actually billable.</li>
+  <li><strong>Blue Horizon</strong> — $38,400 across CRM Migration and Client Portal v2. Both are time and materials; nothing has been invoiced since 30 Nov.</li>
+  <li><strong>Halcyon Logistics</strong> — $9,100, all on Depot Network Review. Enterprise AI Rollout is fixed fee and hasn't started, so nothing there is billable yet.</li>
   <li><strong>Global Media</strong> — $16,100, all within terms.</li>
 </ul>
-<p>The oldest item is <strong>$12,300 on CRM Migration</strong> from work done in December. Want me to draft the invoice schedule for Blue Horizon before month-end?</p>`;
+<p>The oldest item is <strong>$12,300 on CRM Migration</strong>. Want me to draft the invoice schedule for Blue Horizon before month-end?</p>`;
   }
 
   if (q.includes('budget burn') || q.includes('month-end') || q.includes('month end')) {
     return `<p>With <strong>7 working days to month-end</strong>, here's where budgets land if the current burn holds:</p>
 <ul>
-  <li>🔴 <strong>Depot Network Review</strong> — 94% of budget consumed, 3 weeks of work left. Will breach around 6 Mar.</li>
-  <li>🟠 <strong>Enterprise AI Rollout</strong> — 56% of the 820 hours used at week 7 of 12. On plan, but Phase 3 is running hot on change-management time.</li>
+  <li>🔴 <strong>Depot Network Review</strong> — 94% of budget consumed, 3 weeks of work left. Will breach in early February.</li>
   <li>🟠 <strong>CRM Migration</strong> — 88% consumed with the UAT phase not started.</li>
+  <li>🟢 <strong>Enterprise AI Rollout</strong> — starts 6 Jan, nothing consumed of the 820 hours yet.</li>
   <li>🟢 <strong>8 other projects</strong> tracking at or under plan.</li>
 </ul>
-<p>Two projects need a conversation before the month closes: <strong>Depot Network Review</strong> needs a change request, and <strong>CRM Migration</strong> needs the January scope re-quoted.</p>`;
+<p>Two need a conversation before the month closes: <strong>Depot Network Review</strong> needs a change request, and <strong>CRM Migration</strong> needs the December scope re-quoted.</p>`;
   }
 
   if (q.includes('profitable') || q.includes('most profitable')) {
     return `<p>Client profitability for the quarter to date, by realised margin:</p>
 <ul>
   <li><strong>Global Media</strong> — $71,400 on $198,000 billed, <strong>36.1%</strong>. Consistently the cleanest delivery; almost no write-offs.</li>
-  <li><strong>Halcyon Logistics</strong> — $64,900 on $205,000 billed, <strong>31.7%</strong>. Enterprise AI Rollout is carrying it; Depot Network Review is dragging it down.</li>
+  <li><strong>Halcyon Logistics</strong> — $64,900 on $205,000 billed, <strong>31.7%</strong>. Depot Network Review is dragging it down; Enterprise AI Rollout starts 6 Jan at a planned 35.2%.</li>
   <li><strong>Blue Horizon</strong> — $38,200 on $164,000 billed, <strong>23.3%</strong>. Two projects over plan and the slowest to invoice.</li>
 </ul>
-<p>Halcyon is the account to watch — it's the largest by revenue and the Enterprise AI Rollout engagement is the template you'd want to repeat, particularly the agent resource model.</p>`;
+<p>Halcyon is the account to watch — it's the largest by revenue, and Enterprise AI Rollout is the engagement to get right, particularly the agent resource model.</p>`;
   }
 
   return null;
