@@ -3884,6 +3884,119 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
   font-size: 12px; color: var(--color-text-disabled);
 }
 
+/*
+ * ─────────────────────────────────────────────────────────────────
+ * 🧩 Project › Finance — secondary tabs + Rates table
+ * Rates lists everyone billing to the project with their billable
+ * rate type, billable rate and cost rate.
+ * ─────────────────────────────────────────────────────────────────
+ */
+.project-finance { flex: 1; min-height: 0; display: none; flex-direction: column; }
+.project-finance.open { display: flex; }
+
+/* ── Secondary tabs ──────────────────────────────────────────────── */
+.fin-subnav {
+  flex-shrink: 0; display: flex; align-items: center; gap: var(--spacing-1);
+  padding: var(--spacing-3) var(--spacing-6) var(--spacing-2);
+}
+.fin-subtab {
+  padding: var(--spacing-2) var(--spacing-3); border: none; background: none;
+  border-radius: var(--border-rounded-md); cursor: pointer;
+  font-size: 13px; font-weight: 500; color: var(--color-text-subtle); white-space: nowrap;
+}
+.fin-subtab:hover { background: var(--color-background-hover); color: var(--color-text-default); }
+.fin-subtab.active {
+  background: var(--palette-indigo-15); color: var(--color-text-primary); font-weight: 600;
+}
+.fin-subnav-right { margin-left: auto; display: flex; align-items: center; gap: var(--spacing-4); }
+.fin-search {
+  display: flex; align-items: center; gap: 6px; border: none; background: none; cursor: pointer;
+  font-size: 13px; color: var(--color-text-subtle); padding: var(--spacing-2);
+  border-radius: var(--border-rounded-md);
+}
+.fin-search:hover { background: var(--color-background-hover); color: var(--color-text-default); }
+.fin-search svg { width: 15px; height: 15px; }
+.fin-report-link {
+  border: none; background: none; cursor: pointer;
+  font-size: 13px; font-weight: 600; color: var(--color-text-primary);
+}
+.fin-report-link:hover { text-decoration: underline; }
+
+/* ── Rates table ─────────────────────────────────────────────────── */
+.fin-body { flex: 1; min-height: 0; overflow: auto; padding: 0 var(--spacing-6) var(--spacing-8); }
+.fin-table { width: 100%; min-width: 720px; border-collapse: collapse; }
+.fin-table thead th {
+  position: sticky; top: 0; z-index: 2; background: var(--color-background-default);
+  text-align: left; font-size: 12px; font-weight: 600; color: var(--color-text-subtle);
+  padding: var(--spacing-3) var(--spacing-3);
+  border-bottom: var(--border-width-1) solid var(--color-border-separator);
+  white-space: nowrap;
+}
+.fin-table thead th.num { text-align: right; }
+.fin-th-inner { display: inline-flex; align-items: center; gap: 5px; }
+.fin-th-inner.num { justify-content: flex-end; }
+.fin-sort, .fin-info { color: var(--color-text-disabled); display: inline-flex; }
+.fin-sort svg, .fin-info svg { width: 13px; height: 13px; }
+.fin-th-name { color: var(--color-text-primary); font-weight: 600; }
+
+.fin-table tbody td {
+  padding: var(--spacing-4) var(--spacing-3);
+  border-bottom: var(--border-width-1) solid var(--color-border-separator);
+  font-size: 14px; color: var(--color-text-default); vertical-align: middle;
+}
+.fin-table tbody tr:hover td { background: var(--color-background-hover); }
+.fin-table td.num { text-align: right; white-space: nowrap; }
+.fin-col-check { width: 44px; }
+.fin-col-type  { width: 260px; }
+.fin-col-rate  { width: 150px; }
+
+.fin-check {
+  width: 16px; height: 16px; border-radius: var(--border-rounded-sm);
+  border: 1.5px solid var(--color-border-default); background: var(--color-background-default);
+  cursor: pointer; display: block;
+}
+.fin-check:hover { border-color: var(--palette-indigo-40); }
+.fin-check.on {
+  background: var(--palette-indigo-40); border-color: var(--palette-indigo-40);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+  background-size: 11px; background-position: center; background-repeat: no-repeat;
+}
+
+.fin-person { display: flex; align-items: center; gap: var(--spacing-3); }
+.fin-avatar {
+  width: 28px; height: 28px; border-radius: var(--border-rounded-full); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: var(--palette-white);
+}
+.fin-name { font-size: 14px; color: var(--color-text-default); }
+.fin-name .ai-spark { width: 13px; height: 13px; vertical-align: -2px; margin-left: 2px; }
+
+/* Rate-type select, styled to match the design's bordered control */
+.fin-select {
+  width: 100%; display: flex; align-items: center; gap: var(--spacing-2);
+  height: 40px; padding: 0 var(--spacing-3);
+  border: var(--border-width-1) solid var(--color-border-default);
+  border-radius: var(--border-rounded-md);
+  background: var(--color-background-default);
+  font-size: 14px; color: var(--color-text-default); cursor: pointer; text-align: left;
+}
+.fin-select:hover { border-color: var(--palette-indigo-30); }
+.fin-select .fin-select-icon { color: var(--color-text-disabled); display: flex; flex-shrink: 0; }
+.fin-select .fin-select-icon svg { width: 15px; height: 15px; }
+.fin-select .fin-select-label {
+  flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.fin-select .fin-select-caret { color: var(--color-text-subtle); display: flex; flex-shrink: 0; }
+.fin-select .fin-select-caret svg { width: 15px; height: 15px; }
+
+.fin-rate-none { color: var(--color-text-disabled); }
+/* The agent's cost rate is the point of the demo — mark it quietly */
+.fin-rate-agent { color: var(--palette-green-60); font-weight: 600; }
+.fin-foot-note {
+  padding: var(--spacing-4) var(--spacing-3) 0;
+  font-size: 12px; color: var(--color-text-subtle);
+}
+
 
 /*
  * ─────────────────────────────────────────────────────────────────
@@ -4947,7 +5060,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
           <button class="project-tab">Table</button>
           <button class="project-tab">Timeline</button>
           <button class="project-tab">Time</button>
-          <button class="project-tab">Finance</button>
+          <button class="project-tab" onclick="switchProjectTab('finance', this)">Finance</button>
           <button class="project-tab" onclick="switchProjectTab('schedule', this)">Schedule <span class="project-tab-new">NEW</span></button>
           <button class="project-tab">More…</button>
           <button class="project-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> <span class="project-tab-new">NEW</span></button>
@@ -5041,6 +5154,30 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
           </div>
         </div>
       </div>
+
+      <!-- ── Project › Finance (secondary tabs + Rates table) ────────
+           Rates lists everyone billing to the project. Rate values come
+           from the engagement plan's role rate card. -->
+      <div class="project-finance" id="projectFinance">
+
+        <div class="fin-subnav">
+          <button class="fin-subtab" onclick="switchFinanceTab('budgets', this)">Budgets</button>
+          <button class="fin-subtab active" onclick="switchFinanceTab('rates', this)">Rates</button>
+          <button class="fin-subtab" onclick="switchFinanceTab('time', this)">Time</button>
+          <button class="fin-subtab" onclick="switchFinanceTab('expenses', this)">Expenses</button>
+          <button class="fin-subtab" onclick="switchFinanceTab('invoices', this)">Invoices</button>
+          <div class="fin-subnav-right">
+            <button class="fin-search">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="m11 11 2.5 2.5"/></svg>
+              Search
+            </button>
+            <button class="fin-report-link">Profitability report</button>
+          </div>
+        </div>
+
+        <div class="fin-body" id="finBody"></div>
+      </div>
+
     </div>
   </div><!-- /right-area -->
 </div>
@@ -6590,7 +6727,9 @@ function showProject() {
   document.getElementById('projectPage').classList.add('visible');
   document.getElementById('navProjectsBtn').classList.add('active');
   document.getElementById('navTeamworkAiBtn').classList.remove('active');
-  if (projectTab === 'schedule') renderSchedule(); else renderProjectBody();
+  if (projectTab === 'schedule')     renderSchedule();
+  else if (projectTab === 'finance') renderFinance();
+  else                               renderProjectBody();
 }
 
 /* Engagement data — Enterprise AI Rollout for Halcyon Logistics,
@@ -6821,17 +6960,21 @@ function renderProjectBody() {
 /* ── Project tabs ──────────────────────────────────────────────────
    Only List and Schedule are built out; the rest stay decorative. */
 let projectTab = 'list';
+const PROJECT_TAB_LABELS = { list: 'List', schedule: 'Schedule', finance: 'Finance' };
 function switchProjectTab(tab, el) {
   projectTab = tab;
   document.querySelectorAll('#projectPage .project-tabs .project-tab').forEach(b => b.classList.remove('active'));
   if (el) el.classList.add('active');
-  const isList = tab === 'list';
   const crumb = document.getElementById('projectCrumbTab');
-  if (crumb) crumb.textContent = isList ? 'List' : 'Schedule';
-  document.querySelector('#projectPage .project-toolbar').style.display = isList ? '' : 'none';
-  document.getElementById('projectBody').style.display = isList ? '' : 'none';
-  document.getElementById('projectSchedule').classList.toggle('open', !isList);
-  if (isList) renderProjectBody(); else renderSchedule();
+  if (crumb) crumb.textContent = PROJECT_TAB_LABELS[tab] || 'List';
+  // The list toolbar belongs to the list view only; the other views bring their own.
+  document.querySelector('#projectPage .project-toolbar').style.display = tab === 'list' ? '' : 'none';
+  document.getElementById('projectBody').style.display = tab === 'list' ? '' : 'none';
+  document.getElementById('projectSchedule').classList.toggle('open', tab === 'schedule');
+  document.getElementById('projectFinance').classList.toggle('open', tab === 'finance');
+  if (tab === 'schedule')      renderSchedule();
+  else if (tab === 'finance')  renderFinance();
+  else                         renderProjectBody();
 }
 
 /* ─────────────────────────────────────────────────────────────────
@@ -7188,6 +7331,79 @@ function toggleSchedInsights(btn) {
 
 /* Open the first few people so the bars are visible straight away. */
 ['EM', 'SD', 'RA'].forEach(k => schedExpanded[k] = true);
+
+/* ─────────────────────────────────────────────────────────────────
+ * 🧩 Project › Finance — Rates
+ * Rate card from the engagement plan. The Readiness Agent is a
+ * resource user with its own job role and a manually entered cost
+ * rate, so it sits in this table like anyone else.
+ * ───────────────────────────────────────────────────────────────── */
+let financeTab = 'rates';
+
+const financeRates = schedPeople.map(p => ({
+  name: p.name, initials: p.initials, bg: p.bg,
+  rateType: p.role, billable: p.rate, cost: p.cost, agent: !!p.agent,
+}));
+
+function _finMoney(n) { return '$' + n.toLocaleString(); }
+
+function renderFinance() {
+  const body = document.getElementById('finBody');
+  if (financeTab !== 'rates') {
+    body.innerHTML = `<div class="fin-foot-note">${financeTab[0].toUpperCase() + financeTab.slice(1)} is stubbed in this prototype.</div>`;
+    return;
+  }
+
+  const sort = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11M3 12h8M3 17h5"/><path d="M18 5v14l3-3M18 19l-3-3"/></svg>`;
+  const info = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round"/></svg>`;
+  const badge = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8.5" cy="11" r="2"/><path d="M5 16c.6-1.4 2-2.2 3.5-2.2S11.4 14.6 12 16M15 10h4M15 14h3"/></svg>`;
+  const caret = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
+
+  body.innerHTML = `
+    <table class="fin-table">
+      <thead>
+        <tr>
+          <th class="fin-col-check"><span class="fin-check" onclick="this.classList.toggle('on')"></span></th>
+          <th><span class="fin-th-inner"><span class="fin-th-name">Name</span><span class="fin-sort">${sort}</span></span></th>
+          <th class="fin-col-type">Billable rate type</th>
+          <th class="fin-col-rate num"><span class="fin-th-inner num">Billable rate/h <span class="fin-info">${info}</span></span></th>
+          <th class="fin-col-rate num"><span class="fin-th-inner num">Cost rate/h <span class="fin-info">${info}</span></span></th>
+        </tr>
+      </thead>
+      <tbody>
+        ${financeRates.map(r => `
+          <tr>
+            <td><span class="fin-check" onclick="this.classList.toggle('on')"></span></td>
+            <td>
+              <div class="fin-person">
+                <span class="fin-avatar" style="background:${r.bg}">${r.initials}</span>
+                <span class="fin-name">${r.name}${r.agent ? _aiSparkSvg : ''}</span>
+              </div>
+            </td>
+            <td>
+              <button class="fin-select">
+                <span class="fin-select-icon">${badge}</span>
+                <span class="fin-select-label">${r.rateType}</span>
+                <span class="fin-select-caret">${caret}</span>
+              </button>
+            </td>
+            <td class="num">${_finMoney(r.billable)}${r.agent ? ' equiv.' : ''}</td>
+            <td class="num ${r.agent ? 'fin-rate-agent' : ''}">${_finMoney(r.cost)}${r.agent ? ' equiv.' : ''}</td>
+          </tr>`).join('')}
+      </tbody>
+    </table>
+    <div class="fin-foot-note">
+      Rates are set per job role for this project. The Readiness Agent's cost rate covers model and
+      platform spend, so profitability reporting treats it like any other resource.
+    </div>`;
+}
+
+function switchFinanceTab(tab, el) {
+  financeTab = tab;
+  document.querySelectorAll('#projectFinance .fin-subtab').forEach(b => b.classList.remove('active'));
+  if (el) el.classList.add('active');
+  renderFinance();
+}
 
 /* ── Project AI menu + actions ─────────────────────────────────── */
 function toggleProjectAiMenu(e) {
