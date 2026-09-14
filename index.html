@@ -4665,6 +4665,176 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
   .remi-compare { grid-template-columns: 1fr; }
   .remi-arrow { padding: var(--spacing-2) 0; }
 }
+/*
+ * ─────────────────────────────────────────────────────────────────
+ * 🧩 Assessment review — same frame as Remi's modal, chat on the
+ * left and the drafted document on the right.
+ * ─────────────────────────────────────────────────────────────────
+ */
+/* Attachment card inside an agent comment */
+.comment-attach {
+  display: flex; align-items: center; gap: var(--spacing-3); width: 100%;
+  margin-top: var(--spacing-3); padding: var(--spacing-3);
+  border: var(--border-width-1) solid var(--color-border-separator);
+  border-radius: var(--border-rounded-md); background: var(--palette-white);
+  cursor: pointer; text-align: left;
+}
+.comment-attach:hover { border-color: var(--palette-indigo-30); background: var(--color-background-hover); }
+.comment-attach-text { min-width: 0; }
+.comment-attach-name { display: block; font-size: 13px; font-weight: 600; color: var(--color-text-default); }
+.comment-attach-meta { display: block; font-size: 11px; color: var(--color-text-subtle); }
+.comment-attach-cta {
+  margin-left: auto; font-size: 12px; font-weight: 700; color: var(--color-text-primary);
+  padding: 4px 10px; border-radius: var(--border-rounded-full); background: var(--palette-indigo-10);
+}
+.task-file-row.doc { cursor: pointer; }
+.task-file-row.doc:hover { background: var(--color-background-hover); }
+
+.doc-overlay {
+  display: none; position: fixed; inset: 0; z-index: 720;
+  background: rgba(11,15,31,0.45); padding: var(--spacing-5);
+}
+.doc-overlay.open { display: flex; }
+.doc-modal {
+  flex: 1; min-width: 0; display: flex; flex-direction: column;
+  background: var(--palette-white); border-radius: var(--border-rounded-lg);
+  box-shadow: 0 24px 70px rgba(11,15,31,0.28); overflow: hidden;
+}
+.doc-head {
+  flex-shrink: 0; display: flex; align-items: center; gap: var(--spacing-3);
+  padding: var(--spacing-4) var(--spacing-5);
+  border-bottom: var(--border-width-1) solid var(--color-border-separator);
+}
+.doc-head .ai-spark { width: 20px; height: 20px; }
+.doc-head-title { font-size: 17px; font-weight: 700; color: var(--color-text-default); }
+.doc-head-tag {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
+  color: var(--palette-orange-50); background: var(--palette-yellow-20);
+  padding: 3px 8px; border-radius: var(--border-rounded-sm);
+}
+.doc-head-tag.approved { color: var(--palette-green-60); background: var(--palette-green-20); }
+.doc-head-right { margin-left: auto; display: flex; align-items: center; gap: var(--spacing-2); }
+
+.doc-body { flex: 1; min-height: 0; display: flex; }
+
+/* Left — the conversation with the agent */
+.doc-chat {
+  width: 380px; flex-shrink: 0; display: flex; flex-direction: column;
+  border-right: var(--border-width-1) solid var(--color-border-separator);
+  padding: var(--spacing-4) var(--spacing-4) var(--spacing-4);
+}
+.doc-chat-log { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: var(--spacing-4); }
+.doc-msg { display: flex; gap: var(--spacing-2); align-items: flex-start; }
+.doc-msg.user { flex-direction: row-reverse; }
+.doc-msg-avatar {
+  width: 26px; height: 26px; border-radius: var(--border-rounded-full); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: var(--palette-white);
+  border: 1.5px solid transparent;
+  background: linear-gradient(var(--palette-white), var(--palette-white)) padding-box,
+              linear-gradient(135deg, #4da2f8, #ff22b1, #ff7641) border-box;
+}
+.doc-msg.user .doc-msg-avatar { border: none; }
+.doc-msg-text { font-size: 13px; line-height: 1.6; color: var(--color-text-default); }
+.doc-msg.user .doc-msg-text {
+  background: var(--color-surface-emphasis-default); padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--border-rounded-lg); max-width: 270px;
+}
+.doc-chips { display: flex; flex-direction: column; align-items: flex-start; gap: var(--spacing-2); margin-top: var(--spacing-4); }
+.doc-chip {
+  display: inline-flex; align-items: center; gap: var(--spacing-2); text-align: left;
+  padding: var(--spacing-2) var(--spacing-3);
+  border: var(--border-width-1) solid var(--color-border-default);
+  border-radius: var(--border-rounded-full); background: var(--palette-white);
+  font-size: 12px; color: var(--color-text-default); cursor: pointer;
+}
+.doc-chip:hover { border-color: var(--palette-indigo-30); background: var(--color-background-hover); }
+.doc-composer {
+  margin-top: var(--spacing-3); border: var(--border-width-1) solid var(--color-border-default);
+  border-radius: var(--border-rounded-lg); padding: var(--spacing-3);
+}
+.doc-composer textarea {
+  width: 100%; border: none; outline: none; resize: none; background: transparent;
+  font: inherit; font-size: 13px; color: var(--color-text-default); line-height: 1.5; min-height: 38px;
+}
+.doc-composer textarea::placeholder { color: var(--color-text-placeholder); }
+
+/* Right — the document */
+.doc-preview { flex: 1; min-width: 0; overflow-y: auto; background: var(--palette-neutral-05); padding: var(--spacing-5); }
+.doc-page {
+  max-width: 780px; margin: 0 auto; background: var(--palette-white);
+  border: var(--border-width-1) solid var(--color-border-separator);
+  border-radius: var(--border-rounded-lg); padding: var(--spacing-7) var(--spacing-7) var(--spacing-8);
+  font-size: 14px; line-height: 1.7; color: var(--color-text-default);
+}
+.doc-doc-head { border-bottom: var(--border-width-2) solid var(--palette-neutral-60); padding-bottom: var(--spacing-3); margin-bottom: var(--spacing-5); }
+.doc-doc-title { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+.doc-doc-sub { font-size: 12px; color: var(--color-text-subtle); margin-top: 4px; }
+.doc-page h3 {
+  font-size: 15px; font-weight: 700; margin: var(--spacing-6) 0 var(--spacing-2);
+  padding-bottom: 5px; border-bottom: var(--border-width-1) solid var(--color-border-separator);
+}
+.doc-page p { margin: 0 0 var(--spacing-3); }
+.doc-page ul { margin: 0 0 var(--spacing-3); padding-left: var(--spacing-5); }
+.doc-page li { margin-bottom: var(--spacing-2); }
+
+/* The coverage / confidence panel sits above everything else */
+.doc-coverage {
+  display: flex; gap: var(--spacing-5); align-items: stretch;
+  padding: var(--spacing-4); margin-bottom: var(--spacing-5);
+  border: var(--border-width-1) solid var(--palette-indigo-25);
+  border-left: 4px solid var(--palette-indigo-40);
+  border-radius: var(--border-rounded-lg);
+  background: linear-gradient(100deg, var(--palette-indigo-10), var(--palette-purple-10));
+}
+.doc-cov-main { text-align: center; flex-shrink: 0; padding-right: var(--spacing-5); border-right: var(--border-width-1) solid var(--palette-indigo-25); display: flex; flex-direction: column; justify-content: center; }
+.doc-cov-num { font-size: 34px; font-weight: 700; line-height: 1; color: var(--palette-indigo-50); }
+.doc-cov-label { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; color: var(--palette-indigo-50); margin-top: 4px; text-transform: uppercase; }
+.doc-cov-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.doc-cov-body { font-size: 13px; line-height: 1.6; }
+.doc-cov-body p { margin: 0 0 6px; }
+.doc-cov-warn { color: var(--palette-orange-50); }
+
+.doc-score-table { width: 100%; border-collapse: collapse; margin-bottom: var(--spacing-3); font-size: 13px; }
+.doc-score-table th {
+  text-align: left; font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--color-text-subtle);
+  padding: var(--spacing-2) var(--spacing-2);
+  border-bottom: var(--border-width-1) solid var(--color-border-default);
+}
+.doc-score-table td { padding: var(--spacing-3) var(--spacing-2); border-bottom: var(--border-width-1) solid var(--color-border-separator); vertical-align: top; }
+.doc-score-table .num { text-align: center; width: 76px; }
+.doc-score-table tfoot td { font-weight: 700; border-bottom: none; border-top: var(--border-width-2) solid var(--color-border-default); }
+.doc-dim { font-weight: 600; width: 190px; }
+.doc-lowconf {
+  display: block; margin-top: 3px; font-size: 10px; font-weight: 700; letter-spacing: 0.03em;
+  color: var(--palette-orange-50); text-transform: uppercase;
+}
+.doc-cite { margin-top: 5px; font-size: 11px; color: var(--color-text-subtle); font-style: italic; }
+.doc-pill {
+  display: inline-block; min-width: 42px; padding: 3px 8px;
+  border-radius: var(--border-rounded-full); font-size: 12px; font-weight: 700;
+}
+.doc-pill.good { background: var(--palette-green-20); color: var(--palette-green-60); }
+.doc-pill.ok   { background: var(--palette-blue-20);  color: var(--palette-blue-60); }
+.doc-pill.warn { background: var(--palette-yellow-20); color: var(--palette-orange-50); }
+.doc-pill.bad  { background: var(--palette-red-10);   color: var(--palette-red-50); }
+
+.doc-foot {
+  flex-shrink: 0; display: flex; align-items: center;
+  padding: var(--spacing-4) var(--spacing-5);
+  border-top: var(--border-width-1) solid var(--color-border-separator);
+}
+.doc-approve {
+  margin-left: auto; border: none; cursor: pointer;
+  padding: var(--spacing-3) var(--spacing-5); border-radius: var(--border-rounded-full);
+  background: linear-gradient(100deg, #4461d7 0%, #895ef7 35%, #ff22b1 70%, #ff7641 100%);
+  color: var(--palette-white); font-size: 14px; font-weight: 700;
+}
+.doc-approve:hover { filter: brightness(1.05); }
+.doc-approve:disabled { opacity: 0.55; cursor: default; filter: none; }
+
+@media (max-width: 1080px) { .doc-chat { width: 300px; } }
 
 
 /*
@@ -6624,6 +6794,48 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
   </div>
 </div>
 
+<!-- ── 🧩 Assessment review — chat left, document right ────────────
+     Same frame as Remi's resourcing modal. Tom edits a score through
+     the conversation, then approves. -->
+<div class="doc-overlay" id="docOverlay" onclick="if(event.target===this) closeAssessDoc()">
+  <div class="doc-modal">
+
+    <div class="doc-head">
+      <svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg>
+      <span class="doc-head-title">AI Readiness Assessment — Halcyon Logistics</span>
+      <span class="doc-head-tag" id="docHeadTag">DRAFT FOR REVIEW</span>
+      <div class="doc-head-right">
+        <button class="remi-head-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+          Share
+        </button>
+        <button class="remi-head-btn" onclick="closeAssessDoc()" title="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="doc-body">
+      <div class="doc-chat">
+        <div class="doc-chat-log" id="docChatLog"></div>
+        <div class="doc-chips" id="docChips">
+          <button class="doc-chip" onclick="docChip('governance')">Governance should be a 2 — there is a draft AUP</button>
+          <button class="doc-chip" onclick="docChip('confidence')">Why is process readiness low confidence?</button>
+        </div>
+        <div class="doc-composer">
+          <textarea rows="2" placeholder="Ask for a change to the document…" onkeydown="docKey(event, this)"></textarea>
+        </div>
+      </div>
+      <div class="doc-preview" id="docPreview"></div>
+    </div>
+
+    <div class="doc-foot">
+      <button class="remi-cancel" onclick="closeAssessDoc()">Close</button>
+      <button class="doc-approve" id="docApproveBtn" onclick="docApprove()">Approve &amp; send to Halcyon</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ── Data ───────────────────────────────────────────────────────── */
 // Avatar bg colors use palette/decorative tokens from Foundations
@@ -8325,7 +8537,10 @@ function _applyRemiSuggestion() {
   budPhases[0].budget = 268;
   projectTaskLists[0].time = '0h / 268h';
 
-  // 4. Repaint whatever is on screen.
+  // 4. The agent now owns the assessment, so it asks Dana for its inputs.
+  agentRequestInputs();
+
+  // 5. Repaint whatever is on screen.
   if (projectTab === 'schedule')     renderSchedule();
   else if (projectTab === 'finance') renderFinance();
   else                               renderProjectBody();
@@ -9228,28 +9443,69 @@ function _linkifyMentions(text) {
   return out.split('\n').map(l => `<p>${l || '&nbsp;'}</p>`).join('');
 }
 
-function postComment(author, initials, bg, role, text, fromAi, avatar) {
-  const comments = document.querySelector('#taskDrawerBody .task-comments');
-  if (!comments) return;
-  const item = document.createElement('div');
-  item.className = 'task-comment-item' + (fromAi ? ' from-ai' : '');
-  const avatarHtml = fromAi && avatar
-    ? `<span class="task-tl-avatar" style="overflow:hidden;padding:0"><img src="${avatar}" alt="${author}" style="width:100%;height:100%;object-fit:cover"></span>`
-    : `<span class="task-tl-avatar"${bg ? ` style="background:${bg}"` : ''}>${initials}</span>`;
-  item.innerHTML = `
+/* Same mention linking, but for comments the prototype authors itself —
+   those carry their own markup and must not be escaped. */
+function _linkifyMentionsRich(html) {
+  const agentNames = aiAgents().map(a => a.name);
+  const names = [..._mentionPeople.map(p => p.name), ..._mentionTeams.map(t => t.name), ...agentNames]
+    .sort((a, b) => b.length - a.length);
+  const aiNames = new Set(agentNames);
+  let out = html;
+  names.forEach(n => {
+    const safe = n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    out = out.replace(new RegExp('@' + safe, 'g'),
+      `<span class="mention${aiNames.has(n) ? ' ai' : ''}">@${n}</span>`);
+  });
+  return out.trim().startsWith('<') ? out : `<p>${out}`;
+}
+
+/* Comments are held per task rather than written straight to the DOM —
+   the drawer re-renders whenever files, subtasks or status change, and
+   anything only in the DOM would be lost each time. Newest first. */
+const taskComments = {};
+
+function _commentHTML(c) {
+  const avatarHtml = c.avatar
+    ? `<span class="task-tl-avatar" style="overflow:hidden;padding:0"><img src="${c.avatar}" alt="${c.author}" style="width:100%;height:100%;object-fit:cover"></span>`
+    : `<span class="task-tl-avatar"${c.bg ? ` style="background:${c.bg}"` : ''}>${c.initials}</span>`;
+  return `<div class="task-comment-item${c.fromAi ? ' from-ai' : ''}">
     ${avatarHtml}
     <div class="task-comment-content">
       <div class="task-comment-meta">
-        <span class="task-comment-author">${author} ${fromAi ? _aiSparkSvg : ''}</span>
-        <span class="task-comment-time">just now</span>
+        <span class="task-comment-author">${c.author} ${c.fromAi ? _aiSparkSvg : ''}</span>
+        <span class="task-comment-time">${c.time || 'just now'}</span>
       </div>
-      <div class="task-comment-role">${role || ''}</div>
-      <div class="task-comment-text">${_linkifyMentions(text)}</div>
-    </div>`;
-  // Newest first → insert above existing comment items
-  const firstItem = comments.querySelector('.task-comment-item');
-  if (firstItem) comments.insertBefore(item, firstItem);
-  else comments.appendChild(item);
+      <div class="task-comment-role">${c.role || ''}</div>
+      <div class="task-comment-text">${c.html ? _linkifyMentionsRich(c.text) : _linkifyMentions(c.text)}</div>
+      ${c.attachment ? _commentAttachmentHTML(c.attachment) : ''}
+    </div>
+  </div>`;
+}
+
+function _commentAttachmentHTML(a) {
+  return `<button class="comment-attach" onclick="openAssessDoc()">
+      ${_gdIcon('doc', 30)}
+      <span class="comment-attach-text">
+        <span class="comment-attach-name">${a.name}</span>
+        <span class="comment-attach-meta">Google Doc · click to review</span>
+      </span>
+      <span class="comment-attach-cta">Open</span>
+    </button>`;
+}
+
+function _taskCommentsHTML(t) {
+  return (taskComments[t && t.name] || []).map(_commentHTML).join('');
+}
+
+function postComment(author, initials, bg, role, text, fromAi, avatar, attachment) {
+  const key = _currentTask && _currentTask.name;
+  if (!key) return;
+  (taskComments[key] = taskComments[key] || []).unshift(
+    { author, initials, bg, role, text, fromAi, avatar, attachment, time: 'just now' });
+  const wrap = document.querySelector('#taskDrawerBody .task-comments');
+  if (!wrap) return;
+  const holder = document.getElementById('taskCommentList');
+  if (holder) holder.innerHTML = _taskCommentsHTML(_currentTask);
 }
 
 // Close the comment menu on outside click
@@ -9432,6 +9688,7 @@ function renderTaskDrawerBody(t, list, listIdx, taskIdx) {
           </div>
         </div>
       </div>
+      <div id="taskCommentList">${_taskCommentsHTML(t)}</div>
     </div>`;
 }
 
@@ -9536,11 +9793,13 @@ function renderGdGrid() {
 
 function gdConfirm() {
   if (!_gdTaskKey) return closeGdPicker();
-  taskFiles[_gdTaskKey] = GD_FILES.filter(f => _gdSelected.has(f.id));
+  const keep = (taskFiles[_gdTaskKey] || []).filter(f => f.isDoc);
+  taskFiles[_gdTaskKey] = GD_FILES.filter(f => _gdSelected.has(f.id)).concat(keep);
   closeGdPicker();
   const n = taskFiles[_gdTaskKey].length;
   showToast(`${n} file${n > 1 ? 's' : ''} attached from Google Drive`);
   _reopenCurrentTask();   // repaint so the Files block picks them up
+  if (_gdTaskKey === ASSESS_TASK) setTimeout(agentFilesReceived, 700);
 }
 
 /* Markup for the Files block of the open task */
@@ -9549,10 +9808,10 @@ function _taskFilesHTML(t) {
   if (!files.length) return '';
   const x = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
   return `<div class="task-file-list">${files.map(f => `
-    <div class="task-file-row">
+    <div class="task-file-row${f.isDoc ? ' doc' : ''}"${f.isDoc ? ' onclick="openAssessDoc()"' : ''}>
       ${_gdIcon(f.type, 22).replace('gd-file-icon', 'ft')}
       <span class="task-file-name">${f.name}</span>
-      <span class="task-file-meta">Google Drive</span>
+      <span class="task-file-meta">${f.isDoc ? 'Drafted by the agent' : 'Google Drive'}</span>
       <button class="task-file-remove" title="Remove" onclick="gdRemoveFile('${f.id}')">${x}</button>
     </div>`).join('')}</div>`;
 }
@@ -9563,6 +9822,305 @@ function gdRemoveFile(id) {
   const i = list.findIndex(f => f.id === id);
   if (i > -1) list.splice(i, 1);
   _reopenCurrentTask();
+}
+
+
+/* ─────────────────────────────────────────────────────────────────
+ * 🧩 Readiness Agent — the delivery flow on the AI Readiness Assessment
+ *   1. assigned      → agent asks Dana for the source files
+ *   2. files added   → agent confirms it has started
+ *   3. working       → subtasks complete one at a time
+ *   4. drafted       → doc attached, Tom asked to review
+ *   5. review        → Tom edits a score in chat, then approves
+ * ───────────────────────────────────────────────────────────────── */
+const ASSESS_TASK = 'AI Readiness Assessment';
+let agentStage = 'idle';
+let _agentTimers = [];
+
+const AGENT = { author: 'Readiness Agent', initials: 'RA', bg: 'var(--palette-indigo-40)', role: 'Delivery Agent (AI)' };
+
+function _agentTask() {
+  return projectTaskLists[0].tasks.find(t => t.name === ASSESS_TASK);
+}
+/* Post as the agent whether or not the drawer is currently open on the task */
+function _agentSay(text, attachment) {
+  (taskComments[ASSESS_TASK] = taskComments[ASSESS_TASK] || []).unshift({
+    author: AGENT.author, initials: AGENT.initials, bg: AGENT.bg, role: AGENT.role,
+    text, fromAi: true, attachment, html: true, time: 'just now',
+  });
+  _refreshAssessTask();
+}
+function _personSay(name, initials, bg, role, text) {
+  (taskComments[ASSESS_TASK] = taskComments[ASSESS_TASK] || []).unshift(
+    { author: name, initials, bg, role, text, html: true, time: 'just now' });
+  _refreshAssessTask();
+}
+/* Repaint the drawer only when it is open on this task */
+function _refreshAssessTask() {
+  if (_currentTask && _currentTask.name === ASSESS_TASK) _reopenCurrentTask();
+  // the task row behind the drawer shows status and assignee too
+  if (projectTab === 'list') renderProjectBody();
+}
+function _agentTimer(fn, ms) { _agentTimers.push(setTimeout(fn, ms)); }
+
+/* 1 ─ the agent picks up the task and asks Dana for what it needs */
+function agentRequestInputs() {
+  if (agentStage !== 'idle') return;
+  agentStage = 'awaiting-files';
+  _agentSay(`@Dana Whitfield I've picked up the <strong>AI Readiness Assessment</strong> for Halcyon Logistics.
+    Before I can start I need the source material — attach these to the task and I'll begin:</p>
+    <ul>
+      <li>The <strong>self-assessment scores</strong> returned by staff</li>
+      <li>The <strong>interview notes</strong>, uploaded as files — one per function</li>
+      <li>A <strong>light tool-estate scan</strong> so I can see what's already in use</li>
+    </ul>
+    <p>Drop them in via <em>Files → Browse files</em>. I'll take it from there.`);
+}
+
+/* 2 ─ files arrive, so the agent starts and works the subtasks through */
+function agentFilesReceived() {
+  if (agentStage !== 'awaiting-files') return;
+  agentStage = 'working';
+  const files = taskFiles[ASSESS_TASK] || [];
+  const t = _agentTask();
+  if (t) t.tag = { label: 'In progress', dot: 'var(--palette-blue-40)', bg: 'var(--palette-blue-10)', color: 'var(--palette-blue-50)' };
+  _agentSay(`Got them — <strong>${files.length} file${files.length === 1 ? '' : 's'}</strong> from Google Drive.
+    I've started on the assessment and I'll tick the subtasks off as I go.`);
+  _agentWorkSubtasks();
+}
+
+function _agentWorkSubtasks() {
+  const t = _agentTask();
+  if (!t) return;
+  t.subtasks.forEach((st, i) => {
+    _agentTimer(() => {
+      st.done = true;
+      _refreshAssessTask();
+      if (i === t.subtasks.length - 1) _agentTimer(agentDeliverDraft, 1400);
+    }, 1600 * (i + 1));
+  });
+}
+
+/* 3 ─ the draft lands as a document on the task, for Tom to review */
+function agentDeliverDraft() {
+  if (agentStage !== 'working') return;
+  agentStage = 'review';
+  const doc = { id: 'doc-assess', name: 'AI Readiness Assessment — Halcyon Logistics', type: 'doc', meta: 'Docs · just now', isDoc: true };
+  (taskFiles[ASSESS_TASK] = taskFiles[ASSESS_TASK] || []).push(doc);
+  _agentSay(`@Tom Okafor the assessment is drafted and attached — <strong>${doc.name}</strong>.
+    It covers the executive summary, the seven-dimension scorecard with cited evidence, the gap
+    analysis and the roadmap. Coverage is <strong>86%</strong> and confidence is <strong>high</strong>
+    on five of seven dimensions; the panel at the top flags where it isn't.</p>
+    <p>Open it and tell me what to change — I'll amend it before it goes to Halcyon.`, doc);
+}
+
+/* Reset, so the flow can be demoed again without a reload */
+function agentResetFlow() {
+  _agentTimers.forEach(clearTimeout); _agentTimers = [];
+  agentStage = 'idle';
+  delete taskComments[ASSESS_TASK];
+  delete taskFiles[ASSESS_TASK];
+  const t = _agentTask();
+  if (t) { t.subtasks.forEach(st => st.done = false); t.tag = TODO_TAG; }
+  ASSESS_DOC.dims[2].score = 1;
+  ASSESS_DOC.approved = false;
+  _docChat = [];
+  _refreshAssessTask();
+}
+
+
+/* ── The drafted assessment, and the review modal ─────────────────
+   Chat on the left, document preview on the right — the same frame as
+   Remi's resourcing modal. Tom edits a score through the chat. */
+const ASSESS_DOC = {
+  title: 'AI Readiness Assessment — Halcyon Logistics',
+  sub: 'Prepared by the Readiness Agent · Meridian Transformation Partners · Draft for senior review',
+  coverage: 86,
+  approved: false,
+  dims: [
+    { name: 'Leadership & strategy', score: 4, evidence: 'Interview notes — Operations & despatch; Finance & commercial',
+      note: 'Clear executive sponsorship and a named budget owner. Ambition is specific rather than aspirational.' },
+    { name: 'Data foundations', score: 4, evidence: 'Tool estate scan (light); Interview notes — IT & security',
+      note: 'Telematics and TMS data are centralised and clean. Stronger than the sector norm at this stage.' },
+    { name: 'Governance & risk', score: 1, evidence: 'Interview notes — IT & security; self-assessment scores',
+      note: 'No acceptable-use position exists. Nobody owns the decision on new tools.', confidence: 'high' },
+    { name: 'Technology & integration', score: 3, evidence: 'Tool estate scan (light)',
+      note: 'Modern TMS with usable APIs; integration effort is moderate rather than blocking.' },
+    { name: 'People & skills', score: 3, evidence: 'Readiness self-assessment scores (n=40)',
+      note: 'Appetite is high in operations, markedly more cautious in finance. Little formal training to date.' },
+    { name: 'Process readiness', score: 2, evidence: 'Interview notes — Customer service',
+      note: 'Claims and despatch processes are documented but vary by depot.', confidence: 'low' },
+    { name: 'Security & compliance', score: 2, evidence: 'Interview notes — IT & security',
+      note: 'Data classification predates any AI use and has not been revisited.', confidence: 'low' },
+  ],
+};
+
+function _docScore() {
+  const t = ASSESS_DOC.dims.reduce((n, d) => n + d.score, 0);
+  return (t / ASSESS_DOC.dims.length).toFixed(1);
+}
+function _docBand(s) { return s >= 4 ? 'good' : s >= 3 ? 'ok' : s >= 2 ? 'warn' : 'bad'; }
+
+let _docChat = [];
+
+function openAssessDoc() {
+  renderDocModal();
+  document.getElementById('docOverlay').classList.add('open');
+}
+function closeAssessDoc() { document.getElementById('docOverlay').classList.remove('open'); }
+
+function renderDocModal() {
+  document.getElementById('docChatLog').innerHTML = _docChatHTML();
+  document.getElementById('docPreview').innerHTML = _docPreviewHTML();
+  const tag = document.getElementById('docHeadTag');
+  tag.textContent = ASSESS_DOC.approved ? 'APPROVED' : 'DRAFT FOR REVIEW';
+  tag.classList.toggle('approved', ASSESS_DOC.approved);
+  const btn = document.getElementById('docApproveBtn');
+  btn.textContent = ASSESS_DOC.approved ? 'Approved' : 'Approve & send to Halcyon';
+  btn.disabled = ASSESS_DOC.approved;
+  document.getElementById('docChips').style.display = ASSESS_DOC.approved ? 'none' : '';
+}
+
+function _docChatHTML() {
+  const intro = `<div class="doc-msg agent">
+      <span class="doc-msg-avatar"><svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg></span>
+      <div class="doc-msg-text">Here's the draft, Tom. Coverage is <strong>${ASSESS_DOC.coverage}%</strong> — the panel
+        at the top of the document says what that rests on. Two dimensions are marked low confidence.
+        Tell me what to change and I'll amend the document as we talk.</div>
+    </div>`;
+  return intro + _docChat.map(m => m.who === 'TO'
+    ? `<div class="doc-msg user"><div class="doc-msg-text">${m.text}</div><span class="doc-msg-avatar" style="background:var(--palette-blue-40)">TO</span></div>`
+    : `<div class="doc-msg agent">
+         <span class="doc-msg-avatar"><svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg></span>
+         <div class="doc-msg-text">${m.text}</div>
+       </div>`).join('');
+}
+
+/* Tom's edits. Each one changes the document, not just the conversation. */
+function docChip(kind) {
+  if (kind === 'governance') {
+    _docChat.push({ who: 'TO', text: 'Governance should be a 2, not a 1 — IT circulated a draft acceptable-use note in August.' });
+    renderDocModal();
+    setTimeout(() => {
+      const d = ASSESS_DOC.dims.find(x => x.name === 'Governance & risk');
+      d.score = 2;
+      d.note = 'A draft acceptable-use note was circulated by IT in August but never ratified, and nobody owns the decision on new tools.';
+      d.evidence = 'Interview notes — IT & security; draft AUP (Aug 2026)';
+      _docChat.push({ text: `Updated. <strong>Governance &amp; risk</strong> moves from <strong>1</strong> to <strong>2</strong>,
+        I've cited the August draft as evidence and reworded the finding. Overall readiness is now
+        <strong>${_docScore()}</strong> out of 5.` });
+      renderDocModal();
+    }, 900);
+  } else {
+    _docChat.push({ who: 'TO', text: 'Why is process readiness low confidence?' });
+    renderDocModal();
+    setTimeout(() => {
+      _docChat.push({ text: `Only <strong>customer service</strong> returned process documentation — despatch and
+        maintenance didn't. The score is from one function out of three, so I've held it at low confidence
+        rather than inferring across the depots. Two more sets of notes would lift it.` });
+      renderDocModal();
+    }, 900);
+  }
+}
+
+function docSend(el) {
+  const text = (el.value || '').trim();
+  if (!text) return;
+  el.value = '';
+  _docChat.push({ who: 'TO', text });
+  renderDocModal();
+  setTimeout(() => {
+    _docChat.push({ text: `Noted — I've folded that into the draft. Anything else before this goes to Halcyon?` });
+    renderDocModal();
+  }, 900);
+}
+function docKey(e, el) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); docSend(el); } }
+
+function docApprove() {
+  ASSESS_DOC.approved = true;
+  agentStage = 'approved';
+  renderDocModal();
+  const t = _agentTask();
+  if (t) t.tag = { label: 'Done', dot: 'var(--palette-green-40)', bg: 'var(--palette-green-10)', color: 'var(--palette-green-60)' };
+  _personSay('Tom Okafor', 'TO', 'var(--palette-blue-40)', 'Senior Consultant',
+    `Reviewed and approved. One change — governance moves to a 2, the August draft AUP counts as evidence.
+     Overall readiness <strong>${_docScore()}</strong>/5. Good to go to Halcyon.`);
+  showToast('Assessment approved — ready to send to Halcyon');
+  setTimeout(closeAssessDoc, 1100);
+}
+
+function _docPreviewHTML() {
+  const overall = _docScore();
+  const lowConf = ASSESS_DOC.dims.filter(d => d.confidence === 'low');
+  return `
+    <div class="doc-page">
+      <div class="doc-doc-head">
+        <div class="doc-doc-title">${ASSESS_DOC.title}</div>
+        <div class="doc-doc-sub">${ASSESS_DOC.sub}</div>
+      </div>
+
+      <div class="doc-coverage">
+        <div class="doc-cov-main">
+          <div class="doc-cov-num">${ASSESS_DOC.coverage}%</div>
+          <div class="doc-cov-label">Coverage</div>
+        </div>
+        <div class="doc-cov-body">
+          <div class="doc-cov-title">Coverage &amp; confidence</div>
+          <p>Built from <strong>40 self-assessment responses</strong>, <strong>4 sets of interview notes</strong>
+             and a <strong>light tool-estate scan</strong>. Five of seven dimensions are <strong>high confidence</strong>.</p>
+          <p class="doc-cov-warn">Lower confidence: ${lowConf.map(d => d.name).join(' and ')} — single-function evidence only.
+             Treat those scores as indicative until the remaining notes are in.</p>
+        </div>
+      </div>
+
+      <h3>Executive summary</h3>
+      <p>Halcyon Logistics is <strong>partially ready</strong> for AI adoption, scoring
+         <strong>${overall} out of 5</strong> overall. The foundations are better than the sector norm —
+         telematics and TMS data are centralised and clean, and there is named executive sponsorship with
+         a budget behind it.</p>
+      <p>The constraint is not technical. <strong>Governance is the weakest dimension</strong>: there is no
+         ratified acceptable-use position and no owner for decisions on new tooling. Until that is settled,
+         adoption will stay informal and unmeasured, and the shadow usage found in the tool-estate scan will
+         keep growing. Phase 3 of this engagement addresses it directly.</p>
+
+      <h3>Seven-dimension scorecard</h3>
+      <table class="doc-score-table">
+        <thead><tr><th>Dimension</th><th class="num">Score</th><th>Finding &amp; evidence</th></tr></thead>
+        <tbody>
+          ${ASSESS_DOC.dims.map(d => `
+            <tr>
+              <td class="doc-dim">${d.name}${d.confidence === 'low' ? '<span class="doc-lowconf">low confidence</span>' : ''}</td>
+              <td class="num"><span class="doc-pill ${_docBand(d.score)}">${d.score}/5</span></td>
+              <td>
+                <div>${d.note}</div>
+                <div class="doc-cite">Evidence: ${d.evidence}</div>
+              </td>
+            </tr>`).join('')}
+        </tbody>
+        <tfoot><tr><td>Overall readiness</td><td class="num"><span class="doc-pill ${_docBand(overall)}">${overall}/5</span></td><td></td></tr></tfoot>
+      </table>
+
+      <h3>Gap analysis</h3>
+      <ul>
+        <li><strong>No acceptable-use position.</strong> Staff are already using tools informally with no guidance on what data may go where. Highest severity, lowest effort to fix.</li>
+        <li><strong>No owner for tool decisions.</strong> IT and Operations each assume the other decides, so nothing is decided.</li>
+        <li><strong>Process variation across depots.</strong> Claims and despatch are documented centrally but worked differently at each site, which limits what can be automated consistently.</li>
+        <li><strong>Data classification predates AI.</strong> Whether customer manifest data is restricted is unresolved, and it blocks the governance policy.</li>
+        <li><strong>Training is ad hoc.</strong> Appetite is high in operations but there is no curriculum and no shared prompt practice.</li>
+      </ul>
+
+      <h3>Recommended roadmap</h3>
+      <ul>
+        <li><strong>Horizon 1 — 0 to 6 months.</strong> Ratify the acceptable-use policy and name a decision owner. Launch claims triage and despatch summarisation, the two use cases with the cleanest data behind them.</li>
+        <li><strong>Horizon 2 — 6 to 12 months.</strong> Standardise depot processes, then predictive maintenance scheduling once that variation is removed.</li>
+        <li><strong>Horizon 3 — 12 to 18 months.</strong> Dynamic route optimisation, dependent on the integration work in Horizon 2.</li>
+      </ul>
+
+      <h3>Method</h3>
+      <p>Scores are the median of the evidence available per dimension. Where a dimension rests on a single
+         function's evidence it is marked low confidence and excluded from the trend baseline. This draft is
+         for senior review and is not yet issued to Halcyon.</p>
+    </div>`;
 }
 
 /* Re-render the open task drawer in place, finding its position in the data */
