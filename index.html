@@ -11479,7 +11479,20 @@ function _financeReply(text) {
 </ul>
 <p><strong>Planned margin: $52,800 — 35.2%.</strong></p>
 <p>Two things worth knowing. At rate card those 820 hours would bill at <strong>$163,000</strong>, so the fixed fee already concedes <strong>$13,000</strong>. And every hour moved from the junior consultant to the Readiness Agent swaps <strong>$90</strong> of cost for <strong>$10</strong> — the 12h it drafted this week is <strong>$960</strong> of margin that wasn't in the plan.</p>
-<p>Current forecast is <strong>33.8%</strong>, 1.4 points under plan, driven by the Phase 1 over-run.</p>`;
+<p>Current forecast is <strong>33.8%</strong>, 1.4 points under plan.</p>`;
+  }
+
+  if (q.includes('phase') && (q.includes('cost') || q.includes('expensive') || q.includes('most'))) {
+    return `<p><strong>Phase 1 · Readiness &amp; Discovery</strong> carries the most, at <strong>$28,500</strong> — 29% of the engagement's cost against 31% of its hours.</p>
+<ul>
+  <li><strong>Phase 1 — Readiness &amp; Discovery</strong> · 252h · planned $26,400 · actual <strong>$28,500</strong></li>
+  <li><strong>Phase 4 — Rollout &amp; Adoption</strong> · 188h · planned $24,200</li>
+  <li><strong>Phase 3 — Governance &amp; Enablement</strong> · 200h · planned $23,400</li>
+  <li><strong>Phase 2 — Roadmap &amp; Business Case</strong> · 180h · planned $23,200</li>
+</ul>
+<p>Phase 1 is the largest block of hours in the engagement, so it tops the list even though it is the most junior-weighted phase.</p>
+<p><strong>It is also the only phase over plan, by $2,100.</strong> The plan put 200 junior hours into three weeks — 67 hours a week against a 40-hour week — so roughly <strong>35 of those hours</strong> were picked up by Tom Okafor at $150 rather than Sam Delaney at $90. That $2,100 is the entire gap between the $97,200 planned cost and the $99,300 forecast, and the whole of the 1.4-point margin shortfall.</p>
+<p>Worth noting for the phases still to run: the same overflow handled by the <strong>Readiness Agent</strong> would cost $10 an hour rather than $150.</p>`;
   }
 
   if (q.includes('drifting') || (q.includes('margin') && (q.includes('which project') || q.includes('portfolio')))) {
