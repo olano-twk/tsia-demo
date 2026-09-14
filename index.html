@@ -2680,13 +2680,10 @@ body {
   background: linear-gradient(74deg, #edf6fe -37.69%, #fff 36.98%, #fff 70.68%, #ffeff9 126.06%);
 }
 .ai-drawer-header-icon {
-  width: 36px; height: 36px; border-radius: var(--border-rounded-lg);
+  width: 24px; height: 24px;
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  background: linear-gradient(var(--palette-white), var(--palette-white)) padding-box,
-              var(--color-border-ai) border-box;
-  border: 1.5px solid transparent;
 }
-.ai-drawer-header-icon svg { width: 18px; height: 18px; }
+.ai-drawer-header-icon svg { width: 20px; height: 20px; }
 .ai-drawer-header-text { flex: 1; min-width: 0; }
 .ai-drawer-header-title {
   font-size: 15px; font-weight: 700; color: var(--color-text-default);
@@ -2863,10 +2860,65 @@ body {
   color: var(--palette-neutral-60);
   border-radius: var(--border-rounded-lg) var(--border-rounded-sm) var(--border-rounded-lg) var(--border-rounded-lg);
 }
+/* ── Ask AI answers ───────────────────────────────────────────────
+   Plain full-width prose rather than a chat bubble: no avatar, no
+   border, no background. The answer is the content, not a message. */
+.chat-msg.ai { display: block; }
+.chat-msg.ai .chat-msg-sender { display: block; }
 .chat-msg.ai .chat-msg-bubble {
+  max-width: none; width: 100%;
+  background: none; border: none; border-radius: 0; padding: 0;
+  font-size: 14px; line-height: 1.65; color: var(--color-text-default);
+}
+.chat-msg.ai .chat-msg-bubble > *:first-child { margin-top: 0; }
+.chat-msg.ai .chat-msg-bubble > *:last-child  { margin-bottom: 0; }
+.chat-msg.ai .chat-msg-bubble p { margin: 0 0 var(--spacing-3); }
+.chat-msg.ai .chat-msg-bubble strong { font-weight: 650; color: var(--palette-neutral-60); }
+.chat-msg.ai .chat-msg-bubble em { color: var(--color-text-subtle); font-style: normal; }
+.chat-msg.ai .chat-msg-bubble h2,
+.chat-msg.ai .chat-msg-bubble h3 {
+  font-size: 13px; font-weight: 700; color: var(--color-text-default);
+  margin: var(--spacing-5) 0 var(--spacing-2);
+}
+.chat-msg.ai .chat-msg-bubble ul,
+.chat-msg.ai .chat-msg-bubble ol {
+  margin: 0 0 var(--spacing-3); padding-left: 0; list-style: none;
+}
+.chat-msg.ai .chat-msg-bubble ol { counter-reset: ai-ol; }
+.chat-msg.ai .chat-msg-bubble li {
+  position: relative; padding-left: var(--spacing-4); margin-bottom: var(--spacing-2);
+}
+.chat-msg.ai .chat-msg-bubble li:last-child { margin-bottom: 0; }
+/* Bullet as a small neutral dot, aligned to the first line of text */
+.chat-msg.ai .chat-msg-bubble ul > li::before {
+  content: ''; position: absolute; left: 4px; top: 0.62em;
+  width: 4px; height: 4px; border-radius: var(--border-rounded-full);
+  background: var(--palette-neutral-30);
+}
+.chat-msg.ai .chat-msg-bubble ol > li::before {
+  counter-increment: ai-ol; content: counter(ai-ol) '.';
+  position: absolute; left: 0; top: 0;
+  font-size: 12px; font-weight: 600; color: var(--color-text-subtle);
+}
+.chat-msg.ai .chat-msg-bubble hr {
+  border: none; border-top: var(--border-width-1) solid var(--color-border-separator);
+  margin: var(--spacing-4) 0;
+}
+.chat-msg.ai .chat-msg-bubble table {
+  width: 100%; border-collapse: collapse; margin: 0 0 var(--spacing-3); font-size: 13px;
+}
+.chat-msg.ai .chat-msg-bubble th,
+.chat-msg.ai .chat-msg-bubble td {
+  text-align: left; padding: var(--spacing-2) var(--spacing-2) var(--spacing-2) 0;
+  border-bottom: var(--border-width-1) solid var(--color-border-separator);
+}
+.chat-msg.ai .chat-msg-bubble th { font-size: 12px; font-weight: 600; color: var(--color-text-subtle); }
+/* The typing dots still want their pill */
+.chat-msg.ai .chat-msg-bubble.chat-thinking {
+  width: auto; display: inline-flex; padding: var(--spacing-2) var(--spacing-3);
   background: var(--palette-white);
   border: var(--border-width-1) solid var(--color-border-separator);
-  border-radius: var(--border-rounded-sm) var(--border-rounded-lg) var(--border-rounded-lg) var(--border-rounded-lg);
+  border-radius: var(--border-rounded-lg);
 }
 
 /* ── Chat History Panel ─────────────────────────────────────────── */
@@ -4212,6 +4264,34 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 </head>
 <body>
 
+<!-- ── 🧩 AI sparkle — the one sparkle mark used across the prototype ──
+     Source: the Teamwork AI icon in the left global nav. Defined once as
+     a symbol; every instance is <use href="#aiSparkIcon">. aiGrad2 and
+     aiGradLine live here too — other, non-sparkle AI icons stroke with
+     them, and they used to be defined inside the Ask AI drawer icon. ── -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="aiSparkGrad" x1="0.28877" y1="16.2693" x2="15.7112" y2="-0.269282" gradientUnits="userSpaceOnUse">
+      <stop offset="0.1718" stop-color="#4DA2F8"/>
+      <stop offset="0.7326" stop-color="#FF22B1"/>
+      <stop offset="0.9964" stop-color="#FF7641"/>
+    </linearGradient>
+    <linearGradient id="aiGrad2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ff7641"/>
+      <stop offset="50%" stop-color="#c21083"/>
+      <stop offset="100%" stop-color="#4da2f8"/>
+    </linearGradient>
+    <linearGradient id="aiGradLine" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="24" y2="24">
+      <stop offset="0%" stop-color="#ff7641"/>
+      <stop offset="50%" stop-color="#c21083"/>
+      <stop offset="100%" stop-color="#4da2f8"/>
+    </linearGradient>
+    <symbol id="aiSparkIcon" viewBox="0 0 16 16">
+      <path d="M12.4773 7.94001L11.5147 7.70334C9.95133 7.31801 8.73267 6.05134 8.36 4.42801L8.13133 3.43201C7.94267 2.59134 6.796 2.59134 6.60133 3.43201L6.37333 4.42801C6.00667 6.05134 4.782 7.32334 3.21867 7.70334L2.256 7.93934C1.44933 8.13534 1.44933 9.33267 2.256 9.52867L3.21867 9.76467C4.782 10.15 6 11.4167 6.37333 13.04L6.60133 14.036C6.79067 14.8767 7.93667 14.8767 8.13133 14.036L8.36 13.04C8.72667 11.4167 9.95133 10.1447 11.5147 9.76467L12.4773 9.52867C13.284 9.33267 13.284 8.13534 12.4773 7.93934V7.94001ZM14.13 2.94801L13.8293 2.87334C13.3306 2.74504 12.9471 2.34608 12.8387 1.84267L12.7667 1.53201C12.7455 1.41649 12.6448 1.33261 12.5273 1.33261C12.4099 1.33261 12.3092 1.41649 12.288 1.53201L12.2153 1.84267C12.107 2.3459 11.7238 2.74483 11.2253 2.87334L10.9253 2.94801C10.6747 3.01134 10.6747 3.38601 10.9253 3.44934L11.2253 3.52401C11.7147 3.64467 12.0987 4.04201 12.2153 4.55467L12.288 4.86534C12.3092 4.98085 12.4099 5.06473 12.5273 5.06473C12.6448 5.06473 12.7455 4.98085 12.7667 4.86534L12.8387 4.55467C12.9471 4.05127 13.3306 3.6523 13.8293 3.52401L14.1293 3.44934C14.38 3.38601 14.38 3.01134 14.1293 2.94801H14.13Z" fill="url(#aiSparkGrad)"/>
+    </symbol>
+  </defs>
+</svg>
+
 <div class="app-shell">
 
   <!-- ── 🧩 Sidebar (dark nav) ────────────────────────────────────
@@ -4230,24 +4310,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
     </button>
     <div class="nav-ai-wrap">
     <button class="nav-icon-btn active" id="navTeamworkAiBtn" title="Teamwork AI" onclick="showTeamworkAi(lastTeamworkAiTab)">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="aiNavGrad" x1="0.28877" y1="16.2693" x2="15.7112" y2="-0.269282" gradientUnits="userSpaceOnUse">
-            <stop offset="0.1718" stop-color="#4DA2F8"/>
-            <stop offset="0.7326" stop-color="#FF22B1"/>
-            <stop offset="0.9964" stop-color="#FF7641"/>
-          </linearGradient>
-          <clipPath id="aiNavClip"><rect width="16" height="16" fill="white"/></clipPath>
-          <mask id="aiNavMask" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="16" height="16">
-            <g clip-path="url(#aiNavClip)">
-              <path d="M12.4773 7.94001L11.5147 7.70334C9.95133 7.31801 8.73267 6.05134 8.36 4.42801L8.13133 3.43201C7.94267 2.59134 6.796 2.59134 6.60133 3.43201L6.37333 4.42801C6.00667 6.05134 4.782 7.32334 3.21867 7.70334L2.256 7.93934C1.44933 8.13534 1.44933 9.33267 2.256 9.52867L3.21867 9.76467C4.782 10.15 6 11.4167 6.37333 13.04L6.60133 14.036C6.79067 14.8767 7.93667 14.8767 8.13133 14.036L8.36 13.04C8.72667 11.4167 9.95133 10.1447 11.5147 9.76467L12.4773 9.52867C13.284 9.33267 13.284 8.13534 12.4773 7.93934V7.94001ZM14.13 2.94801L13.8293 2.87334C13.3306 2.74504 12.9471 2.34608 12.8387 1.84267L12.7667 1.53201C12.7455 1.41649 12.6448 1.33261 12.5273 1.33261C12.4099 1.33261 12.3092 1.41649 12.288 1.53201L12.2153 1.84267C12.107 2.3459 11.7238 2.74483 11.2253 2.87334L10.9253 2.94801C10.6747 3.01134 10.6747 3.38601 10.9253 3.44934L11.2253 3.52401C11.7147 3.64467 12.0987 4.04201 12.2153 4.55467L12.288 4.86534C12.3092 4.98085 12.4099 5.06473 12.5273 5.06473C12.6448 5.06473 12.7455 4.98085 12.7667 4.86534L12.8387 4.55467C12.9471 4.05127 13.3306 3.6523 13.8293 3.52401L14.1293 3.44934C14.38 3.38601 14.38 3.01134 14.1293 2.94801H14.13Z" fill="black"/>
-            </g>
-          </mask>
-        </defs>
-        <g mask="url(#aiNavMask)">
-          <rect width="16" height="16" fill="url(#aiNavGrad)"/>
-        </g>
-      </svg>
+      <svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg>
     </button>
       <div class="nav-ai-popover">
         <button class="nav-ai-popover-item" onclick="showTeamworkAi('ask')">
@@ -4529,7 +4592,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 
                 <div class="askai-suggest-group">
                   <div class="askai-suggest-label">
-                    <svg viewBox="0 0 24 24" fill="url(#aiGrad2)"><path d="M18.716 11.91L17.272 11.555C14.927 10.977 13.099 9.077 12.54 6.642L12.197 5.148C11.914 3.887 10.194 3.887 9.902 5.148L9.56 6.642C9.01 9.077 7.173 10.985 4.828 11.555L3.384 11.909C2.174 12.203 2.174 13.999 3.384 14.293L4.828 14.647C7.173 15.225 9 17.125 9.56 19.56L9.902 21.054C10.186 22.315 11.905 22.315 12.197 21.054L12.54 19.56C13.09 17.125 14.927 15.217 17.272 14.647L18.716 14.293C19.926 13.999 19.926 12.203 18.716 11.909V11.91ZM21.195 4.422L20.744 4.31C19.996 4.118 19.421 3.519 19.258 2.764L19.15 2.298C19.118 2.125 18.967 1.999 18.791 1.999C18.615 1.999 18.464 2.125 18.432 2.298L18.323 2.764C18.16 3.519 17.586 4.117 16.838 4.31L16.388 4.422C16.012 4.517 16.012 5.079 16.388 5.174L16.838 5.286C17.572 5.467 18.148 6.063 18.323 6.832L18.432 7.298C18.464 7.471 18.615 7.597 18.791 7.597C18.967 7.597 19.118 7.471 19.15 7.298L19.258 6.832C19.421 6.077 19.996 5.478 20.744 5.286L21.194 5.174C21.57 5.079 21.57 4.517 21.194 4.422H21.195Z"/></svg>
+                    <svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg>
                     For you
                   </div>
                   <div class="askai-suggest-chips">
@@ -4737,7 +4800,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 
                   <div class="filter-group">
                     <button class="filter-group-btn" onclick="toggleFilterGroup('jobTypeOpts', this)">
-                      <svg class="fg-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.716 11.91L17.272 11.555C14.927 10.977 13.099 9.077 12.54 6.642L12.197 5.148C11.914 3.887 10.194 3.887 9.902 5.148L9.56 6.642C9.01 9.077 7.173 10.985 4.828 11.555L3.384 11.909C2.174 12.203 2.174 13.999 3.384 14.293L4.828 14.647C7.173 15.225 9 17.125 9.56 19.56L9.902 21.054C10.186 22.315 11.905 22.315 12.197 21.054L12.54 19.56C13.09 17.125 14.927 15.217 17.272 14.647L18.716 14.293C19.926 13.999 19.926 12.203 18.716 11.909V11.91ZM21.195 4.422L20.744 4.31C19.996 4.118 19.421 3.519 19.258 2.764L19.15 2.298C19.118 2.125 18.967 1.999 18.791 1.999C18.615 1.999 18.464 2.125 18.432 2.298L18.323 2.764C18.16 3.519 17.586 4.117 16.838 4.31L16.388 4.422C16.012 4.517 16.012 5.079 16.388 5.174L16.838 5.286C17.572 5.467 18.148 6.063 18.323 6.832L18.432 7.298C18.464 7.471 18.615 7.597 18.791 7.597C18.967 7.597 19.118 7.471 19.15 7.298L19.258 6.832C19.421 6.077 19.996 5.478 20.744 5.286L21.194 5.174C21.57 5.079 21.57 4.517 21.194 4.422H21.195Z"/></svg>
+                      <svg class="fg-icon" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg>
                       <span class="fg-label">Job type</span>
                       <span class="fg-count" id="countJobType">0</span>
                       <svg class="fg-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
@@ -4850,15 +4913,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
           <!-- AI button + menu beside project name -->
           <div class="project-ai-wrap" id="projectAiWrap">
             <button class="project-ai-btn" title="Teamwork AI" onclick="toggleProjectAiMenu(event)">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="projAiGrad" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stop-color="#ff7641"/><stop offset="50%" stop-color="#c21083"/><stop offset="100%" stop-color="#4da2f8"/>
-                  </linearGradient>
-                </defs>
-                <path d="M18.716 11.91L17.272 11.555C14.927 10.977 13.099 9.077 12.54 6.642L12.197 5.148C11.914 3.887 10.194 3.887 9.902 5.148L9.56 6.642C9.01 9.077 7.173 10.985 4.828 11.555L3.384 11.909C2.174 12.203 2.174 13.999 3.384 14.293L4.828 14.647C7.173 15.225 9 17.125 9.56 19.56L9.902 21.054C10.186 22.315 11.905 22.315 12.197 21.054L12.54 19.56C13.09 17.125 14.927 15.217 17.272 14.647L18.716 14.293C19.926 13.999 19.926 12.203 18.716 11.909V11.91ZM21.195 4.422L20.744 4.31C19.996 4.118 19.421 3.519 19.258 2.764L19.15 2.298C19.118 2.125 18.967 1.999 18.791 1.999C18.615 1.999 18.464 2.125 18.432 2.298L18.323 2.764C18.16 3.519 17.586 4.117 16.838 4.31L16.388 4.422C16.012 4.517 16.012 5.079 16.388 5.174L16.838 5.286C17.572 5.467 18.148 6.063 18.323 6.832L18.432 7.298C18.464 7.471 18.615 7.597 18.791 7.597C18.967 7.597 19.118 7.471 19.15 7.298L19.258 6.832C19.421 6.077 19.996 5.478 20.744 5.286L21.194 5.174C21.57 5.079 21.57 4.517 21.194 4.422H21.195Z" fill="url(#projAiGrad)"/>
-                <path d="M19 16l.9 2.6L22.5 19.5l-2.6.9L19 23l-.9-2.6L15.5 19.5l2.6-.9L19 16z" fill="url(#projAiGrad)" opacity="0.7"/>
-              </svg>
+              <svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg>
             </button>
             <div class="project-ai-menu" id="projectAiMenu">
               <button class="project-ai-menu-item" onclick="askAiAboutProject()">
@@ -5131,23 +5186,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 <div class="ai-drawer" id="aiDrawer">
   <div class="ai-drawer-header">
     <div class="ai-drawer-header-icon">
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
-        <defs>
-          <linearGradient id="aiGrad2" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#ff7641"/>
-            <stop offset="50%" stop-color="#c21083"/>
-            <stop offset="100%" stop-color="#4da2f8"/>
-          </linearGradient>
-          <!-- User-space variant so gradient strokes paint on straight-line icons (zero-area bbox) -->
-          <linearGradient id="aiGradLine" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="24" y2="24">
-            <stop offset="0%" stop-color="#ff7641"/>
-            <stop offset="50%" stop-color="#c21083"/>
-            <stop offset="100%" stop-color="#4da2f8"/>
-          </linearGradient>
-        </defs>
-        <path d="M18.716 11.91L17.272 11.555C14.927 10.977 13.099 9.077 12.54 6.642L12.197 5.148C11.914 3.887 10.194 3.887 9.902 5.148L9.56 6.642C9.01 9.077 7.173 10.985 4.828 11.555L3.384 11.909C2.174 12.203 2.174 13.999 3.384 14.293L4.828 14.647C7.173 15.225 9 17.125 9.56 19.56L9.902 21.054C10.186 22.315 11.905 22.315 12.197 21.054L12.54 19.56C13.09 17.125 14.927 15.217 17.272 14.647L18.716 14.293C19.926 13.999 19.926 12.203 18.716 11.909V11.91ZM21.195 4.422L20.744 4.31C19.996 4.118 19.421 3.519 19.258 2.764L19.15 2.298C19.118 2.125 18.967 1.999 18.791 1.999C18.615 1.999 18.464 2.125 18.432 2.298L18.323 2.764C18.16 3.519 17.586 4.117 16.838 4.31L16.388 4.422C16.012 4.517 16.012 5.079 16.388 5.174L16.838 5.286C17.572 5.467 18.148 6.063 18.323 6.832L18.432 7.298C18.464 7.471 18.615 7.597 18.791 7.597C18.967 7.597 19.118 7.471 19.15 7.298L19.258 6.832C19.421 6.077 19.996 5.478 20.744 5.286L21.194 5.174C21.57 5.079 21.57 4.517 21.194 4.422H21.195Z" fill="url(#aiGrad2)"/>
-        <path d="M19 16l.9 2.6L22.5 19.5l-2.6.9L19 23l-.9-2.6L15.5 19.5l2.6-.9L19 16z" fill="url(#aiGrad2)" opacity="0.7"/>
-      </svg>
+      <svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg>
     </div>
     <div class="ai-drawer-header-text">
       <div class="ai-drawer-header-title">Ask AI</div>
@@ -5215,7 +5254,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
       </div>
       <div class="ai-for-you" id="aiDrawerForYou">
         <div class="ai-for-you-label">
-          <svg viewBox="0 0 24 24" fill="url(#aiGrad2)"><path d="M18.716 11.91L17.272 11.555C14.927 10.977 13.099 9.077 12.54 6.642L12.197 5.148C11.914 3.887 10.194 3.887 9.902 5.148L9.56 6.642C9.01 9.077 7.173 10.985 4.828 11.555L3.384 11.909C2.174 12.203 2.174 13.999 3.384 14.293L4.828 14.647C7.173 15.225 9 17.125 9.56 19.56L9.902 21.054C10.186 22.315 11.905 22.315 12.197 21.054L12.54 19.56C13.09 17.125 14.927 15.217 17.272 14.647L18.716 14.293C19.926 13.999 19.926 12.203 18.716 11.909V11.91ZM21.195 4.422L20.744 4.31C19.996 4.118 19.421 3.519 19.258 2.764L19.15 2.298C19.118 2.125 18.967 1.999 18.791 1.999C18.615 1.999 18.464 2.125 18.432 2.298L18.323 2.764C18.16 3.519 17.586 4.117 16.838 4.31L16.388 4.422C16.012 4.517 16.012 5.079 16.388 5.174L16.838 5.286C17.572 5.467 18.148 6.063 18.323 6.832L18.432 7.298C18.464 7.471 18.615 7.597 18.791 7.597C18.967 7.597 19.118 7.471 19.15 7.298L19.258 6.832C19.421 6.077 19.996 5.478 20.744 5.286L21.194 5.174C21.57 5.079 21.57 4.517 21.194 4.422H21.195Z"/></svg>
+          <svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg>
           For you
         </div>
         <div class="ai-for-you-list">
@@ -5313,7 +5352,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
       <div class="ab-chat">
         <div class="ab-chat-head">
           <h2>
-            <svg viewBox="0 0 24 24" fill="url(#aiGrad2)"><path d="M18.716 11.91L17.272 11.555C14.927 10.977 13.099 9.077 12.54 6.642L12.197 5.148C11.914 3.887 10.194 3.887 9.902 5.148L9.56 6.642C9.01 9.077 7.173 10.985 4.828 11.555L3.384 11.909C2.174 12.203 2.174 13.999 3.384 14.293L4.828 14.647C7.173 15.225 9 17.125 9.56 19.56L9.902 21.054C10.186 22.315 11.905 22.315 12.197 21.054L12.54 19.56C13.09 17.125 14.927 15.217 17.272 14.647L18.716 14.293C19.926 13.999 19.926 12.203 18.716 11.909V11.91ZM21.195 4.422L20.744 4.31C19.996 4.118 19.421 3.519 19.258 2.764L19.15 2.298C19.118 2.125 18.967 1.999 18.791 1.999C18.615 1.999 18.464 2.125 18.432 2.298L18.323 2.764C18.16 3.519 17.586 4.117 16.838 4.31L16.388 4.422C16.012 4.517 16.012 5.079 16.388 5.174L16.838 5.286C17.572 5.467 18.148 6.063 18.323 6.832L18.432 7.298C18.464 7.471 18.615 7.597 18.791 7.597C18.967 7.597 19.118 7.471 19.15 7.298L19.258 6.832C19.421 6.077 19.996 5.478 20.744 5.286L21.194 5.174C21.57 5.079 21.57 4.517 21.194 4.422H21.195Z"/></svg>
+            <svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg>
             Builder chat
           </h2>
           <p>Ask questions or make changes — edits appear in the panel on the right.</p>
@@ -5378,7 +5417,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
   <div class="skills-modal">
     <div class="skills-modal-header">
       <div class="skills-modal-title">
-        <svg viewBox="0 0 24 24" fill="url(#aiGrad2)" width="18" height="18"><path d="M18.716 11.91L17.272 11.555C14.927 10.977 13.099 9.077 12.54 6.642L12.197 5.148C11.914 3.887 10.194 3.887 9.902 5.148L9.56 6.642C9.01 9.077 7.173 10.985 4.828 11.555L3.384 11.909C2.174 12.203 2.174 13.999 3.384 14.293L4.828 14.647C7.173 15.225 9 17.125 9.56 19.56L9.902 21.054C10.186 22.315 11.905 22.315 12.197 21.054L12.54 19.56C13.09 17.125 14.927 15.217 17.272 14.647L18.716 14.293C19.926 13.999 19.926 12.203 18.716 11.909V11.91ZM21.195 4.422L20.744 4.31C19.996 4.118 19.421 3.519 19.258 2.764L19.15 2.298C19.118 2.125 18.967 1.999 18.791 1.999C18.615 1.999 18.464 2.125 18.432 2.298L18.323 2.764C18.16 3.519 17.586 4.117 16.838 4.31L16.388 4.422C16.012 4.517 16.012 5.079 16.388 5.174L16.838 5.286C17.572 5.467 18.148 6.063 18.323 6.832L18.432 7.298C18.464 7.471 18.615 7.597 18.791 7.597C18.967 7.597 19.118 7.471 19.15 7.298L19.258 6.832C19.421 6.077 19.996 5.478 20.744 5.286L21.194 5.174C21.57 5.079 21.57 4.517 21.194 4.422H21.195Z"/></svg>
+        <svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg>
         Skills
       </div>
       <div class="skills-modal-tools">
@@ -5417,7 +5456,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
         <div class="cs-prompt-head">
           <label class="cs-label" for="createSkillPrompt">Prompt</label>
           <button class="cs-write-ai" onclick="writeSkillWithAi()">
-            <svg viewBox="0 0 24 24" fill="url(#aiGrad2)"><path d="M18.716 11.91L17.272 11.555C14.927 10.977 13.099 9.077 12.54 6.642L12.197 5.148C11.914 3.887 10.194 3.887 9.902 5.148L9.56 6.642C9.01 9.077 7.173 10.985 4.828 11.555L3.384 11.909C2.174 12.203 2.174 13.999 3.384 14.293L4.828 14.647C7.173 15.225 9 17.125 9.56 19.56L9.902 21.054C10.186 22.315 11.905 22.315 12.197 21.054L12.54 19.56C13.09 17.125 14.927 15.217 17.272 14.647L18.716 14.293C19.926 13.999 19.926 12.203 18.716 11.909V11.91ZM21.195 4.422L20.744 4.31C19.996 4.118 19.421 3.519 19.258 2.764L19.15 2.298C19.118 2.125 18.967 1.999 18.791 1.999C18.615 1.999 18.464 2.125 18.432 2.298L18.323 2.764C18.16 3.519 17.586 4.117 16.838 4.31L16.388 4.422C16.012 4.517 16.012 5.079 16.388 5.174L16.838 5.286C17.572 5.467 18.148 6.063 18.323 6.832L18.432 7.298C18.464 7.471 18.615 7.597 18.791 7.597C18.967 7.597 19.118 7.471 19.15 7.298L19.258 6.832C19.421 6.077 19.996 5.478 20.744 5.286L21.194 5.174C21.57 5.079 21.57 4.517 21.194 4.422H21.195Z"/></svg>
+            <svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg>
             Write with AI
           </button>
         </div>
@@ -5458,10 +5497,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
     <div class="task-tb-spacer"></div>
     <div class="project-ai-wrap task-ai-wrap" id="taskAiWrap">
       <button class="project-ai-btn" title="Teamwork AI" onclick="toggleTaskAiMenu(event)">
-        <svg viewBox="0 0 24 24" fill="url(#aiGrad2)" xmlns="http://www.w3.org/2000/svg">
-          <path d="M18.716 11.91L17.272 11.555C14.927 10.977 13.099 9.077 12.54 6.642L12.197 5.148C11.914 3.887 10.194 3.887 9.902 5.148L9.56 6.642C9.01 9.077 7.173 10.985 4.828 11.555L3.384 11.909C2.174 12.203 2.174 13.999 3.384 14.293L4.828 14.647C7.173 15.225 9 17.125 9.56 19.56L9.902 21.054C10.186 22.315 11.905 22.315 12.197 21.054L12.54 19.56C13.09 17.125 14.927 15.217 17.272 14.647L18.716 14.293C19.926 13.999 19.926 12.203 18.716 11.909V11.91ZM21.195 4.422L20.744 4.31C19.996 4.118 19.421 3.519 19.258 2.764L19.15 2.298C19.118 2.125 18.967 1.999 18.791 1.999C18.615 1.999 18.464 2.125 18.432 2.298L18.323 2.764C18.16 3.519 17.586 4.117 16.838 4.31L16.388 4.422C16.012 4.517 16.012 5.079 16.388 5.174L16.838 5.286C17.572 5.467 18.148 6.063 18.323 6.832L18.432 7.298C18.464 7.471 18.615 7.597 18.791 7.597C18.967 7.597 19.118 7.471 19.15 7.298L19.258 6.832C19.421 6.077 19.996 5.478 20.744 5.286L21.194 5.174C21.57 5.079 21.57 4.517 21.194 4.422H21.195Z"/>
-          <path d="M19 16l.9 2.6L22.5 19.5l-2.6.9L19 23l-.9-2.6L15.5 19.5l2.6-.9L19 16z" opacity="0.7"/>
-        </svg>
+        <svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg>
       </button>
       <div class="project-ai-menu task-ai-menu" id="taskAiMenu">
         <button class="project-ai-menu-item" onclick="askAiAboutTask()">
@@ -7270,7 +7306,7 @@ function _captureForYou() {
   if (label && list) _defaultForYou = { label: label.innerHTML, list: list.innerHTML };
 }
 const _forYouArrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
-const _forYouSpark = '<svg viewBox="0 0 24 24" fill="url(#aiGrad2)"><path d="M18.716 11.91L17.272 11.555C14.927 10.977 13.099 9.077 12.54 6.642L12.197 5.148C11.914 3.887 10.194 3.887 9.902 5.148L9.56 6.642C9.01 9.077 7.173 10.985 4.828 11.555L3.384 11.909C2.174 12.203 2.174 13.999 3.384 14.293L4.828 14.647C7.173 15.225 9 17.125 9.56 19.56L9.902 21.054C10.186 22.315 11.905 22.315 12.197 21.054L12.54 19.56C13.09 17.125 14.927 15.217 17.272 14.647L18.716 14.293C19.926 13.999 19.926 12.203 18.716 11.909V11.91ZM21.195 4.422L20.744 4.31C19.996 4.118 19.421 3.519 19.258 2.764L19.15 2.298C19.118 2.125 18.967 1.999 18.791 1.999C18.615 1.999 18.464 2.125 18.432 2.298L18.323 2.764C18.16 3.519 17.586 4.117 16.838 4.31L16.388 4.422C16.012 4.517 16.012 5.079 16.388 5.174L16.838 5.286C17.572 5.467 18.148 6.063 18.323 6.832L18.432 7.298C18.464 7.471 18.615 7.597 18.791 7.597C18.967 7.597 19.118 7.471 19.15 7.298L19.258 6.832C19.421 6.077 19.996 5.478 20.744 5.286L21.194 5.174C21.57 5.079 21.57 4.517 21.194 4.422H21.195Z"/></svg>';
+const _forYouSpark = '<svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg>';
 
 /* Render scoped prompts using the default start-screen design.
    items: [{ label, onclick }] */
@@ -7475,7 +7511,7 @@ const _mentionTeams = [
   { name: 'Development', sub: '4 members' },
   { name: 'Testers',     sub: '2 members' },
 ];
-const _aiSparkSvg = '<svg class="ai-spark" viewBox="0 0 24 24" fill="url(#aiGrad2)"><path d="M18.716 11.91L17.272 11.555C14.927 10.977 13.099 9.077 12.54 6.642L12.197 5.148C11.914 3.887 10.194 3.887 9.902 5.148L9.56 6.642C9.01 9.077 7.173 10.985 4.828 11.555L3.384 11.909C2.174 12.203 2.174 13.999 3.384 14.293L4.828 14.647C7.173 15.225 9 17.125 9.56 19.56L9.902 21.054C10.186 22.315 11.905 22.315 12.197 21.054L12.54 19.56C13.09 17.125 14.927 15.217 17.272 14.647L18.716 14.293C19.926 13.999 19.926 12.203 18.716 11.909V11.91ZM21.195 4.422L20.744 4.31C19.996 4.118 19.421 3.519 19.258 2.764L19.15 2.298C19.118 2.125 18.967 1.999 18.791 1.999C18.615 1.999 18.464 2.125 18.432 2.298L18.323 2.764C18.16 3.519 17.586 4.117 16.838 4.31L16.388 4.422C16.012 4.517 16.012 5.079 16.388 5.174L16.838 5.286C17.572 5.467 18.148 6.063 18.323 6.832L18.432 7.298C18.464 7.471 18.615 7.597 18.791 7.597C18.967 7.597 19.118 7.471 19.15 7.298L19.258 6.832C19.421 6.077 19.996 5.478 20.744 5.286L21.194 5.174C21.57 5.079 21.57 4.517 21.194 4.422H21.195Z"/></svg>';
+const _aiSparkSvg = '<svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg>';
 
 /* Teammates with runnable jobs (mapped to the existing job dialog data) */
 function _slashTeammates() {
@@ -7838,7 +7874,7 @@ function renderTaskDrawerBody(t, list, listIdx, taskIdx) {
     <!-- Comments -->
     <div class="task-comments">
       <div class="task-comments-tabs">
-        <button class="task-comments-tab active">Comments <svg class="ai-spark" viewBox="0 0 24 24" fill="url(#aiGrad2)"><path d="M18.716 11.91L17.272 11.555C14.927 10.977 13.099 9.077 12.54 6.642L12.197 5.148C11.914 3.887 10.194 3.887 9.902 5.148L9.56 6.642C9.01 9.077 7.173 10.985 4.828 11.555L3.384 11.909C2.174 12.203 2.174 13.999 3.384 14.293L4.828 14.647C7.173 15.225 9 17.125 9.56 19.56L9.902 21.054C10.186 22.315 11.905 22.315 12.197 21.054L12.54 19.56C13.09 17.125 14.927 15.217 17.272 14.647L18.716 14.293C19.926 13.999 19.926 12.203 18.716 11.909V11.91ZM21.195 4.422L20.744 4.31C19.996 4.118 19.421 3.519 19.258 2.764L19.15 2.298C19.118 2.125 18.967 1.999 18.791 1.999C18.615 1.999 18.464 2.125 18.432 2.298L18.323 2.764C18.16 3.519 17.586 4.117 16.838 4.31L16.388 4.422C16.012 4.517 16.012 5.079 16.388 5.174L16.838 5.286C17.572 5.467 18.148 6.063 18.323 6.832L18.432 7.298C18.464 7.471 18.615 7.597 18.791 7.597C18.967 7.597 19.118 7.471 19.15 7.298L19.258 6.832C19.421 6.077 19.996 5.478 20.744 5.286L21.194 5.174C21.57 5.079 21.57 4.517 21.194 4.422H21.195Z"/></svg></button>
+        <button class="task-comments-tab active">Comments <svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg></button>
         <button class="task-comments-tab">Email</button>
         <button class="task-comments-tab">Activity</button>
         <button class="task-comments-tab">Info</button>
@@ -8775,7 +8811,7 @@ function renderDetail(u, targetId = 'detailPanel') {
         ${renderSuggestedActions(u)}
         <div class="detail-askai">
           <button class="detail-askai-btn" onclick="askAiAboutUpdate()">
-            <svg viewBox="0 0 24 24" fill="url(#aiGrad2)"><path d="M18.716 11.91L17.272 11.555C14.927 10.977 13.099 9.077 12.54 6.642L12.197 5.148C11.914 3.887 10.194 3.887 9.902 5.148L9.56 6.642C9.01 9.077 7.173 10.985 4.828 11.555L3.384 11.909C2.174 12.203 2.174 13.999 3.384 14.293L4.828 14.647C7.173 15.225 9 17.125 9.56 19.56L9.902 21.054C10.186 22.315 11.905 22.315 12.197 21.054L12.54 19.56C13.09 17.125 14.927 15.217 17.272 14.647L18.716 14.293C19.926 13.999 19.926 12.203 18.716 11.909V11.91ZM21.195 4.422L20.744 4.31C19.996 4.118 19.421 3.519 19.258 2.764L19.15 2.298C19.118 2.125 18.967 1.999 18.791 1.999C18.615 1.999 18.464 2.125 18.432 2.298L18.323 2.764C18.16 3.519 17.586 4.117 16.838 4.31L16.388 4.422C16.012 4.517 16.012 5.079 16.388 5.174L16.838 5.286C17.572 5.467 18.148 6.063 18.323 6.832L18.432 7.298C18.464 7.471 18.615 7.597 18.791 7.597C18.967 7.597 19.118 7.471 19.15 7.298L19.258 6.832C19.421 6.077 19.996 5.478 20.744 5.286L21.194 5.174C21.57 5.079 21.57 4.517 21.194 4.422H21.195Z"/></svg>
+            <svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg>
             Ask AI about this update
           </button>
         </div>
@@ -9981,9 +10017,7 @@ function clientIconSVG(size = 22) {
   </svg>`;
 }
 function sparkleIcon() {
-  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="14" height="14">
-    <path d="M18.716 11.91L17.272 11.555C14.927 10.977 13.099 9.077 12.54 6.642L12.197 5.148C11.914 3.887 10.194 3.887 9.902 5.148L9.56 6.642C9.01 9.077 7.173 10.985 4.828 11.555L3.384 11.909C2.174 12.203 2.174 13.999 3.384 14.293L4.828 14.647C7.173 15.225 9 17.125 9.56 19.56L9.902 21.054C10.186 22.315 11.905 22.315 12.197 21.054L12.54 19.56C13.09 17.125 14.927 15.217 17.272 14.647L18.716 14.293C19.926 13.999 19.926 12.203 18.716 11.909V11.91ZM21.195 4.422L20.744 4.31C19.996 4.118 19.421 3.519 19.258 2.764L19.15 2.298C19.118 2.125 18.967 1.999 18.791 1.999C18.615 1.999 18.464 2.125 18.432 2.298L18.323 2.764C18.16 3.519 17.586 4.117 16.838 4.31L16.388 4.422C16.012 4.517 16.012 5.079 16.388 5.174L16.838 5.286C17.572 5.467 18.148 6.063 18.323 6.832L18.432 7.298C18.464 7.471 18.615 7.597 18.791 7.597C18.967 7.597 19.118 7.471 19.15 7.298L19.258 6.832C19.421 6.077 19.996 5.478 20.744 5.286L21.194 5.174C21.57 5.079 21.57 4.517 21.194 4.422H21.195Z" fill="#4461d7" stroke="none"/>
-  </svg>`;
+  return `<svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg>`;
 }
 
 function renderJobs() {
@@ -10902,14 +10936,15 @@ function aiAppendMessage(role, html, opts = {}) {
 
   if (role === 'user') {
     el.innerHTML = `
-      <div class="chat-msg-avatar" style="background:var(--palette-purple-40);color:var(--palette-white);">O</div>
+      <div class="chat-msg-avatar" style="background:var(--palette-indigo-40);color:var(--palette-white);">DW</div>
       <div class="chat-msg-bubble">${html}</div>`;
   } else {
-    const { style, inner } = _chatAvatarHTML(opts.teammate || null);
+    // Ask AI answers render as plain full-width prose — no avatar, no
+    // bubble. Teammate replies keep a name label so it stays clear who
+    // is speaking.
     const nameLabel = opts.teammate
       ? `<div class="chat-msg-name">${opts.teammate}</div>` : '';
     el.innerHTML = `
-      <div class="chat-msg-avatar" style="${style}">${inner}</div>
       <div class="chat-msg-sender">
         ${nameLabel}
         <div class="chat-msg-bubble">${html}</div>
@@ -10927,10 +10962,8 @@ function aiAppendThinking(teammate = null) {
   const el = document.createElement('div');
   el.className = 'chat-msg ai';
   el.id = id;
-  const { style, inner } = _chatAvatarHTML(teammate);
   const nameLabel = teammate ? `<div class="chat-msg-name">${teammate}</div>` : '';
   el.innerHTML = `
-    <div class="chat-msg-avatar" style="${style}">${inner}</div>
     <div class="chat-msg-sender">
       ${nameLabel}
       <div class="chat-msg-bubble chat-thinking"><span></span><span></span><span></span></div>
@@ -11269,13 +11302,12 @@ function abIconSvg(key) {
 
 const _abSvg = (p, fill) => `<svg viewBox="0 0 24 24" fill="${fill || 'none'}" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
 /* The shared Teamwork sparkle — filled, never stroked */
-const _abSpark = (fill) => `<svg viewBox="0 0 24 24" fill="${fill || 'currentColor'}">${AB_GLYPH.skill}</svg>`;
+const _abSpark = () => `<svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg>`;
 const AB_GLYPH = {
   mention:  '<path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"/>',
   assign:   '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
   schedule: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
   event:    '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
-  skill:    '<path d="M18.716 11.91L17.272 11.555C14.927 10.977 13.099 9.077 12.54 6.642L12.197 5.148C11.914 3.887 10.194 3.887 9.902 5.148L9.56 6.642C9.01 9.077 7.173 10.985 4.828 11.555L3.384 11.909C2.174 12.203 2.174 13.999 3.384 14.293L4.828 14.647C7.173 15.225 9 17.125 9.56 19.56L9.902 21.054C10.186 22.315 11.905 22.315 12.197 21.054L12.54 19.56C13.09 17.125 14.927 15.217 17.272 14.647L18.716 14.293C19.926 13.999 19.926 12.203 18.716 11.909V11.91ZM21.195 4.422L20.744 4.31C19.996 4.118 19.421 3.519 19.258 2.764L19.15 2.298C19.118 2.125 18.967 1.999 18.791 1.999C18.615 1.999 18.464 2.125 18.432 2.298L18.323 2.764C18.16 3.519 17.586 4.117 16.838 4.31L16.388 4.422C16.012 4.517 16.012 5.079 16.388 5.174L16.838 5.286C17.572 5.467 18.148 6.063 18.323 6.832L18.432 7.298C18.464 7.471 18.615 7.597 18.791 7.597C18.967 7.597 19.118 7.471 19.15 7.298L19.258 6.832C19.421 6.077 19.996 5.478 20.744 5.286L21.194 5.174C21.57 5.079 21.57 4.517 21.194 4.422H21.195Z"/>',
   file:     '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>',
   page:     '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
   link:     '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
