@@ -3435,6 +3435,11 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
   padding: var(--spacing-2) 0; border-bottom: 2px solid transparent; margin-bottom: -1px;
 }
 .task-comments-tab.active { color: var(--color-action-primary-default); border-bottom-color: var(--color-action-primary-default); font-weight: 600; }
+/* Base size for the shared sparkle — an <svg> with only a viewBox has no
+   intrinsic size, so without this it renders at the 300x150 default and
+   blows out whatever row it sits in. More specific rules still win. */
+.ai-spark { width: 14px; height: 14px; flex-shrink: 0; vertical-align: -2px; }
+.sched-person-name .ai-spark { width: 13px; height: 13px; margin-left: 2px; }
 .task-comments-tab .ai-spark { width: 14px; height: 14px; }
 .task-comments-sort {
   margin-left: auto; display: inline-flex; align-items: center; gap: 6px;
@@ -4196,6 +4201,289 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 
 @media (max-width: 1080px) {
   .bud-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/*
+ * ─────────────────────────────────────────────────────────────────
+ * 🧩 Ask Remi — header button, coach-mark and resourcing modal
+ * Button: figma.com/design/Yr3DffiV6ZZowkJ6NEhBu3 node 2599-144396
+ * Modal:  figma.com/design/4XFgZGSEN0NnkGk2rk9L1z node 30-18292
+ * The button only appears on the Schedule tab, where resourcing is
+ * the thing you are looking at.
+ * ─────────────────────────────────────────────────────────────────
+ */
+.ask-remi-wrap { position: relative; display: none; }
+.ask-remi-wrap.show { display: block; }
+
+.ask-remi-btn {
+  display: flex; align-items: center; gap: 6px;
+  height: 32px; padding: 0 var(--spacing-3) 0 3px;
+  border: 1.5px solid transparent; border-radius: var(--border-rounded-full);
+  background:
+    linear-gradient(var(--palette-white), var(--palette-white)) padding-box,
+    linear-gradient(100deg, #4da2f8 12%, #ff22b1 70%, #ff7641 100%) border-box;
+  font-size: 13px; font-weight: 600; color: var(--palette-purple-50);
+  cursor: pointer; white-space: nowrap;
+}
+.ask-remi-btn:hover { filter: brightness(0.99); box-shadow: 0 1px 6px rgba(137,94,247,0.22); }
+.ask-remi-btn img {
+  width: 24px; height: 24px; border-radius: var(--border-rounded-full); object-fit: cover; flex-shrink: 0;
+}
+
+/* ── Coach-mark ──────────────────────────────────────────────────── */
+.remi-coach {
+  position: absolute; top: calc(100% + 12px); right: 0; z-index: 60;
+  width: 288px; padding: var(--spacing-4);
+  background: var(--palette-dark-80, #191a1a); color: var(--palette-white);
+  border-radius: var(--border-rounded-lg);
+  box-shadow: 0 16px 40px rgba(11,15,31,0.34);
+  opacity: 0; transform: translateY(-6px) scale(0.97); transform-origin: top right;
+  pointer-events: none;
+  transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.34, 1.3, 0.5, 1);
+}
+.remi-coach.show { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+.remi-coach::after {
+  content: ''; position: absolute; top: -6px; right: 42px;
+  width: 12px; height: 12px; background: var(--palette-dark-80, #191a1a);
+  transform: rotate(45deg); border-radius: 2px;
+}
+.remi-coach-head {
+  display: flex; align-items: center; gap: var(--spacing-2); margin-bottom: 6px;
+}
+.remi-coach-head img { width: 22px; height: 22px; border-radius: var(--border-rounded-full); }
+.remi-coach-title { font-size: 13px; font-weight: 700; }
+.remi-coach-body { font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.78); }
+.remi-coach-body strong { color: var(--palette-white); font-weight: 650; }
+.remi-coach-actions { display: flex; align-items: center; gap: var(--spacing-2); margin-top: var(--spacing-3); }
+.remi-coach-cta {
+  border: none; border-radius: var(--border-rounded-md); cursor: pointer;
+  background: var(--palette-white); color: var(--palette-neutral-60);
+  font-size: 12px; font-weight: 700; padding: 6px var(--spacing-3);
+}
+.remi-coach-dismiss {
+  border: none; background: none; cursor: pointer;
+  color: rgba(255,255,255,0.6); font-size: 12px; font-weight: 600; padding: 6px;
+}
+.remi-coach-dismiss:hover { color: var(--palette-white); }
+/* A soft pulse on the button while the coach-mark is up */
+.ask-remi-wrap.hint .ask-remi-btn { animation: remiPulse 2s ease-out 3; }
+@keyframes remiPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(255,34,177,0.38); }
+  70%  { box-shadow: 0 0 0 9px rgba(255,34,177,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,34,177,0); }
+}
+
+/* ── Modal ───────────────────────────────────────────────────────── */
+.remi-overlay {
+  display: none; position: fixed; inset: 0; z-index: 700;
+  background: rgba(11,15,31,0.45); padding: var(--spacing-5);
+}
+.remi-overlay.open { display: flex; }
+.remi-modal {
+  flex: 1; min-width: 0; display: flex; flex-direction: column;
+  background: var(--palette-white); border-radius: var(--border-rounded-lg);
+  box-shadow: 0 24px 70px rgba(11,15,31,0.28); overflow: hidden;
+}
+.remi-head {
+  flex-shrink: 0; display: flex; align-items: center; gap: var(--spacing-3);
+  padding: var(--spacing-4) var(--spacing-5);
+  border-bottom: var(--border-width-1) solid var(--color-border-separator);
+}
+.remi-head .ai-spark { width: 20px; height: 20px; flex-shrink: 0; }
+.remi-head-title { font-size: 18px; font-weight: 700; color: var(--color-text-default); }
+.remi-head-right { margin-left: auto; display: flex; align-items: center; gap: var(--spacing-2); }
+.remi-head-btn {
+  display: flex; align-items: center; gap: 6px; border: none; background: none; cursor: pointer;
+  font-size: 13px; color: var(--color-text-subtle); padding: var(--spacing-2);
+  border-radius: var(--border-rounded-md);
+}
+.remi-head-btn:hover { background: var(--color-background-hover); color: var(--color-text-default); }
+.remi-head-btn svg { width: 16px; height: 16px; }
+
+.remi-body { flex: 1; min-height: 0; display: flex; }
+
+/* Left: Remi's chat column */
+.remi-chat {
+  width: 400px; flex-shrink: 0; display: flex; flex-direction: column;
+  border-right: var(--border-width-1) solid var(--color-border-separator);
+  padding: var(--spacing-5);
+}
+.remi-chat-msg { display: flex; gap: var(--spacing-3); }
+.remi-chat-msg img { width: 28px; height: 28px; border-radius: var(--border-rounded-full); flex-shrink: 0; }
+.remi-chat-text { font-size: 14px; line-height: 1.6; color: var(--color-text-default); }
+.remi-chat-text strong { font-weight: 650; }
+.remi-chips { margin: var(--spacing-4) 0 0 40px; display: flex; flex-direction: column; align-items: flex-start; gap: var(--spacing-2); }
+.remi-chip {
+  display: inline-flex; align-items: center; gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  border: var(--border-width-1) solid var(--color-border-default);
+  border-radius: var(--border-rounded-full);
+  background: var(--palette-white); cursor: pointer;
+  font-size: 13px; color: var(--color-text-default); text-align: left;
+}
+.remi-chip:hover { border-color: var(--palette-indigo-30); background: var(--color-background-hover); }
+.remi-chip svg { width: 14px; height: 14px; color: var(--color-text-disabled); flex-shrink: 0; }
+.remi-composer {
+  margin-top: auto; border: var(--border-width-1) solid var(--color-border-default);
+  border-radius: var(--border-rounded-lg); padding: var(--spacing-3);
+}
+.remi-composer textarea {
+  width: 100%; border: none; outline: none; resize: none; background: transparent;
+  font: inherit; font-size: 14px; color: var(--color-text-default); line-height: 1.5; min-height: 46px;
+}
+.remi-composer textarea::placeholder { color: var(--color-text-placeholder); }
+.remi-composer-bar { display: flex; align-items: center; gap: var(--spacing-1); margin-top: var(--spacing-2); }
+.remi-composer-bar .spacer { margin-left: auto; }
+.remi-composer-icon {
+  width: 28px; height: 28px; border: none; background: none; cursor: pointer;
+  color: var(--color-text-subtle); border-radius: var(--border-rounded-sm);
+  display: flex; align-items: center; justify-content: center;
+}
+.remi-composer-icon:hover { background: var(--color-background-hover); }
+.remi-composer-icon svg { width: 16px; height: 16px; }
+
+/* Right: the suggestion */
+.remi-panel { flex: 1; min-width: 0; display: flex; flex-direction: column; background: var(--palette-neutral-05); }
+.remi-panel-head {
+  flex-shrink: 0; display: flex; align-items: center; gap: var(--spacing-2);
+  padding: var(--spacing-4) var(--spacing-5);
+  border-bottom: var(--border-width-1) solid var(--color-border-separator);
+  background: var(--palette-white);
+}
+.remi-panel-title { font-size: 14px; font-weight: 600; color: var(--color-text-default); }
+.remi-count {
+  font-size: 11px; font-weight: 700; color: var(--color-text-subtle);
+  background: var(--color-surface-default); border-radius: var(--border-rounded-full);
+  min-width: 20px; height: 20px; padding: 0 6px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.remi-attention {
+  margin-left: auto; display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--color-text-default);
+}
+.remi-attention svg { width: 15px; height: 15px; color: var(--palette-orange-50); }
+
+.remi-panel-body { flex: 1; min-height: 0; overflow-y: auto; padding: var(--spacing-5); }
+.remi-suggest-banner {
+  display: flex; gap: var(--spacing-3); padding: var(--spacing-4);
+  border-radius: var(--border-rounded-lg);
+  background: linear-gradient(100deg, var(--palette-indigo-10) 0%, var(--palette-purple-10) 45%, var(--palette-pink-10) 100%);
+  font-size: 14px; line-height: 1.6; color: var(--color-text-default);
+}
+.remi-suggest-banner .ai-spark { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; }
+
+.remi-alloc {
+  display: flex; align-items: center; gap: var(--spacing-3);
+  margin-top: var(--spacing-4); padding: var(--spacing-4);
+  border: var(--border-width-1) solid var(--color-border-separator);
+  border-radius: var(--border-rounded-lg); background: var(--palette-white);
+}
+.remi-alloc-icon {
+  width: 32px; height: 32px; border-radius: var(--border-rounded-full); flex-shrink: 0;
+  background: var(--palette-purple-10); color: var(--palette-purple-50);
+  display: flex; align-items: center; justify-content: center;
+}
+.remi-alloc-icon svg { width: 17px; height: 17px; }
+.remi-alloc-name { font-size: 14px; font-weight: 600; color: var(--color-text-default); }
+.remi-alloc-meta { font-size: 12px; color: var(--color-text-subtle); margin-top: 2px; }
+.remi-alloc-link {
+  margin-left: auto; border: none; background: none; cursor: pointer;
+  font-size: 13px; font-weight: 600; color: var(--color-text-primary); white-space: nowrap;
+}
+.remi-alloc-link:hover { text-decoration: underline; }
+
+.remi-compare {
+  margin-top: var(--spacing-4); display: grid;
+  grid-template-columns: 1fr 34px 1fr; align-items: stretch; gap: 0;
+}
+.remi-card {
+  border: var(--border-width-1) solid var(--color-border-separator);
+  border-radius: var(--border-rounded-lg); background: var(--palette-white);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.remi-card-inner { padding: var(--spacing-4); flex: 1; }
+.remi-card-label { font-size: 14px; font-weight: 700; color: var(--color-text-default); margin-bottom: var(--spacing-3); }
+.remi-badge {
+  display: inline-block; margin-bottom: var(--spacing-3);
+  font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
+  color: var(--palette-purple-60); background: var(--palette-purple-15);
+  padding: 3px 8px; border-radius: var(--border-rounded-sm);
+}
+.remi-who { display: flex; align-items: center; gap: var(--spacing-3); margin-bottom: var(--spacing-3); }
+.remi-who-avatar {
+  width: 36px; height: 36px; border-radius: var(--border-rounded-full); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+  font-size: 12px; font-weight: 700; color: var(--palette-white);
+}
+.remi-who-avatar.agent {
+  background: var(--palette-white);
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(var(--palette-white), var(--palette-white)) padding-box,
+    linear-gradient(135deg, #4da2f8, #ff22b1, #ff7641) border-box;
+}
+.remi-who-avatar.agent .ai-spark { width: 17px; height: 17px; }
+.remi-who-name { font-size: 14px; font-weight: 700; color: var(--color-text-default); }
+.remi-who-role { font-size: 13px; color: var(--color-text-subtle); }
+.remi-line {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 14px; color: var(--color-text-subtle); padding: 5px 0;
+}
+.remi-line b { color: var(--color-text-default); font-weight: 700; }
+.remi-plus {
+  display: flex; align-items: center; gap: var(--spacing-2);
+  margin: var(--spacing-3) 0; color: var(--color-text-disabled);
+}
+.remi-plus::before, .remi-plus::after {
+  content: ''; flex: 1; height: 1px; background: var(--color-border-separator);
+}
+.remi-card-foot {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: var(--spacing-3) var(--spacing-4);
+  background: var(--color-surface-default);
+  font-size: 14px; font-weight: 700; color: var(--color-text-default);
+}
+.remi-arrow { display: flex; align-items: center; justify-content: center; }
+.remi-arrow span {
+  width: 28px; height: 28px; border-radius: var(--border-rounded-full);
+  border: var(--border-width-1) solid var(--color-border-separator);
+  background: var(--palette-white); color: var(--color-text-subtle);
+  display: flex; align-items: center; justify-content: center;
+}
+.remi-arrow svg { width: 14px; height: 14px; }
+.remi-saving {
+  margin-top: var(--spacing-4); padding: var(--spacing-3) var(--spacing-4);
+  border-radius: var(--border-rounded-lg);
+  background: var(--palette-green-10); color: var(--palette-green-70);
+  font-size: 13px; line-height: 1.6;
+}
+.remi-saving strong { font-weight: 700; }
+
+.remi-foot {
+  flex-shrink: 0; display: flex; align-items: center;
+  padding: var(--spacing-4) var(--spacing-5);
+  border-top: var(--border-width-1) solid var(--color-border-separator);
+  background: var(--palette-white);
+}
+.remi-cancel {
+  border: none; background: none; cursor: pointer;
+  font-size: 14px; font-weight: 600; color: var(--color-text-default);
+  padding: var(--spacing-2) var(--spacing-3); border-radius: var(--border-rounded-md);
+}
+.remi-cancel:hover { background: var(--color-background-hover); }
+.remi-approve {
+  margin-left: auto; border: none; cursor: pointer;
+  padding: var(--spacing-3) var(--spacing-5); border-radius: var(--border-rounded-full);
+  background: linear-gradient(100deg, #4461d7 0%, #895ef7 35%, #ff22b1 70%, #ff7641 100%);
+  color: var(--palette-white); font-size: 14px; font-weight: 700;
+}
+.remi-approve:hover { filter: brightness(1.05); }
+.remi-approve:disabled { opacity: 0.55; cursor: default; filter: none; }
+
+@media (max-width: 1080px) {
+  .remi-chat { width: 320px; }
+  .remi-compare { grid-template-columns: 1fr; }
+  .remi-arrow { padding: var(--spacing-2) 0; }
 }
 
 
@@ -5242,6 +5530,28 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
           </div>
 
           <div class="project-head-right">
+            <!-- 🧩 Ask Remi — only on the Schedule tab, where resourcing is in view.
+                 ref: figma.com/design/Yr3DffiV6ZZowkJ6NEhBu3 node 2599-144396 -->
+            <div class="ask-remi-wrap" id="askRemiWrap">
+              <button class="ask-remi-btn" onclick="openRemiModal()">
+                <img src="avatars/remi-md.png" alt="">
+                Ask Remi
+              </button>
+              <div class="remi-coach" id="remiCoach" role="status">
+                <div class="remi-coach-head">
+                  <img src="avatars/remi-md.png" alt="">
+                  <span class="remi-coach-title">Remi spotted something</span>
+                </div>
+                <div class="remi-coach-body">
+                  You can lift the margin on <strong>Halcyon Logistics</strong> by <strong>9 points</strong> by
+                  rebalancing one allocation. Want to see it?
+                </div>
+                <div class="remi-coach-actions">
+                  <button class="remi-coach-cta" onclick="openRemiModal()">Show me</button>
+                  <button class="remi-coach-dismiss" onclick="dismissRemiCoach()">Not now</button>
+                </div>
+              </div>
+            </div>
             <button class="project-automate-btn">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>
               Automate
@@ -5918,6 +6228,162 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
         <span id="attAddLabel">Add task</span>
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── 🧩 Resource your project with Remi ─────────────────────────
+     ref: figma.com/design/4XFgZGSEN0NnkGk2rk9L1z node 30-18292
+     Before / after on one allocation: 200 junior hours moved to the
+     Readiness Agent with senior review kept in place. -->
+<div class="remi-overlay" id="remiOverlay" onclick="if(event.target===this) closeRemiModal()">
+  <div class="remi-modal">
+
+    <div class="remi-head">
+      <svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg>
+      <span class="remi-head-title">Resource your project with Remi</span>
+      <div class="remi-head-right">
+        <button class="remi-head-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Send feedback
+        </button>
+        <button class="remi-head-btn" onclick="closeRemiModal()" title="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="remi-body">
+
+      <div class="remi-chat">
+        <div class="remi-chat-msg">
+          <img src="avatars/remi-md.png" alt="">
+          <div class="remi-chat-text" id="remiChatText">
+            Here's the suggestion to increase the margin by <strong>9 points</strong> for the Halcyon
+            project. The AI Readiness Assessment allocation is <strong>200 junior hours</strong> and
+            it's your most repeatable deliverable.
+          </div>
+        </div>
+        <div class="remi-chips" id="remiChips">
+          <button class="remi-chip" onclick="remiChip('replace')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg>
+            Replace Sam with Readiness agent
+          </button>
+          <button class="remi-chip" onclick="remiChip('more')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg>
+            Show me more recommendations
+          </button>
+        </div>
+        <div class="remi-composer">
+          <textarea rows="2" placeholder="Ask me to find, create or update anything relating to resourcing or scheduling."></textarea>
+          <div class="remi-composer-bar">
+            <button class="remi-composer-icon" title="Attach">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+            </button>
+            <button class="remi-composer-icon" title="Dictate">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+            </button>
+            <span class="spacer"></span>
+            <button class="remi-composer-icon" title="Send">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="remi-panel">
+        <div class="remi-panel-head">
+          <span class="remi-panel-title">Remi's suggestion</span>
+          <span class="remi-count">3</span>
+          <span class="remi-attention">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01"/></svg>
+            1 needs attention
+          </span>
+        </div>
+
+        <div class="remi-panel-body">
+          <div class="remi-suggest-banner">
+            <svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg>
+            <span>Replace Sam's 200h of initial assessment work with the Readiness Agent, with 16 hours of
+            senior review from Tom. This reduces cost, improves margin and frees up team capacity.</span>
+          </div>
+
+          <div class="remi-alloc">
+            <span class="remi-alloc-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8.5 12.5 11 15 16 9.5"/></svg>
+            </span>
+            <div>
+              <div class="remi-alloc-name">AI Readiness Assessment</div>
+              <div class="remi-alloc-meta">Halcyon Logistics &nbsp;•&nbsp; 200h Junior work &nbsp;•&nbsp; 6 – 24 Jan 2025</div>
+            </div>
+            <button class="remi-alloc-link">View allocation</button>
+          </div>
+
+          <div class="remi-compare">
+            <div class="remi-card">
+              <div class="remi-card-inner">
+                <div class="remi-card-label">Before</div>
+                <div class="remi-who">
+                  <span class="remi-who-avatar" style="background:var(--palette-green-40)">SD</span>
+                  <div>
+                    <div class="remi-who-name">Sam Delaney</div>
+                    <div class="remi-who-role">Junior Consultant</div>
+                  </div>
+                </div>
+                <div class="remi-line">Hours <b>200h</b></div>
+                <div class="remi-line">Rate <b>$90/h</b></div>
+                <div class="remi-line">Cost <b>$18,000</b></div>
+              </div>
+              <div class="remi-card-foot"><span>Total cost</span><span>$18,000</span></div>
+            </div>
+
+            <div class="remi-arrow">
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span>
+            </div>
+
+            <div class="remi-card">
+              <div class="remi-card-inner">
+                <span class="remi-badge">REMI'S SUGGESTION</span>
+                <div class="remi-who">
+                  <span class="remi-who-avatar agent"><svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg></span>
+                  <div>
+                    <div class="remi-who-name">Readiness Agent</div>
+                    <div class="remi-who-role">AI Agent</div>
+                  </div>
+                </div>
+                <div class="remi-line">Hours <b>200h</b></div>
+                <div class="remi-line">Rate <b>$10/h</b></div>
+                <div class="remi-line">Cost <b>$2,000</b></div>
+
+                <div class="remi-plus">+</div>
+
+                <div class="remi-who">
+                  <span class="remi-who-avatar" style="background:var(--palette-blue-40)">TO</span>
+                  <div>
+                    <div class="remi-who-name">Tom Okafor</div>
+                    <div class="remi-who-role">Senior Consultant</div>
+                  </div>
+                </div>
+                <div class="remi-line">Hours <b>16h</b></div>
+                <div class="remi-line">Rate <b>$150/h</b></div>
+                <div class="remi-line">Cost <b>$2,400</b></div>
+              </div>
+              <div class="remi-card-foot"><span>Total cost</span><span>$4,400</span></div>
+            </div>
+          </div>
+
+          <div class="remi-saving">
+            Saves <strong>$13,600</strong> of cost on a $150,000 fixed fee — margin moves from
+            <strong>33.8%</strong> to <strong>42.9%</strong>, and Sam gets 200 hours back for
+            Phase 3 and 4 delivery.
+          </div>
+        </div>
+
+        <div class="remi-foot">
+          <button class="remi-cancel" onclick="closeRemiModal()">Cancel</button>
+          <button class="remi-approve" id="remiApprove" onclick="approveRemiSuggestion()">Approve suggestion</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -6931,6 +7397,7 @@ function showProject() {
   if (projectTab === 'schedule')     renderSchedule();
   else if (projectTab === 'finance') renderFinance();
   else                               renderProjectBody();
+  _syncRemiButton(projectTab);
 }
 
 /* Engagement data — Enterprise AI Rollout for Halcyon Logistics,
@@ -7176,6 +7643,7 @@ function switchProjectTab(tab, el) {
   if (tab === 'schedule')      renderSchedule();
   else if (tab === 'finance')  renderFinance();
   else                         renderProjectBody();
+  _syncRemiButton(tab);
 }
 
 /* ─────────────────────────────────────────────────────────────────
@@ -7532,6 +8000,70 @@ function toggleSchedInsights(btn) {
 
 /* Open the first few people so the bars are visible straight away. */
 ['EM', 'SD', 'RA'].forEach(k => schedExpanded[k] = true);
+
+
+/* ── Ask Remi — button visibility, coach-mark and modal ───────────
+   The button lives in the project header but only on the Schedule
+   tab. The coach-mark animates in the first time you land there. */
+let _remiCoachSeen = false;
+let _remiCoachTimer = null;
+
+function _syncRemiButton(tab) {
+  const wrap = document.getElementById('askRemiWrap');
+  if (!wrap) return;
+  const show = tab === 'schedule';
+  wrap.classList.toggle('show', show);
+  clearTimeout(_remiCoachTimer);
+  if (!show) { hideRemiCoach(); return; }
+  if (_remiCoachSeen) return;
+  // Let the schedule paint first, then bring the coach-mark in.
+  _remiCoachTimer = setTimeout(showRemiCoach, 900);
+}
+function showRemiCoach() {
+  const wrap = document.getElementById('askRemiWrap');
+  const coach = document.getElementById('remiCoach');
+  if (!coach || !wrap.classList.contains('show')) return;
+  coach.classList.add('show');
+  wrap.classList.add('hint');
+}
+function hideRemiCoach() {
+  document.getElementById('remiCoach')?.classList.remove('show');
+  document.getElementById('askRemiWrap')?.classList.remove('hint');
+}
+function dismissRemiCoach() { _remiCoachSeen = true; hideRemiCoach(); }
+
+function openRemiModal() {
+  dismissRemiCoach();
+  document.getElementById('remiOverlay').classList.add('open');
+}
+function closeRemiModal() { document.getElementById('remiOverlay').classList.remove('open'); }
+
+function remiChip(kind) {
+  const text = document.getElementById('remiChatText');
+  const chips = document.getElementById('remiChips');
+  if (kind === 'replace') {
+    text.innerHTML = `Done — the swap is staged on the right. Approving it moves the 200 assessment
+      hours to the Readiness Agent and books <strong>16h</strong> of Tom's time for review, so the
+      deliverable still gets a senior sign-off before it reaches Halcyon.`;
+  } else {
+    text.innerHTML = `Two more worth a look. <strong>Elena is at 12h/day</strong> on Thursday and Friday
+      across the governance policy and the champion playbook — Tom has 31h free this week. And
+      <strong>Phase 4's adoption dashboard</strong> is another repeatable build the agent could draft.`;
+  }
+  chips.style.display = 'none';
+}
+
+function approveRemiSuggestion() {
+  const btn = document.getElementById('remiApprove');
+  btn.textContent = 'Approved';
+  btn.disabled = true;
+  showToast("Remi applied the change — Sam's 200h moved to the Readiness Agent");
+  setTimeout(() => {
+    closeRemiModal();
+    btn.textContent = 'Approve suggestion';
+    btn.disabled = false;
+  }, 1200);
+}
 
 /* ─────────────────────────────────────────────────────────────────
  * 🧩 Project › Finance — Rates
