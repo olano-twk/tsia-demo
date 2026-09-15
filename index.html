@@ -9857,7 +9857,7 @@ function _syncRemiButton(tab) {
 function showRemiCoach() {
   const wrap = document.getElementById('askRemiWrap');
   const coach = document.getElementById('remiCoach');
-  if (!coach || !wrap.classList.contains('show')) return;
+  if (_remiCoachSeen || !coach || !wrap.classList.contains('show')) return;
   coach.classList.add('show');
   wrap.classList.add('hint');
 }
@@ -9865,7 +9865,7 @@ function hideRemiCoach() {
   document.getElementById('remiCoach')?.classList.remove('show');
   document.getElementById('askRemiWrap')?.classList.remove('hint');
 }
-function dismissRemiCoach() { _remiCoachSeen = true; hideRemiCoach(); }
+function dismissRemiCoach() { _remiCoachSeen = true; clearTimeout(_remiCoachTimer); hideRemiCoach(); }
 
 function openRemiModal() {
   dismissRemiCoach();
@@ -9938,11 +9938,21 @@ function approveRemiSuggestion() {
   btn.textContent = 'Approved';
   btn.disabled = true;
   _applyRemiSuggestion();
-  showToast("Remi applied the change — the assessment is now the Readiness Agent plus 16h of Tom's review");
   setTimeout(() => {
     closeRemiModal();
     btn.textContent = 'Approve suggestion';
     btn.disabled = false;
+    showActionToast(
+      'Allocation updated',
+      'The AI Readiness Assessment is now the Readiness Agent for 200h, with 16h of senior review from Tom Okafor. Planned margin moves from 35.2% to 44.3%.',
+      'Open task',
+      () => {
+        const ti = projectTaskLists[0].tasks.findIndex(t => t.name === ASSESS_TASK);
+        const tab = [...document.querySelectorAll('#projectPage .project-tabs .project-tab')]
+          .find(b => b.textContent.trim() === 'List');
+        switchProjectTab('list', tab);
+        if (ti > -1) openTaskDrawer(0, ti);
+      });
   }, 1200);
 }
 
