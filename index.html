@@ -13800,9 +13800,10 @@ selectUpdate(1);
 openTeammate(1);
 selectUpdate(103);
 switchTab('updates');
-switchTeamworkAiTab('teammates');   // prime the AI Agents gallery behind the project view
-// …then land on the project List view — the start page for this prototype.
-showProject();
+switchTeamworkAiTab('teammates');   // prime the AI Agents gallery
+showProject();                      // prime the project view behind it
+// …then land on the client overview — the start page for this prototype.
+showClient('overview');
 
 /* ── AI Chat Drawer ─────────────────────────────────────────────── */
 
