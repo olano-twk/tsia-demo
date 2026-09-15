@@ -4258,6 +4258,14 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 .bud-overview { flex: 1; display: flex; flex-direction: column; }
 .bud-overview .bud-chart { flex: 1; display: flex; flex-direction: column; min-height: 0; }
 .bud-overview .bud-chart svg { flex: 1; height: auto; min-height: 210px; }
+/* The Profitability + Costs stack shares the column height, so the two
+   cards together line up with the Budget overview card beside them.
+   They grow from their natural heights rather than to equal halves. */
+.bud-grid > div:last-child > .bud-card {
+  flex: 1 1 auto; display: flex; flex-direction: column;
+}
+/* Card actions sit at the foot once the card is taller than its content */
+.bud-grid > div:last-child > .bud-card .bud-card-links { margin-top: auto; }
 
 /* The two budgets, money and time, side by side */
 .bud-budgets { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-4); }
