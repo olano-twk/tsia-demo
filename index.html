@@ -10323,6 +10323,37 @@ function toggleTaskDone(li, ti, ev) {
   if (!done) _checkPhaseComplete(li);
 }
 
+/* What a phase actually delivered. Where a task carries allocations —
+   the assessment does, and they change when Remi's swap is approved —
+   each one becomes its own line, so the invoice shows who really did
+   the work rather than who was quoted for it. */
+function _phaseDelivered(li) {
+  const quoted = QUOTE_SECTIONS[li].items;
+  const rows = [];
+  projectTaskLists[li].tasks.forEach(task => {
+    const q = quoted.find(i => i.item === task.name);
+    if (task.allocations && task.allocations.length) {
+      task.allocations.forEach((a, n) => {
+        const p = schedPeople.find(x => x.initials === a.initials) || {};
+        rows.push({
+          item: n === 0 ? task.name : task.name + ' — senior review',
+          who: a.initials,
+          date: q ? q.date : '',
+          hours: a.hours,
+          bill: p.rate || (q ? q.bill : 0),
+        });
+      });
+    } else if (q) {
+      rows.push(q);
+    }
+  });
+  /* anything quoted but not a task (support lines) still counts */
+  quoted.forEach(q => {
+    if (!projectTaskLists[li].tasks.some(t => t.name === q.item)) rows.push(q);
+  });
+  return rows;
+}
+
 function _checkPhaseComplete(li) {
   const list = projectTaskLists[li];
   if (!list.tasks.every(t => t.tag && t.tag.label === 'Done')) return;
@@ -10333,7 +10364,7 @@ function _checkPhaseComplete(li) {
   m.invoice = 'INV-2026-0' + (94 + li);
   INVOICES[m.name] = {
     id: m.invoice, issued: _billToday(), po: m.po, milestone: m,
-    phase: list.name, items: QUOTE_SECTIONS[li].items,
+    phase: list.name, items: _phaseDelivered(li),
   };
   if (financeTab === 'budgets' && projectTab === 'finance') renderFinance();
 
@@ -10384,7 +10415,7 @@ function _invoicesListHTML() {
             <td class="q-muted">&mdash;</td>
             <td><span class="q-status open">${clock} Open</span></td>
             <td class="num">${hrs}h</td>
-            <td class="num">${_cm(BUD.fee)}</td>
+            <td class="num">${_cm(inv.milestone.amount)}</td>
             <td class="q-muted">${kebab}</td>
           </tr>`;
         }).join('')}
@@ -10478,7 +10509,7 @@ function _invoiceHTML(inv) {
 
     <div class="inv-foot">
       Total hours: <strong>${hrs.toFixed(2)} (${hrs}h)</strong>
-      <span class="inv-foot-total">Total: <strong>${_cm(BUD.fee)}</strong></span>
+      <span class="inv-foot-total">Total: <strong>${_cm(inv.milestone.amount)}</strong></span>
     </div>
     </div>`;
 }
@@ -11784,14 +11815,22 @@ function docApprove() {
   agentStage = 'approved';
   renderDocModal();
   const t = _agentTask();
-  if (t) t.tag = { label: 'Done', dot: 'var(--palette-green-40)', bg: 'var(--palette-green-10)', color: 'var(--palette-green-60)' };
+  const DONE = { label: 'Done', dot: 'var(--palette-green-40)', bg: 'var(--palette-green-10)', color: 'var(--palette-green-60)' };
   const review = (t && (t.allocations || []).find(a => a.initials === 'TO'));
   _logTime(ASSESS_TASK, 'TO', 'Senior review of the assessment', '22 Oct 2026', '10:00', review ? review.hours : 16);
   _personSay('Tom Okafor', 'TO', 'var(--palette-blue-40)', 'Senior Consultant',
     `Reviewed and approved. One change — governance moves to a 2, the August draft AUP counts as evidence.
      Overall readiness <strong>${_docScore()}</strong>/5. Good to go to Halcyon.`);
-  showToast('Assessment approved — ready to send to Halcyon');
-  setTimeout(closeAssessDoc, 1100);
+
+  /* Approving the assessment closes out Phase 1 — the other two
+     deliverables ran alongside it and land with the sign-off. */
+  projectTaskLists[0].tasks.forEach(task => { task.tag = DONE; });
+  if (projectTab === 'list') renderProjectBody();
+
+  setTimeout(() => {
+    closeAssessDoc();
+    _checkPhaseComplete(0);   // raises the Phase 1 milestone invoice
+  }, 1100);
 }
 
 function _docPreviewHTML() {
