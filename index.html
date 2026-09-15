@@ -4231,7 +4231,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 }
 .bud-banner-btn:hover { background: var(--palette-neutral-25); }
 
-.bud-grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: var(--spacing-4); }
+.bud-grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: var(--spacing-4); align-items: stretch; }
 .bud-card {
   border: var(--border-width-1) solid var(--color-border-separator);
   border-radius: var(--border-rounded-lg);
@@ -4251,6 +4251,49 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 .bud-card-icon.mint { background: var(--palette-green-20); color: var(--palette-green-70); }
 .bud-card-icon.pink { background: var(--palette-pink-10); color: var(--palette-pink-45); }
 .bud-card-title { font-size: 15px; font-weight: 700; color: var(--color-text-default); }
+
+/* Budget overview fills its column, so the chart grows with the
+   Profitability + Costs stack beside it rather than leaving a gap. */
+.bud-grid > div { display: flex; flex-direction: column; min-width: 0; }
+.bud-overview { flex: 1; display: flex; flex-direction: column; }
+.bud-overview .bud-chart { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.bud-overview .bud-chart svg { flex: 1; height: auto; min-height: 210px; }
+
+/* The two budgets, money and time, side by side */
+.bud-budgets { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-4); }
+.bud-budget {
+  border: var(--border-width-1) solid var(--color-border-separator);
+  border-radius: var(--border-rounded-lg); padding: var(--spacing-4);
+}
+.bud-budget-label { font-size: 12px; color: var(--color-text-subtle); }
+.bud-budget-value { font-size: 24px; font-weight: 700; color: var(--color-text-default); margin: 2px 0 var(--spacing-3); }
+.bud-split {
+  display: flex; justify-content: space-between; align-items: baseline; gap: var(--spacing-3);
+  font-size: 14px; font-weight: 700; color: var(--color-text-default); margin-bottom: 6px;
+}
+.bud-split .muted { font-weight: 500; color: var(--color-text-subtle); }
+.bud-split.sub { margin: 6px 0 0; font-size: 12px; font-weight: 500; color: var(--color-text-subtle); }
+.bud-track { height: 8px; border-radius: var(--border-rounded-full); background: var(--color-surface-selected); overflow: hidden; }
+.bud-track-fill { height: 100%; border-radius: var(--border-rounded-full); }
+.bud-track-fill.money { background: var(--palette-purple-40); }
+.bud-track-fill.hours { background: var(--palette-teal-40); }
+
+.bud-chart-head {
+  display: flex; align-items: center; gap: var(--spacing-3);
+  margin: var(--spacing-5) 0 var(--spacing-2);
+}
+.bud-chart-title { font-size: 14px; font-weight: 700; color: var(--color-text-default); }
+.bud-mode {
+  margin-left: auto; display: flex;
+  border: var(--border-width-1) solid var(--color-border-default);
+  border-radius: var(--border-rounded-md); overflow: hidden;
+}
+.bud-mode button {
+  width: 30px; height: 26px; border: none; cursor: pointer;
+  background: var(--color-background-default); color: var(--color-text-subtle);
+  font-size: 12px; font-weight: 700;
+}
+.bud-mode button.on { background: var(--color-surface-emphasis-default); color: var(--color-text-primary); }
 
 .bud-fee-row { display: flex; align-items: flex-start; gap: var(--spacing-6); }
 .bud-fee-label { font-size: 13px; color: var(--color-text-subtle); }
@@ -4281,6 +4324,14 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 .bud-legend-swatch { width: 12px; height: 3px; border-radius: 2px; background: var(--palette-indigo-40); }
 .bud-legend-swatch.forecast { background: var(--palette-neutral-30); }
 .bud-legend-swatch.fee { background: var(--palette-green-40); }
+.bud-legend-swatch.money { background: var(--palette-purple-40); }
+.bud-legend-swatch.hours { background: var(--palette-teal-40); }
+.bud-legend-swatch.target { background: var(--palette-neutral-30); }
+.bud-chart-legend { justify-content: center; }
+.bud-legend-key {
+  padding: 4px 10px; border: var(--border-width-1) solid var(--color-border-separator);
+  border-radius: var(--border-rounded-full);
+}
 
 .bud-stat-row { display: flex; gap: var(--spacing-5); }
 .bud-stat { flex: 1; min-width: 0; }
@@ -8672,38 +8723,91 @@ function _budPerson(init) {
   return `<span class="bud-avatar" style="background:${p.bg}">${init}</span>${p.name}`;
 }
 
-/* Burn-up: cumulative cost against the fixed fee, actual then forecast. */
+/* Spend over time — percent of budget by default, dollars on toggle.
+   ref: figma.com/design/4XFgZGSEN0NnkGk2rk9L1z node 41-20305
+   Three series: costs to date, hours logged to date, and the planned
+   burn as the target. Percent is the default because it is the only
+   axis on which hours and dollars can share a chart. */
+let budChartMode = 'pct';
+
+function setBudChartMode(mode) { budChartMode = mode; renderFinance(); }
+
 function _budChart() {
-  const W = 760, H = 230, padL = 52, padR = 12, padT = 12, padB = 26;
-  const maxY = 150000, weeks = BUD.weeks;
+  const W = 760, H = 250, padL = 52, padR = 16, padT = 14, padB = 40;
+  const weeks = BUD.weeks;
+  const pct = budChartMode === 'pct';
+  const maxY = pct ? 100 : BUD.fee;
   const x = w => padL + (w / weeks) * (W - padL - padR);
   const y = v => padT + (1 - v / maxY) * (H - padT - padB);
 
-  const fStart = BUD.actual.length - 1;          /* forecast picks up where actual stops */
-  const hasActual = BUD.actual.length > 1;
-  const pts  = BUD.actual.map((v, i) => `${x(i)},${y(v)}`).join(' ');
-  const fpts = BUD.forecast.map((v, i) => `${x(fStart + i)},${y(v)}`).join(' ');
-  const area = `${padL},${y(0)} ${pts} ${x(fStart)},${y(0)}`;
+  /* Planned burn — the target line. In percent it is progress against
+     the planned cost; in dollars it is the cost itself. */
+  const target = BUD.forecast.map((v, i) => ({
+    w: i, v: pct ? (v / BUD.costTarget) * 100 : v,
+  }));
+  /* Costs actually incurred */
+  const costs = BUD.actual.map((v, i) => ({ w: i, v: pct ? (v / BUD.costTarget) * 100 : v }));
+  /* Hours logged — percent only, there is no dollar axis for hours */
+  const hours = pct ? [{ w: 0, v: (BUD.hoursLogged / BUD.hoursBudget) * 100 }] : [];
 
-  const grid = [0, 37500, 75000, 112500, 150000].map(v => `
+  const pts = a => a.map(p => `${x(p.w)},${y(p.v)}`).join(' ');
+  const ticks = pct ? [0, 25, 50, 75, 100] : [0, BUD.fee * 0.25, BUD.fee * 0.5, BUD.fee * 0.75, BUD.fee];
+  const label = v => pct ? v + '%' : '$' + Math.round(v / 1000) + 'k';
+
+  const grid = ticks.map(v => `
     <line x1="${padL}" y1="${y(v)}" x2="${W - padR}" y2="${y(v)}" stroke="var(--color-border-separator)" stroke-width="1"/>
-    <text x="${padL - 8}" y="${y(v) + 4}" text-anchor="end" font-size="10" fill="var(--color-text-subtle)">$${(v / 1000)}k</text>`).join('');
+    <text x="${padL - 8}" y="${y(v) + 4}" text-anchor="end" font-size="10" fill="var(--color-text-subtle)">${label(v)}</text>`).join('');
 
-  const ticks = [0, 2, 4, 6, 8, 10, 12].map(w => `
-    <text x="${x(w)}" y="${H - 8}" text-anchor="middle" font-size="10" fill="var(--color-text-subtle)">${w === 0 ? 'W1' : 'W' + w}</text>`).join('');
+  const dates = [[0, '5 Oct'], [3, '26 Oct'], [6, '16 Nov'], [9, '7 Dec'], [12, '25 Dec']];
+  const xAxis = dates.map(([w, t]) => `
+    <text x="${x(w)}" y="${H - 18}" text-anchor="middle" font-size="10" fill="var(--color-text-subtle)">${t}</text>`).join('');
+
+  /* A lone point needs a dot — a one-point polyline draws nothing */
+  const dot = (a, fill, shape) => a.length !== 1 ? '' : (shape === 'square'
+    ? `<rect x="${x(a[0].w) - 4}" y="${y(a[0].v) - 4}" width="8" height="8" rx="1.5" fill="${fill}"/>`
+    : `<circle cx="${x(a[0].w)}" cy="${y(a[0].v)}" r="4.5" fill="${fill}"/>`);
 
   return `
-    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Cumulative cost against the fixed fee">
-      ${grid}${ticks}
-      <line x1="${padL}" y1="${y(BUD.costTarget)}" x2="${W - padR}" y2="${y(BUD.costTarget)}"
-            stroke="var(--palette-green-40)" stroke-width="1.5" stroke-dasharray="5 4"/>
-      <text x="${W - padR}" y="${y(BUD.costTarget) - 6}" text-anchor="end" font-size="10" fill="var(--palette-green-60)">Planned cost $97,200</text>
-      ${hasActual ? `<polygon points="${area}" fill="var(--palette-indigo-40)" opacity="0.10"/>
-      <polyline points="${pts}" fill="none" stroke="var(--palette-indigo-40)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>` : ''}
-      <polyline points="${fpts}" fill="none" stroke="var(--palette-neutral-30)" stroke-width="2.5"
-                stroke-dasharray="6 5" stroke-linejoin="round" stroke-linecap="round"/>
-      ${hasActual ? `<circle cx="${x(fStart)}" cy="${y(BUD.costToDate)}" r="4" fill="var(--palette-indigo-40)"/>` : ''}
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img"
+         aria-label="Spend over time against the budget target">
+      ${grid}${xAxis}
+      <polyline points="${pts(target)}" fill="none" stroke="var(--palette-neutral-30)"
+                stroke-width="2" stroke-dasharray="2 4" stroke-linecap="round"/>
+      ${hours.length > 1 ? `<polyline points="${pts(hours)}" fill="none" stroke="var(--palette-teal-40)"
+                stroke-width="2.5" stroke-dasharray="7 4" stroke-linecap="round"/>` : ''}
+      ${dot(hours, 'var(--palette-teal-40)', 'square')}
+      ${costs.length > 1 ? `<polyline points="${pts(costs)}" fill="none" stroke="var(--palette-purple-40)"
+                stroke-width="2.5" stroke-linecap="round"/>` : ''}
+      ${dot(costs, 'var(--palette-purple-40)')}
     </svg>`;
+}
+
+function _budBudgetCards() {
+  const costPct  = BUD.costToDate / BUD.fee * 100;
+  const hoursPct = BUD.hoursLogged / BUD.hoursBudget * 100;
+  return `
+    <div class="bud-budgets">
+      <div class="bud-budget">
+        <div class="bud-budget-label">Project budget</div>
+        <div class="bud-budget-value">${_budMoney(BUD.fee, 2)}</div>
+        <div class="bud-split">
+          <span>${_budMoney(BUD.costToDate, 2)} <span class="muted">(${costPct.toFixed(0)}%)</span></span>
+          <span>${_budMoney(BUD.fee - BUD.costToDate, 2)} <span class="muted">(${(100 - costPct).toFixed(0)}%)</span></span>
+        </div>
+        <div class="bud-track"><div class="bud-track-fill money" style="width:${costPct}%"></div></div>
+        <div class="bud-split sub"><span>Costs (to date)</span><span>Remaining</span></div>
+      </div>
+      <div class="bud-budget">
+        <div class="bud-budget-label">Budgeted hours</div>
+        <div class="bud-budget-value">${BUD.hoursBudget}h</div>
+        <div class="bud-split">
+          <span>${BUD.hoursLogged}h <span class="muted">(${hoursPct.toFixed(0)}%)</span></span>
+          <span>${BUD.hoursBudget - BUD.hoursLogged}h <span class="muted">(${(100 - hoursPct).toFixed(0)}%)</span></span>
+        </div>
+        <div class="bud-track"><div class="bud-track-fill hours" style="width:${hoursPct}%"></div></div>
+        <div class="bud-split sub"><span>Logged (to date)</span><span>Remaining</span></div>
+      </div>
+    </div>`;
 }
 
 function _budPanelBody() {
@@ -8816,31 +8920,25 @@ function _budgetsHTML() {
 
     <div class="bud-grid">
       <div>
-        <div class="bud-card">
+        <div class="bud-card bud-overview">
           <div class="bud-card-head">
             <span class="bud-card-icon teal">${doc}</span>
             <span class="bud-card-title">Budget overview</span>
           </div>
-          <div class="bud-fee-row">
-            <div>
-              <div class="bud-fee-label">Fixed fee</div>
-              <div class="bud-fee-value">${_budMoney(BUD.fee, 2)}</div>
-            </div>
-            <div class="bud-bar-wrap">
-              <div class="bud-bar-top">
-                <span>${_budMoney(BUD.costToDate, 2)} <span>(${costPct.toFixed(0)}%)</span></span>
-                <span>${_budMoney(profit, 2)} <span>(${(100 - costPct).toFixed(0)}%)</span></span>
-              </div>
-              <div class="bud-bar"><div class="bud-bar-fill" style="width:${costPct}%"></div></div>
-              <div class="bud-bar-legend"><span>Costs (to date)</span><span>Remaining</span></div>
+          ${_budBudgetCards()}
+          <div class="bud-chart-head">
+            <span class="bud-chart-title">Spend over time</span>
+            <div class="bud-mode">
+              <button class="${budChartMode === 'pct' ? 'on' : ''}" onclick="setBudChartMode('pct')" title="Percent of budget">%</button>
+              <button class="${budChartMode === 'money' ? 'on' : ''}" onclick="setBudChartMode('money')" title="Dollars">$</button>
             </div>
           </div>
           <div class="bud-chart">
             ${_budChart()}
             <div class="bud-chart-legend">
-              ${BUD.costToDate ? '<span class="bud-legend-key"><span class="bud-legend-swatch"></span> Cost to date</span>' : ''}
-              <span class="bud-legend-key"><span class="bud-legend-swatch forecast"></span> ${BUD.costToDate ? 'Forecast to completion' : 'Planned burn'}</span>
-              <span class="bud-legend-key"><span class="bud-legend-swatch fee"></span> Planned cost</span>
+              <span class="bud-legend-key"><span class="bud-legend-swatch money"></span> Costs (to date)</span>
+              ${budChartMode === 'pct' ? '<span class="bud-legend-key"><span class="bud-legend-swatch hours"></span> Logged (to date)</span>' : ''}
+              <span class="bud-legend-key"><span class="bud-legend-swatch target"></span> Budget target</span>
             </div>
           </div>
         </div>
