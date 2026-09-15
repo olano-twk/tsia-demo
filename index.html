@@ -5026,6 +5026,11 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 .q-expired { color: var(--palette-red-50); }
 .q-muted { color: var(--color-text-disabled); }
 .q-who { display: flex; align-items: center; gap: var(--spacing-2); white-space: nowrap; }
+.rr-table td { padding-top: var(--spacing-5); padding-bottom: var(--spacing-5); }
+.rr-th-sort { display: inline-flex; align-items: center; gap: 5px; color: var(--color-text-primary); font-weight: 600; }
+.rr-people { display: inline-flex; align-items: center; }
+.rr-people .q-avatar { margin-left: -8px; border: 2px solid var(--palette-white); }
+.rr-people .q-avatar:first-child { margin-left: 0; }
 .q-avatar {
   width: 26px; height: 26px; border-radius: var(--border-rounded-full); flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
@@ -8743,6 +8748,7 @@ function renderClient() {
 
   if (clientTab === 'quotes') return _renderQuotesList();
   if (clientTab === 'overview') return _renderClientOverview();
+  if (clientTab === 'rates') return _renderRoleRates();
 
   document.getElementById('clientToolbar').innerHTML = '';
   document.getElementById('clientBody').innerHTML =
@@ -8931,6 +8937,47 @@ function _renderQuotesList() {
           </tr>`).join('')}
       </tbody>
     </table>`;
+}
+
+/* ── Role rates ──────────────────────────────────────────────────
+   The same roles and rates as the project's Rates tab, grouped by job
+   role with the people who hold it. View only. */
+function _renderRoleRates() {
+  const roles = schedPeople.map(p => ({
+    role: p.role, people: [p.initials], standard: p.agent ? null : p.rate, client: p.rate,
+  }));
+  const sort = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11M3 12h8M3 17h5"/><path d="M18 5v14l3-3M18 19l-3-3"/></svg>`;
+  const info = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round"/></svg>`;
+
+  document.getElementById('clientToolbar').innerHTML = `
+    <span class="client-count">${roles.length} roles</span>
+    <div class="client-toolbar-right">
+      <button class="client-btn ghost"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="m11 11 2.5 2.5"/></svg> Search</button>
+    </div>`;
+
+  document.getElementById('clientBody').innerHTML = `
+    <table class="q-table rr-table">
+      <thead><tr>
+        <th><span class="rr-th-sort">Roles <span class="fin-sort">${sort}</span></span></th>
+        <th>People</th>
+        <th class="num"><span class="fin-th-inner num">Standard rate <span class="fin-info">${info}</span></span></th>
+        <th class="num"><span class="fin-th-inner num">Client rate <span class="fin-info">${info}</span></span></th>
+      </tr></thead>
+      <tbody>
+        ${roles.map(r => `
+          <tr>
+            <td>${r.role}</td>
+            <td><span class="rr-people">${r.people.map(i => _cAvatar(i)).join('')}</span></td>
+            <td class="num">${r.standard === null ? '<span class="q-muted">&mdash;</span>' : _cm(r.standard)}</td>
+            <td class="num">${r.client === null ? '<span class="q-muted">&mdash;</span>' : _cm(r.client)}</td>
+          </tr>`).join('')}
+      </tbody>
+    </table>
+    <div class="fin-foot-note">
+      Halcyon Logistics is billed at standard rates &mdash; no client-specific overrides are set.
+      The Readiness Agent has no firm-wide standard rate yet; it bills at the junior equivalent of
+      $150/h against a $10/h cost rate.
+    </div>`;
 }
 
 function openQuote(id) { openQuoteId = id; renderClient(); }
