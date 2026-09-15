@@ -14645,6 +14645,46 @@ function _projectScopedReply(text) {
 function _financeReply(text) {
   const q = text.toLowerCase();
 
+  /* How the engagement is tracking. Only reports actuals once work has
+     actually been delivered and invoiced — before that there is nothing
+     to track against. Cost rows follow whoever is on the assessment, so
+     the agent and Tom's review appear once Remi's swap is applied. */
+  if (q.includes('tracking') || (q.includes('halcyon') && q.includes('plan') && !q.includes('planned margin'))) {
+    const bill = _billTotals();
+    const agent = _remiApplied;
+    const rows = agent
+      ? [['Tom Okafor', 'Stakeholder interviews & workshop synthesis', 40, 150],
+         ['Priya Raman', 'Use-case discovery', 12, 200],
+         ['Readiness Agent', 'AI Readiness Assessment', 200, 10],
+         ['Tom Okafor', 'AI Readiness Assessment — senior review', 16, 150]]
+      : [['Tom Okafor', 'Stakeholder interviews & workshop synthesis', 40, 150],
+         ['Priya Raman', 'Use-case discovery', 12, 200],
+         ['Sam Delaney', 'AI Readiness Assessment', 200, 90]];
+    const spent = rows.reduce((n, r) => n + r[2] * r[3], 0);
+    const hours = rows.reduce((n, r) => n + r[2], 0);
+    const margin = BUD.marginTarget.toFixed(1);
+
+    if (!bill.invoiced || bill.invoiced <= 30000) {
+      return `<p><strong>Enterprise AI Rollout</strong> hasn't delivered a phase yet, so there is nothing to track against plan.</p>
+<p>The plan stands at <strong>${_budMoney(BUD.costTarget)}</strong> of cost against the $150,000 fee — a
+<strong>${margin}%</strong> margin over ${BUD.hoursBudget} hours. Only the deposit has been invoiced.</p>`;
+    }
+
+    return `<p><strong>Phase 1 is complete and invoiced</strong>, and the engagement is tracking <strong>on plan</strong>.</p>
+<p><strong>Margin: ${margin}% planned, ${margin}% actual.</strong></p>
+<ul>
+  <li><strong>Cost to date: ${_budMoney(spent)}</strong> across ${hours} hours
+    <ul>
+      ${rows.map(r => `<li>${r[0]} — ${r[1]} — <strong>${r[2]}h</strong> at $${r[3]}/h = <strong>${_budMoney(r[2] * r[3])}</strong></li>`).join('')}
+    </ul>
+  </li>
+  <li><strong>Billed to date: ${_budMoney(bill.invoiced)}</strong> of $150,000 — deposit plus the Phase 1 sign-off milestone. ${_budMoney(bill.left)} left to bill.</li>
+  <li><strong>Remaining plan: ${_budMoney(BUD.costTarget - spent)}</strong> of cost across Phases 2 to 4.</li>
+</ul>
+${agent ? `<p>Phase 1 came in at <strong>${_budMoney(spent)}</strong> against the <strong>$26,400</strong> it would have cost before Remi's change — the Readiness Agent's 200 hours at $10 plus Tom's 16 hours of review replaced 200 junior hours at $90. That is the whole of the move from 35.2% to <strong>${margin}%</strong>.</p>`
+        : `<p>Phase 1 ran on its original plan, with Sam Delaney's 200 hours at $90. Remi's suggestion on the Schedule tab would take the margin from ${margin}% to 44.3% if applied to the phases still to run.</p>`}`;
+  }
+
   if (q.includes('planned margin') || (q.includes('margin') && q.includes('this project'))) {
     return `<p><strong>Enterprise AI Rollout</strong> is fixed fee at <strong>$150,000</strong> over <strong>820 planned hours</strong>. Planned cost to serve at the team's cost rates:</p>
 <ul>
