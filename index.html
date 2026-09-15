@@ -4961,6 +4961,8 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
   padding: var(--spacing-4); display: flex; flex-direction: column; min-width: 0;
 }
 .cw.span2 { grid-column: span 2; }
+/* Activity, Notes and Tasks by status share their own row of thirds */
+.cw-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: var(--spacing-4); }
 .cw-head { display: flex; align-items: center; gap: var(--spacing-2); margin-bottom: var(--spacing-2); }
 .cw-title { font-size: 14px; font-weight: 700; color: var(--color-text-default); }
 .cw-actions { margin-left: auto; display: flex; align-items: center; gap: 2px; color: var(--color-text-disabled); }
@@ -5139,7 +5141,9 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
   border-top: var(--border-width-1) solid var(--color-border-separator);
 }
 
-@media (max-width: 1200px) { .cw-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 1200px) {
+  .cw-grid, .cw-grid.three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 
 
 /*
@@ -8852,7 +8856,10 @@ function _renderClientOverview() {
         ])}</div>
       </div>
 
-      <div class="cw span2">
+    </div>
+
+    <div class="cw-grid three">
+      <div class="cw">
         <div class="cw-head">
           <span class="cw-title">Activity by team member</span>
           <span class="cw-actions">
@@ -8887,7 +8894,7 @@ function _renderClientOverview() {
         </div>
       </div>
 
-      <div class="cw span2">
+      <div class="cw">
         <div class="cw-head"><span class="cw-title">Tasks by status</span><span class="cw-actions">${filt}${kebab}</span></div>
         <div class="cw-status">
           ${statuses.map(st => `
