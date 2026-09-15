@@ -4896,6 +4896,246 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 @media (max-width: 1080px) { .doc-chat { width: 300px; } }
 
 
+
+/*
+ * ─────────────────────────────────────────────────────────────────
+ * 🧩 Client — Halcyon Logistics
+ * Overview widget board, Quotes list, and a quote detail whose
+ * numbers are the Enterprise AI Rollout engagement.
+ * ─────────────────────────────────────────────────────────────────
+ */
+.client-page { display: none; flex: 1; min-height: 0; flex-direction: column; }
+.client-page.visible { display: flex; }
+
+.client-head { flex-shrink: 0; padding: var(--spacing-4) var(--spacing-6) 0; }
+.client-title-row { display: flex; align-items: center; gap: var(--spacing-3); }
+.client-logo {
+  width: 44px; height: 44px; border-radius: var(--border-rounded-full); flex-shrink: 0;
+  background: var(--color-surface-default); color: var(--color-text-subtle);
+  display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700;
+}
+.client-name { font-size: 22px; font-weight: 700; color: var(--color-text-default); }
+.client-head-icon { border: none; background: none; cursor: pointer; color: var(--color-text-disabled); display: flex; padding: 2px; }
+.client-head-icon svg { width: 15px; height: 15px; }
+.client-meta { font-size: 13px; color: var(--color-text-subtle); margin: 4px 0 0 56px; }
+.client-meta .sep { margin: 0 6px; color: var(--color-text-disabled); }
+
+.client-tabs {
+  display: flex; align-items: center; gap: var(--spacing-1);
+  margin-top: var(--spacing-3);
+  border-bottom: var(--border-width-1) solid var(--color-border-separator);
+}
+.client-tab {
+  padding: var(--spacing-2) var(--spacing-3); font-size: 13px; font-weight: 500;
+  color: var(--color-text-subtle); background: none; border: none; cursor: pointer;
+  border-bottom: var(--border-width-2) solid transparent; margin-bottom: -1px;
+  display: flex; align-items: center; gap: 6px; white-space: nowrap;
+}
+.client-tab:hover { color: var(--color-text-default); }
+.client-tab.active { color: var(--color-text-primary); border-bottom-color: var(--palette-indigo-40); font-weight: 600; }
+
+.client-toolbar {
+  flex-shrink: 0; display: flex; align-items: center; gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-6);
+}
+.client-count { font-size: 13px; font-weight: 600; color: var(--color-text-default); }
+.client-toolbar-right { margin-left: auto; display: flex; align-items: center; gap: var(--spacing-2); }
+.client-btn {
+  display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 var(--spacing-3);
+  border: none; border-radius: var(--border-rounded-md);
+  background: var(--color-action-primary-default); color: var(--palette-white);
+  font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;
+}
+.client-btn:hover { background: var(--color-action-primary-hover); }
+.client-btn svg { width: 14px; height: 14px; }
+.client-btn.ghost { background: none; color: var(--color-text-subtle); font-weight: 500; }
+.client-btn.ghost:hover { background: var(--color-background-hover); color: var(--color-text-default); }
+
+.client-body { flex: 1; min-height: 0; overflow: auto; padding: 0 var(--spacing-6) var(--spacing-8); }
+
+/* ── Overview widget board ───────────────────────────────────────── */
+.cw-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--spacing-4); }
+.cw {
+  border: var(--border-width-1) solid var(--color-border-separator);
+  border-radius: var(--border-rounded-lg); background: var(--color-background-default);
+  padding: var(--spacing-4); display: flex; flex-direction: column; min-width: 0;
+}
+.cw.span2 { grid-column: span 2; }
+.cw-head { display: flex; align-items: center; gap: var(--spacing-2); margin-bottom: var(--spacing-2); }
+.cw-title { font-size: 14px; font-weight: 700; color: var(--color-text-default); }
+.cw-actions { margin-left: auto; display: flex; align-items: center; gap: 2px; color: var(--color-text-disabled); }
+.cw-actions svg { width: 15px; height: 15px; }
+.cw-tag {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
+  padding: 2px 7px; border-radius: var(--border-rounded-sm);
+  background: var(--color-surface-default); color: var(--color-text-subtle);
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.cw-legend { display: flex; flex-wrap: wrap; gap: var(--spacing-3); font-size: 11px; color: var(--color-text-subtle); margin-bottom: var(--spacing-2); }
+.cw-legend span { display: inline-flex; align-items: center; gap: 5px; }
+.cw-dot { width: 8px; height: 8px; border-radius: var(--border-rounded-full); }
+.cw-chart { flex: 1; display: flex; align-items: center; justify-content: center; padding: var(--spacing-2) 0; }
+.cw-chart svg { width: 150px; height: 150px; }
+
+.cw-big { font-size: 34px; font-weight: 700; color: var(--color-text-default); text-align: center; margin-top: var(--spacing-4); }
+.cw-big-label { font-size: 12px; color: var(--color-text-subtle); text-align: center; margin-bottom: var(--spacing-4); }
+.cw-split { display: flex; align-items: stretch; margin-top: auto; }
+.cw-split > div { flex: 1; text-align: center; }
+.cw-split > div + div { border-left: var(--border-width-1) solid var(--color-border-separator); }
+.cw-split-val { font-size: 14px; font-weight: 600; color: var(--color-text-default); }
+.cw-split-lbl { font-size: 12px; color: var(--color-text-subtle); margin-top: 2px; }
+
+/* Activity by team member */
+.cw-bars { display: flex; align-items: flex-end; justify-content: center; gap: var(--spacing-6); flex: 1; padding-top: var(--spacing-4); }
+.cw-bar-col { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.cw-bar { width: 22px; background: var(--palette-indigo-40); border-radius: 3px 3px 0 0; }
+.cw-bar-n { font-size: 13px; font-weight: 700; color: var(--color-text-default); }
+.cw-bar-avatar {
+  width: 26px; height: 26px; border-radius: var(--border-rounded-full);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: var(--palette-white);
+}
+.cw-bar-name { font-size: 11px; color: var(--color-text-subtle); max-width: 82px; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cw-range { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--color-text-default); }
+.cw-range button { border: none; background: none; cursor: pointer; color: var(--color-text-subtle); display: flex; padding: 2px; }
+.cw-range svg { width: 13px; height: 13px; }
+
+/* Tasks by status */
+.cw-status { display: flex; flex-direction: column; gap: var(--spacing-3); padding-top: var(--spacing-3); flex: 1; }
+.cw-status-row { display: grid; grid-template-columns: 78px 1fr auto; align-items: center; gap: var(--spacing-3); }
+.cw-status-lbl { font-size: 12px; color: var(--color-text-subtle); text-align: right; }
+.cw-status-bar { height: 16px; border-radius: 4px; min-width: 2px; }
+.cw-status-n { font-size: 12px; font-weight: 600; color: var(--color-text-default); }
+.cw-note { font-size: 14px; color: var(--color-text-default); line-height: 1.6; padding-top: var(--spacing-2); }
+
+/* ── Quotes list ─────────────────────────────────────────────────── */
+.q-table { width: 100%; border-collapse: collapse; }
+.q-table th {
+  text-align: left; font-size: 12px; font-weight: 600; color: var(--color-text-subtle);
+  padding: var(--spacing-3) var(--spacing-3);
+  border-bottom: var(--border-width-1) solid var(--color-border-separator); white-space: nowrap;
+}
+.q-table th.num, .q-table td.num { text-align: right; }
+.q-table td {
+  padding: var(--spacing-4) var(--spacing-3); font-size: 14px; color: var(--color-text-default);
+  border-bottom: var(--border-width-1) solid var(--color-border-separator); vertical-align: middle;
+}
+.q-row { cursor: pointer; }
+.q-row:hover td { background: var(--color-background-hover); }
+.q-no { font-weight: 500; }
+.q-expired { color: var(--palette-red-50); }
+.q-muted { color: var(--color-text-disabled); }
+.q-who { display: flex; align-items: center; gap: var(--spacing-2); white-space: nowrap; }
+.q-avatar {
+  width: 26px; height: 26px; border-radius: var(--border-rounded-full); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: var(--palette-white);
+}
+.q-status {
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px;
+  border-radius: var(--border-rounded-md); font-size: 13px; font-weight: 500; white-space: nowrap;
+}
+.q-status svg { width: 14px; height: 14px; }
+.q-status.accepted { background: var(--palette-green-20); color: var(--palette-green-70); }
+.q-status.open     { background: var(--palette-blue-20);  color: var(--palette-blue-60); }
+.q-status.expired  { background: var(--palette-yellow-20); color: var(--palette-orange-50); }
+
+/* ── Quote detail ────────────────────────────────────────────────── */
+.qd-head { flex-shrink: 0; padding: var(--spacing-4) var(--spacing-6) 0; }
+.qd-title-row { display: flex; align-items: center; gap: var(--spacing-3); }
+.qd-back { border: none; background: none; cursor: pointer; color: var(--color-text-default); display: flex; padding: 4px; border-radius: var(--border-rounded-md); }
+.qd-back:hover { background: var(--color-background-hover); }
+.qd-back svg { width: 18px; height: 18px; }
+.qd-title { font-size: 18px; font-weight: 700; color: var(--color-text-default); }
+.qd-autosave { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--color-text-subtle); }
+.qd-autosave svg { width: 14px; height: 14px; }
+.qd-head-right { margin-left: auto; display: flex; align-items: center; gap: var(--spacing-2); }
+.qd-btn {
+  display: flex; align-items: center; gap: 6px; height: 34px; padding: 0 var(--spacing-3);
+  border: var(--border-width-1) solid var(--color-border-default);
+  border-radius: var(--border-rounded-md); background: var(--color-background-default);
+  font-size: 13px; font-weight: 600; color: var(--color-text-default); cursor: pointer; white-space: nowrap;
+}
+.qd-btn:hover { background: var(--color-background-hover); }
+.qd-btn.ghost { border: none; font-weight: 500; color: var(--color-text-subtle); }
+.qd-btn.primary { border: none; background: var(--color-action-primary-default); color: var(--palette-white); }
+.qd-btn.primary:hover { background: var(--color-action-primary-hover); }
+.qd-btn.accent { border-color: var(--palette-indigo-30); color: var(--color-text-primary); }
+.qd-btn svg { width: 15px; height: 15px; }
+
+.qd-stats {
+  display: flex; align-items: stretch; flex-wrap: wrap; gap: 0;
+  padding: var(--spacing-4) var(--spacing-6);
+  border-bottom: var(--border-width-1) solid var(--color-border-separator);
+}
+.qd-stat { padding: 0 var(--spacing-5); border-right: var(--border-width-1) solid var(--color-border-separator); }
+.qd-stat:first-child { padding-left: 0; }
+.qd-stat:last-child { border-right: none; }
+.qd-stat-lbl { font-size: 12px; color: var(--color-text-subtle); }
+.qd-stat-val { font-size: 14px; font-weight: 600; color: var(--color-text-default); margin-top: 3px; white-space: nowrap; }
+.qd-stat-val.pos { color: var(--palette-green-60); }
+.qd-stat-val.neg { color: var(--palette-red-50); }
+.qd-edit { display: flex; align-items: center; gap: 6px; border: none; background: none; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--color-text-primary); align-self: center; margin-left: var(--spacing-4); }
+.qd-edit svg { width: 14px; height: 14px; }
+
+.qd-body { flex: 1; min-height: 0; overflow: auto; padding: 0 0 var(--spacing-8); }
+.qd-section { margin-top: var(--spacing-5); }
+.qd-section-head {
+  display: flex; align-items: center; gap: var(--spacing-2);
+  padding: 0 var(--spacing-6) var(--spacing-2);
+}
+.qd-section-caret { color: var(--color-text-subtle); display: flex; }
+.qd-section-caret svg { width: 14px; height: 14px; }
+.qd-section-name { font-size: 15px; font-weight: 700; color: var(--color-text-default); }
+.qd-section-count {
+  font-size: 11px; font-weight: 600; color: var(--color-text-subtle);
+  background: var(--color-surface-default); border-radius: var(--border-rounded-full);
+  padding: 2px 8px;
+}
+.qd-section-icon { color: var(--color-text-disabled); display: flex; cursor: pointer; padding: 2px; }
+.qd-section-icon svg { width: 14px; height: 14px; }
+
+.qd-scroll { overflow-x: auto; }
+.qd-table { border-collapse: collapse; min-width: 1180px; width: 100%; }
+.qd-table th {
+  text-align: left; font-size: 11px; font-weight: 600; color: var(--color-text-subtle);
+  padding: var(--spacing-2) var(--spacing-3); white-space: nowrap;
+  border-top: var(--border-width-1) solid var(--color-border-separator);
+  border-bottom: var(--border-width-1) solid var(--color-border-separator);
+  background: var(--color-background-default);
+}
+.qd-table th.num, .qd-table td.num { text-align: right; }
+.qd-table td {
+  padding: var(--spacing-3); font-size: 13px; color: var(--color-text-default);
+  border-bottom: var(--border-width-1) solid var(--color-border-separator); white-space: nowrap;
+}
+.qd-table tbody tr:hover td { background: var(--color-background-hover); }
+.qd-table td:first-child, .qd-table th:first-child { padding-left: var(--spacing-6); }
+.qd-shade { background: var(--palette-neutral-05); }
+.qd-type {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
+  border-radius: var(--border-rounded-md); font-size: 12px; font-weight: 500; white-space: nowrap;
+}
+.qd-type.task  { background: var(--palette-blue-10);  color: var(--palette-blue-60); }
+.qd-type.alloc { background: var(--palette-pink-10);  color: var(--palette-pink-45); }
+.qd-type svg { width: 13px; height: 13px; }
+.qd-totals td { font-weight: 700; background: var(--color-background-default); border-top: var(--border-width-1) solid var(--color-border-default); }
+.qd-total-sub { display: block; font-size: 10px; font-weight: 500; color: var(--color-text-subtle); }
+.qd-add {
+  display: flex; align-items: center; gap: 6px; padding: var(--spacing-3) var(--spacing-6);
+  font-size: 13px; color: var(--color-text-subtle); cursor: pointer;
+}
+.qd-add:hover { color: var(--color-text-default); }
+.qd-add svg { width: 14px; height: 14px; }
+.qd-foot {
+  position: sticky; bottom: 0; display: flex; justify-content: flex-end;
+  padding: var(--spacing-3) var(--spacing-6);
+  background: var(--color-background-default);
+  border-top: var(--border-width-1) solid var(--color-border-separator);
+}
+
+@media (max-width: 1200px) { .cw-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
 /*
  * ─────────────────────────────────────────────────────────────────
  * 🧩 Agent builder — full-screen create / edit modal
@@ -5341,6 +5581,12 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
     <button class="nav-icon-btn" title="Tasks">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12l3 3 5-5"/>
+      </svg>
+    </button>
+    <button class="nav-icon-btn" id="navClientsBtn" title="Clients" onclick="showClient()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 21V7l7-4v18"/><path d="M10 21V9l8 3v9"/><path d="M2 21h20"/>
+        <path d="M6 9v0M6 13v0M6 17v0M14 14v0M14 18v0"/>
       </svg>
     </button>
     <button class="nav-icon-btn" id="navProjectsBtn" title="Projects" onclick="showProject()">
@@ -5907,6 +6153,34 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
         </svg>
         Send feedback
       </button>
+    </div>
+
+    <!-- ── 🧩 Client — Halcyon Logistics ──────────────────────────── -->
+    <div class="breadcrumb-row" id="clientBreadcrumbRow" style="display:none">
+      <div class="breadcrumb">
+        <svg style="width:12px;height:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <a href="#" onclick="return false;">Home</a>
+        <span class="breadcrumb-sep">/</span>
+        <a href="#" onclick="return false;">Clients</a>
+        <span class="breadcrumb-sep">/</span>
+        <a href="#" onclick="showClient(); return false;">Halcyon Logistics</a>
+        <span class="breadcrumb-sep">/</span>
+        <span class="breadcrumb-current" id="clientCrumbTab">Overview</span>
+      </div>
+      <button class="send-feedback-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+        </svg>
+        Send feedback
+      </button>
+    </div>
+
+    <div class="client-page" id="clientPage">
+      <div class="client-head" id="clientHead"></div>
+      <div class="client-toolbar" id="clientToolbar"></div>
+      <div class="client-body" id="clientBody"></div>
     </div>
 
     <div class="project-page" id="projectPage">
@@ -7875,11 +8149,17 @@ function renderCombinedActivity() {
 function renderTeammatesPage() { switchTeammatesTab(_teammatesTab || 'jobs'); }
 
 function showTeammatesPage() {
+  document.getElementById('clientPage').classList.remove('visible');
+  document.getElementById('clientBreadcrumbRow').style.display = 'none';
+  document.getElementById('navClientsBtn').classList.remove('active');
   showTeamworkAi('teammates');
 }
 
 /* Show the Teamwork AI page on a given tab ('ask' | 'teammates' | 'teammate') */
 function showTeamworkAi(tab) {
+  document.getElementById('clientPage').classList.remove('visible');
+  document.getElementById('clientBreadcrumbRow').style.display = 'none';
+  document.getElementById('navClientsBtn').classList.remove('active');
   // Hide the project page / breadcrumb, show the teammates page / breadcrumb
   document.getElementById('projectPage').classList.remove('visible');
   document.getElementById('projectBreadcrumbRow').style.display = 'none';
@@ -7894,6 +8174,9 @@ function showTeamworkAi(tab) {
 
 /* ── Project page ──────────────────────────────────────────────── */
 function showProject() {
+  document.getElementById('clientPage').classList.remove('visible');
+  document.getElementById('clientBreadcrumbRow').style.display = 'none';
+  document.getElementById('navClientsBtn').classList.remove('active');
   // Hide teammates page / breadcrumb, show project page / breadcrumb
   document.getElementById('teammatesPage').classList.remove('visible');
   document.getElementById('teammatesBreadcrumbRow').style.display = 'none';
@@ -8130,6 +8413,450 @@ function renderProjectBody() {
   if (el) el.textContent = total + ' tasks';
 }
 
+
+
+/* ─────────────────────────────────────────────────────────────────
+ * 🧩 Client — Halcyon Logistics
+ * Overview widgets, a quotes list, and the accepted quote behind the
+ * Enterprise AI Rollout engagement. The quote's line items are the
+ * four phases at the team's cost and billable rates, so it totals the
+ * same $150,000 fee / $97,200 cost / 35.2% margin as the project.
+ * ───────────────────────────────────────────────────────────────── */
+let clientTab = 'overview';
+let openQuoteId = null;
+
+const CLIENT = {
+  name: 'Halcyon Logistics',
+  address: 'Unit 7, Northbridge Distribution Park, Warrington, WA5',
+  email: 'accounts@halcyonlogistics.com',
+  revenue: 205000, cost: 140100,          /* across all three engagements */
+};
+
+/* Quote line items — the engagement priced by phase.
+   hours × cost rate = cost; hours × billable rate = potential billable. */
+const QUOTE_SECTIONS = [
+  { name: 'Phase 1 · Readiness & Discovery', items: [
+    { item: 'Stakeholder interviews & workshop synthesis', who: 'TO', date: '5 – 16 Oct 2026', hours: 40,  cost: 150, bill: 250 },
+    { item: 'Use-case discovery',                          who: 'PR', date: '19 – 23 Oct 2026', hours: 12, cost: 200, bill: 350 },
+    { item: 'AI Readiness Assessment',                     who: 'SD', date: '5 – 23 Oct 2026',  hours: 200, cost: 90,  bill: 150 },
+  ]},
+  { name: 'Phase 2 · Roadmap & Business Case', items: [
+    { item: 'Prioritised transformation roadmap', who: 'TO', date: '26 Oct – 6 Nov 2026', hours: 80, cost: 150, bill: 250 },
+    { item: 'Roadmap analysis support',           who: 'SD', date: '26 Oct – 6 Nov 2026', hours: 40, cost: 90,  bill: 150 },
+    { item: 'ROI business case',                  who: 'PR', date: '2 – 13 Nov 2026',     hours: 20, cost: 200, bill: 350 },
+    { item: 'Business case modelling',            who: 'SD', date: '2 – 13 Nov 2026',     hours: 40, cost: 90,  bill: 150 },
+  ]},
+  { name: 'Phase 3 · Governance & Enablement', items: [
+    { item: 'Acceptable-use / governance policy',  who: 'EM', date: '16 – 25 Nov 2026',    hours: 56, cost: 120, bill: 200 },
+    { item: 'Champion programme playbook',         who: 'EM', date: '19 Nov – 1 Dec 2026', hours: 44, cost: 120, bill: 200 },
+    { item: 'Training curriculum & prompt library',who: 'SD', date: '18 Nov – 4 Dec 2026', hours: 60, cost: 90,  bill: 150 },
+    { item: 'Curriculum & prompt review',          who: 'TO', date: '18 Nov – 4 Dec 2026', hours: 40, cost: 150, bill: 250 },
+  ]},
+  { name: 'Phase 4 · Rollout & Adoption', items: [
+    { item: 'Launch communication plan',   who: 'EM', date: '7 – 15 Dec 2026',  hours: 60, cost: 120, bill: 200 },
+    { item: 'Adoption dashboard',          who: 'SD', date: '9 – 21 Dec 2026',  hours: 60, cost: 90,  bill: 150 },
+    { item: 'Dashboard technical review',  who: 'TO', date: '9 – 21 Dec 2026',  hours: 40, cost: 150, bill: 250 },
+    { item: 'ROI report',                  who: 'PR', date: '16 – 25 Dec 2026', hours: 28, cost: 200, bill: 350 },
+  ]},
+];
+
+const CLIENT_QUOTES = [
+  { id: 'QTE-014-15-09-2026', issued: '15 Sept 2026', valid: '15 Oct 2026', by: 'PR',
+    note: 'Enterprise AI Rollout — 12-week fixed fee', status: 'accepted', total: 150000, open: true },
+  { id: 'QTE-013-02-09-2026', issued: '2 Sept 2026', valid: '2 Oct 2026', by: 'TO',
+    note: 'Depot Network Review — phase 2 extension', status: 'open', total: 48500 },
+  { id: 'QTE-011-18-07-2026', issued: '18 July 2026', valid: '17 Aug 2026', by: 'PR',
+    note: '—', status: 'expired', total: 22750, expired: true },
+  { id: 'QTE-009-04-06-2026', issued: '4 June 2026', valid: '4 July 2026', by: 'EM',
+    note: 'TMS data migration — discovery only', status: 'accepted', total: 18900 },
+  { id: 'QTE-007-20-03-2026', issued: '20 Mar 2026', valid: '19 Apr 2026', by: 'TO',
+    note: '—', status: 'expired', total: 9400, expired: true },
+];
+
+function _qTotals() {
+  let hours = 0, cost = 0, bill = 0;
+  QUOTE_SECTIONS.forEach(s => s.items.forEach(i => {
+    hours += i.hours; cost += i.hours * i.cost; bill += i.hours * i.bill;
+  }));
+  return { hours, cost, bill };
+}
+function _cm(n, dp) {
+  return '$' + n.toLocaleString('en-US', { minimumFractionDigits: dp === undefined ? 2 : dp,
+                                           maximumFractionDigits: dp === undefined ? 2 : dp });
+}
+function _cAvatar(init, cls) {
+  const p = schedPeople.find(x => x.initials === init) || { bg: 'var(--palette-neutral-30)' };
+  return `<span class="${cls || 'q-avatar'}" style="background:${p.bg}">${init}</span>`;
+}
+function _cName(init) { return PEOPLE_BY_INITIALS[init] || init; }
+
+/* ── Page ────────────────────────────────────────────────────────── */
+function showClient(tab) {
+  if (tab) { clientTab = tab; openQuoteId = null; }
+  document.getElementById('teammatesPage').classList.remove('visible');
+  document.getElementById('teammatesBreadcrumbRow').style.display = 'none';
+  document.getElementById('projectPage').classList.remove('visible');
+  document.getElementById('projectBreadcrumbRow').style.display = 'none';
+  document.getElementById('clientBreadcrumbRow').style.display = '';
+  document.getElementById('clientPage').classList.add('visible');
+  document.getElementById('navClientsBtn').classList.add('active');
+  document.getElementById('navProjectsBtn').classList.remove('active');
+  document.getElementById('navTeamworkAiBtn').classList.remove('active');
+  renderClient();
+}
+
+function switchClientTab(tab, el) {
+  clientTab = tab; openQuoteId = null;
+  renderClient();
+}
+
+const CLIENT_TABS = [
+  ['overview', 'Overview'], ['activity', 'Activity'], ['quotes', 'Quotes', true],
+  ['projects', 'Projects'], ['time', 'Time'], ['tickets', 'Tickets'],
+  ['rates', 'Role rates', true], ['people', 'People'], ['reports', 'Reports'],
+];
+
+function renderClient() {
+  const head = document.getElementById('clientHead');
+  const info = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round"/></svg>`;
+  const pen  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>`;
+
+  /* The quote detail replaces the whole header */
+  if (openQuoteId) { _renderQuoteDetail(); return; }
+
+  head.innerHTML = `
+    <div class="client-title-row">
+      <span class="client-logo">HL</span>
+      <span class="client-name">${CLIENT.name}</span>
+      <button class="client-head-icon" title="Details">${info}</button>
+      <button class="client-head-icon" title="Edit">${pen}</button>
+    </div>
+    <div class="client-meta">${CLIENT.address} <span class="sep">/</span> ${CLIENT.email}</div>
+    <div class="client-tabs">
+      ${CLIENT_TABS.map(([k, label, isNew]) => `
+        <button class="client-tab${clientTab === k ? ' active' : ''}" onclick="switchClientTab('${k}', this)">
+          ${label}${isNew ? '<span class="project-tab-new">NEW</span>' : ''}
+        </button>`).join('')}
+    </div>`;
+
+  document.getElementById('clientPage').classList.add('visible');
+  const crumb = document.getElementById('clientCrumbTab');
+  if (crumb) crumb.textContent = (CLIENT_TABS.find(t => t[0] === clientTab) || [, 'Overview'])[1];
+
+  if (clientTab === 'quotes') return _renderQuotesList();
+  if (clientTab === 'overview') return _renderClientOverview();
+
+  document.getElementById('clientToolbar').innerHTML = '';
+  document.getElementById('clientBody').innerHTML =
+    `<div class="bud-empty">${(CLIENT_TABS.find(t => t[0] === clientTab) || [, ''])[1]} is stubbed in this prototype.</div>`;
+}
+
+/* ── Overview ────────────────────────────────────────────────────── */
+function _donut(segs, size) {
+  const s = size || 150, r = s * 0.32, c = 2 * Math.PI * r;
+  let off = 0;
+  const arcs = segs.map(g => {
+    const len = c * g.v / 100;
+    const el = `<circle cx="${s/2}" cy="${s/2}" r="${r}" fill="none" stroke="${g.c}" stroke-width="${s*0.2}"
+      stroke-dasharray="${len.toFixed(2)} ${(c - len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"/>`;
+    off += len; return el;
+  }).join('');
+  return `<svg viewBox="0 0 ${s} ${s}" style="transform:rotate(-90deg)">${arcs}</svg>`;
+}
+function _pie(segs, size) {
+  const s = size || 150, r = s * 0.42, c = 2 * Math.PI * r;
+  let off = 0;
+  return `<svg viewBox="0 0 ${s} ${s}" style="transform:rotate(-90deg)">${segs.map(g => {
+    const len = c * g.v / 100;
+    const el = `<circle cx="${s/2}" cy="${s/2}" r="${r/2}" fill="none" stroke="${g.c}" stroke-width="${r}"
+      stroke-dasharray="${(len/2).toFixed(2)} ${((c - len)/2).toFixed(2)}" stroke-dashoffset="${(-off/2).toFixed(2)}"/>`;
+    off += len; return el;
+  }).join('')}</svg>`;
+}
+
+function _renderClientOverview() {
+  const filt = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg>`;
+  const kebab = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>`;
+  const prev = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>`;
+  const next = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`;
+  const profit = CLIENT.revenue - CLIENT.cost;
+
+  const acts = [{ i: 'PR', n: 18 }, { i: 'TO', n: 11 }, { i: 'EM', n: 6 }, { i: 'SD', n: 3 }];
+  const maxAct = Math.max(...acts.map(a => a.n));
+  const statuses = [
+    { l: 'Started',  n: 46, c: 'var(--palette-green-30)' },
+    { l: 'Late',     n: 12, c: 'var(--palette-red-30)' },
+    { l: 'Today',    n: 3,  c: 'var(--palette-blue-30)' },
+    { l: 'Upcoming', n: 61, c: 'var(--palette-yellow-40)' },
+  ];
+  const maxSt = Math.max(...statuses.map(s => s.n));
+
+  document.getElementById('clientToolbar').innerHTML = `
+    <span class="client-count">7 widgets</span>
+    <div class="client-toolbar-right">
+      <button class="client-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> Add widget</button>
+    </div>`;
+
+  document.getElementById('clientBody').innerHTML = `
+    <div class="cw-grid">
+      <div class="cw">
+        <div class="cw-head"><span class="cw-title">Profitability</span><span class="cw-actions">${filt}${kebab}</span></div>
+        <div class="cw-big">${_cm(profit, 0)}</div>
+        <div class="cw-big-label">Profit</div>
+        <div class="cw-split">
+          <div><div class="cw-split-val">${_cm(CLIENT.revenue, 0)}</div><div class="cw-split-lbl">Revenue</div></div>
+          <div><div class="cw-split-val">${_cm(CLIENT.cost, 0)}</div><div class="cw-split-lbl">Total cost</div></div>
+        </div>
+      </div>
+
+      <div class="cw">
+        <div class="cw-head"><span class="cw-title">Budget usage</span><span class="cw-actions">${filt}${kebab}</span></div>
+        <div class="cw-legend">
+          <span><span class="cw-dot" style="background:var(--palette-green-30)"></span>&lt;49%</span>
+          <span><span class="cw-dot" style="background:var(--palette-yellow-40)"></span>50-79%</span>
+          <span><span class="cw-dot" style="background:var(--palette-red-30)"></span>&gt;80%</span>
+        </div>
+        <div class="cw-chart">${_donut([
+          { v: 67, c: 'var(--palette-green-30)' },
+          { v: 22, c: 'var(--palette-yellow-40)' },
+          { v: 11, c: 'var(--palette-red-30)' },
+        ])}</div>
+      </div>
+
+      <div class="cw">
+        <div class="cw-head"><span class="cw-title">Time distribution</span><span class="cw-actions">${filt}${kebab}</span></div>
+        <div class="cw-legend">
+          <span><span class="cw-dot" style="background:var(--palette-indigo-40)"></span>Billable</span>
+          <span><span class="cw-dot" style="background:var(--palette-indigo-20)"></span>Non-billable</span>
+        </div>
+        <div class="cw-chart">${_donut([
+          { v: 84, c: 'var(--palette-indigo-40)' },
+          { v: 16, c: 'var(--palette-indigo-20)' },
+        ])}</div>
+      </div>
+
+      <div class="cw">
+        <div class="cw-head"><span class="cw-title">Projects by health</span><span class="cw-actions">${filt}${kebab}</span></div>
+        <div class="cw-legend">
+          <span><span class="cw-dot" style="background:var(--palette-green-30)"></span>Good</span>
+          <span><span class="cw-dot" style="background:var(--palette-yellow-40)"></span>At risk</span>
+          <span><span class="cw-dot" style="background:var(--palette-red-30)"></span>Needs attention</span>
+        </div>
+        <div class="cw-chart">${_pie([
+          { v: 67, c: 'var(--palette-green-30)' },
+          { v: 33, c: 'var(--palette-yellow-40)' },
+        ])}</div>
+      </div>
+
+      <div class="cw span2">
+        <div class="cw-head">
+          <span class="cw-title">Activity by team member</span>
+          <span class="cw-actions">
+            <span class="cw-range"><button>${prev}</button> 1 – 30 Sept <button>${next}</button></span>
+            ${kebab}
+          </span>
+        </div>
+        <div class="cw-bars">
+          ${acts.map(a => `
+            <div class="cw-bar-col">
+              <div class="cw-bar" style="height:${Math.round(a.n / maxAct * 120)}px"></div>
+              <div class="cw-bar-n">${a.n}</div>
+              ${_cAvatar(a.i, 'cw-bar-avatar')}
+              <div class="cw-bar-name">${_cName(a.i)}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <div class="cw">
+        <div class="cw-head">
+          <span class="cw-title">Notes</span>
+          <span class="cw-tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px"><path d="M3 21V7l7-4v18M10 21V9l8 3v9M2 21h20" stroke-linejoin="round"/></svg>
+            CLIENT
+          </span>
+          <span class="cw-actions">${kebab}</span>
+        </div>
+        <div class="cw-note">
+          Dana is the exec sponsor at Meridian; Marcus Boyd (Head of Operations) is the day-to-day
+          contact at Halcyon. Board reviews the AI rollout business case in November — keep the ROI
+          model current. Invoicing is monthly in arrears, 30-day terms.
+        </div>
+      </div>
+
+      <div class="cw span2">
+        <div class="cw-head"><span class="cw-title">Tasks by status</span><span class="cw-actions">${filt}${kebab}</span></div>
+        <div class="cw-status">
+          ${statuses.map(st => `
+            <div class="cw-status-row">
+              <span class="cw-status-lbl">${st.l}</span>
+              <span class="cw-status-bar" style="width:${Math.max(2, st.n / maxSt * 100)}%;background:${st.c}"></span>
+              <span class="cw-status-n">${st.n}</span>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ── Quotes list ─────────────────────────────────────────────────── */
+function _renderQuotesList() {
+  const tick = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8.5 12.5 11 15 16 9.5"/></svg>`;
+  const clock = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`;
+  const warn = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>`;
+  const icon = { accepted: tick, open: clock, expired: warn };
+  const label = { accepted: 'Accepted', open: 'Open', expired: 'Expired' };
+
+  document.getElementById('clientToolbar').innerHTML = `
+    <span class="client-count">${CLIENT_QUOTES.length} quotes</span>
+    <div class="client-toolbar-right">
+      <button class="client-btn ghost"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="m11 11 2.5 2.5"/></svg> Search</button>
+      <button class="client-btn ghost"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg> Filter</button>
+      <button class="client-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> Add quote</button>
+    </div>`;
+
+  document.getElementById('clientBody').innerHTML = `
+    <table class="q-table">
+      <thead><tr>
+        <th>Quote no.</th><th>Issue date</th><th>Valid until</th><th>Last updated by</th>
+        <th>Notes</th><th>Status</th><th class="num">Total amount</th><th></th>
+      </tr></thead>
+      <tbody>
+        ${CLIENT_QUOTES.map(q => `
+          <tr class="q-row" onclick="${q.open ? `openQuote('${q.id}')` : `showToast('Only the Enterprise AI Rollout quote is built out in this prototype')`}">
+            <td class="q-no">${q.id}</td>
+            <td>${q.issued}</td>
+            <td class="${q.expired ? 'q-expired' : ''}">${q.valid}</td>
+            <td><span class="q-who">${_cAvatar(q.by)} ${_cName(q.by)}</span></td>
+            <td class="${q.note === '—' ? 'q-muted' : ''}">${q.note}</td>
+            <td><span class="q-status ${q.status}">${icon[q.status]} ${label[q.status]}</span></td>
+            <td class="num">${_cm(q.total)}</td>
+            <td class="q-muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:15px;height:15px"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg></td>
+          </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+
+function openQuote(id) { openQuoteId = id; renderClient(); }
+function closeQuote() { openQuoteId = null; renderClient(); }
+
+
+/* ── Quote detail ────────────────────────────────────────────────── */
+function _renderQuoteDetail() {
+  const q = CLIENT_QUOTES.find(x => x.id === openQuoteId) || CLIENT_QUOTES[0];
+  const T = _qTotals();
+  const profit = q.total - T.cost;
+  const margin = profit / q.total * 100;
+
+  const back = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="11 18 5 12 11 6"/></svg>`;
+  const info = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round"/></svg>`;
+  const eye  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+  const conv = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>`;
+  const down = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
+  const pen  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>`;
+  const kebab= `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>`;
+  const tick = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8.5 12.5 11 15 16 9.5"/></svg>`;
+
+  document.getElementById('clientHead').innerHTML = `
+    <div class="qd-title-row">
+      <button class="qd-back" onclick="closeQuote()" title="Back to quotes">${back}</button>
+      <span class="qd-title">Quote: ${q.id}</span>
+      <span class="qd-autosave">${info} Changes are saved automatically</span>
+      <div class="qd-head-right">
+        <button class="qd-btn ghost">${eye} Quote preview</button>
+        <button class="qd-btn accent">${conv} Convert to project</button>
+        <button class="qd-btn primary">${down} Export quote</button>
+        <button class="qd-btn ghost" style="padding:0 6px">${kebab}</button>
+      </div>
+    </div>`;
+
+  document.getElementById('clientToolbar').innerHTML = `
+    <div class="qd-stats" style="padding:var(--spacing-4) 0;border:none;width:100%">
+      <div class="qd-stat"><div class="qd-stat-lbl">Status</div>
+        <div class="qd-stat-val"><span class="q-status accepted">${tick} Accepted</span></div></div>
+      <div class="qd-stat"><div class="qd-stat-lbl">Issue date</div><div class="qd-stat-val">${q.issued}</div></div>
+      <div class="qd-stat"><div class="qd-stat-lbl">Valid until</div><div class="qd-stat-val">${q.valid}</div></div>
+      <div class="qd-stat"><div class="qd-stat-lbl">Fixed fee total</div><div class="qd-stat-val">${_cm(q.total)}</div></div>
+      <div class="qd-stat"><div class="qd-stat-lbl">Cost</div><div class="qd-stat-val">${_cm(T.cost)}</div></div>
+      <div class="qd-stat"><div class="qd-stat-lbl">Profit</div><div class="qd-stat-val pos">${_cm(profit)}</div></div>
+      <div class="qd-stat"><div class="qd-stat-lbl">Profit margin</div><div class="qd-stat-val pos">${margin.toFixed(2)}%</div></div>
+      <div class="qd-stat"><div class="qd-stat-lbl">Client</div><div class="qd-stat-val">${CLIENT.name}</div></div>
+      <button class="qd-edit">${pen} Edit details</button>
+    </div>`;
+
+  const caret = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
+  const plus  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`;
+  const kb    = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>`;
+  const taskIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8.5 12.5 11 15 16 9.5"/></svg>`;
+
+  const head = `<thead><tr>
+      <th>Item</th><th>Description</th><th>Type</th><th>Date(s)</th><th>Who</th>
+      <th class="num">Quantity</th><th class="num">Cost rate</th><th class="num">Cost amount</th>
+      <th class="num">Billable rate</th><th class="num">Potential billable</th>
+      <th class="num">Potential profit</th><th class="num">Potential margin</th>
+    </tr></thead>`;
+
+  document.getElementById('clientBody').innerHTML = `
+    <div class="qd-body">
+      ${QUOTE_SECTIONS.map(sec => {
+        let h = 0, c = 0, b = 0;
+        sec.items.forEach(i => { h += i.hours; c += i.hours * i.cost; b += i.hours * i.bill; });
+        return `
+        <div class="qd-section">
+          <div class="qd-section-head">
+            <span class="qd-section-caret">${caret}</span>
+            <span class="qd-section-name">${sec.name}</span>
+            <span class="qd-section-count">${sec.items.length} items</span>
+            <span class="qd-section-icon">${kb}</span>
+            <span class="qd-section-icon">${plus}</span>
+          </div>
+          <div class="qd-scroll">
+            <table class="qd-table">
+              ${head}
+              <tbody>
+                ${sec.items.map(i => {
+                  const cost = i.hours * i.cost, bill = i.hours * i.bill;
+                  const prof = bill - cost;
+                  return `<tr>
+                    <td>${i.item}</td>
+                    <td class="q-muted">—</td>
+                    <td><span class="qd-type task">${taskIcon} Task (hours)</span></td>
+                    <td>${i.date}</td>
+                    <td><span class="q-who">${_cAvatar(i.who)} ${_cName(i.who)}</span></td>
+                    <td class="num">${i.hours}</td>
+                    <td class="num">${_cm(i.cost)}</td>
+                    <td class="num qd-shade">${_cm(cost)}</td>
+                    <td class="num">${_cm(i.bill)}</td>
+                    <td class="num qd-shade">${_cm(bill)}</td>
+                    <td class="num qd-shade">${_cm(prof)}</td>
+                    <td class="num qd-shade">${(prof / bill * 100).toFixed(2)}%</td>
+                  </tr>`;
+                }).join('')}
+                <tr class="qd-totals">
+                  <td colspan="5"><span class="qd-add">${plus} Add line item</span></td>
+                  <td class="num">${h.toFixed(2)}<span class="qd-total-sub">Total</span></td>
+                  <td></td>
+                  <td class="num">${_cm(c)}<span class="qd-total-sub">Total</span></td>
+                  <td></td>
+                  <td class="num">${_cm(b)}<span class="qd-total-sub">Total</span></td>
+                  <td class="num">${_cm(b - c)}<span class="qd-total-sub">Total</span></td>
+                  <td class="num">${((b - c) / b * 100).toFixed(2)}%<span class="qd-total-sub">Total</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>`;
+      }).join('')}
+
+      <div class="qd-foot">
+        <button class="qd-btn accent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+          View quote totals · ${T.hours}h · ${_cm(T.bill)} at rate card
+        </button>
+      </div>
+    </div>`;
+
+  const crumb = document.getElementById('clientCrumbTab');
+  if (crumb) crumb.textContent = 'Quotes';
+}
 
 /* ── Project tabs ──────────────────────────────────────────────────
    Only List and Schedule are built out; the rest stay decorative. */
