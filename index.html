@@ -4899,6 +4899,9 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 
 
 /* ── Billing schedule ────────────────────────────────────────────── */
+.inv-list-bar { display: flex; padding: 0 0 var(--spacing-3); }
+.inv-list-actions { margin-left: auto; display: flex; align-items: center; gap: var(--spacing-2); }
+
 .bill-summary { display: flex; gap: var(--spacing-8); padding: var(--spacing-5) var(--spacing-4) var(--spacing-4); }
 .bill-sum-lbl { font-size: 13px; color: var(--color-text-subtle); }
 .bill-sum-val { font-size: 26px; font-weight: 700; color: var(--color-text-default); margin-top: 2px; }
@@ -6637,7 +6640,7 @@ textarea.cv-input { height: auto; min-height: 84px; padding: var(--spacing-3); l
            from the engagement plan's role rate card. -->
       <div class="project-finance" id="projectFinance">
 
-        <div class="fin-subnav">
+        <div class="fin-subnav" id="finSubnav">
           <button class="fin-subtab" onclick="switchFinanceTab('budgets', this)">Budgets</button>
           <button class="fin-subtab active" onclick="switchFinanceTab('rates', this)">Rates</button>
           <button class="fin-subtab" onclick="switchFinanceTab('time', this)">Time</button>
@@ -9931,6 +9934,9 @@ function _finMoney(n) { return '$' + n.toLocaleString(); }
 
 function renderFinance() {
   const body = document.getElementById('finBody');
+  /* an open invoice takes over the page — only the project tabs stay above */
+  const subnav = document.getElementById('finSubnav');
+  if (subnav) subnav.style.display = openInvoiceName ? 'none' : '';
   /* keep the sub-nav in step when the tab is changed in code */
   const labels = { budgets: 'Budgets', rates: 'Rates', time: 'Time', expenses: 'Expenses', invoices: 'Invoices' };
   document.querySelectorAll('#projectFinance .fin-subtab').forEach(b =>
@@ -9941,6 +9947,7 @@ function renderFinance() {
       : _budgetsHTML();
     return;
   }
+  if (financeTab === 'invoices') { body.innerHTML = _invoicesListHTML(); return; }
   if (financeTab !== 'rates') {
     body.innerHTML = `<div class="fin-foot-note">${financeTab[0].toUpperCase() + financeTab.slice(1)} is stubbed in this prototype.</div>`;
     return;
@@ -10294,6 +10301,48 @@ function _billToday() {
 
 
 /* ── Milestone invoice ───────────────────────────────────────────── */
+/* ── Invoices list ───────────────────────────────────────────────
+   Only invoices actually raised in the prototype appear here. */
+function _invoicesListHTML() {
+  const rows = Object.values(INVOICES);
+  const clock = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`;
+  const kebab = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:15px;height:15px"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>`;
+
+  if (!rows.length) {
+    return `<div class="bud-empty">No invoices raised yet. Completing a phase raises its milestone invoice.</div>`;
+  }
+
+  return `
+    <div class="inv-list-bar">
+      <div class="inv-list-actions">
+        <button class="client-btn ghost"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg> Filter</button>
+        <button class="qd-btn accent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> Add new expense</button>
+        <button class="qd-btn primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> Add invoice</button>
+      </div>
+    </div>
+    <table class="q-table">
+      <thead><tr>
+        <th>Invoice NO./ID</th><th>Issue date</th><th>Last updated by</th><th>Notes</th>
+        <th>Status</th><th class="num">Time</th><th class="num">Amount</th><th></th>
+      </tr></thead>
+      <tbody>
+        ${rows.map(inv => {
+          const hrs = inv.items.reduce((n, i) => n + i.hours, 0);
+          return `<tr class="q-row" onclick="openInvoice('${inv.milestone.name}')">
+            <td class="q-no"><strong>${inv.id}</strong></td>
+            <td>${inv.issued}</td>
+            <td><span class="q-who">${_cAvatar('PR')} Priya Raman</span></td>
+            <td class="q-muted">&mdash;</td>
+            <td><span class="q-status open">${clock} Open</span></td>
+            <td class="num">${hrs}h</td>
+            <td class="num">${_cm(BUD.fee)}</td>
+            <td class="q-muted">${kebab}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>`;
+}
+
 let openInvoiceName = null;
 
 function openInvoice(milestoneName) {
@@ -10307,7 +10356,11 @@ function openInvoice(milestoneName) {
     .find(b => b.textContent.trim().startsWith('Finance'));
   switchProjectTab('finance', tab);
 }
-function closeInvoice() { openInvoiceName = null; renderFinance(); }
+function closeInvoice() {
+  openInvoiceName = null;
+  financeTab = 'invoices';     /* back lands on the invoices list */
+  renderFinance();
+}
 
 function _invoiceHTML(inv) {
   const back  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="11 18 5 12 11 6"/></svg>`;
