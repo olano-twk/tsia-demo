@@ -4897,6 +4897,89 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 
 
 
+
+/* ── Billing schedule ────────────────────────────────────────────── */
+.bill-summary { display: flex; gap: var(--spacing-8); padding: var(--spacing-5) var(--spacing-4) var(--spacing-4); }
+.bill-sum-lbl { font-size: 13px; color: var(--color-text-subtle); }
+.bill-sum-val { font-size: 26px; font-weight: 700; color: var(--color-text-default); margin-top: 2px; }
+.bill-table td { font-size: 14px; }
+.bill-name { font-weight: 600; }
+.bill-muted { color: var(--color-text-disabled); }
+.bill-plain { color: var(--color-text-subtle); }
+.bill-inv { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+.bill-pill {
+  display: inline-flex; align-items: center; padding: 4px 11px;
+  border-radius: var(--border-rounded-md); font-size: 13px; font-weight: 500;
+}
+.bill-pill.paid     { background: var(--palette-green-20); color: var(--palette-green-70); }
+.bill-pill.ready    { background: var(--palette-blue-20);  color: var(--palette-blue-60); }
+.bill-pill.invoiced { background: var(--palette-purple-15); color: var(--palette-purple-60); }
+.bill-row { cursor: pointer; }
+.bill-row:hover td { background: var(--color-background-hover); }
+.bill-total td { font-weight: 700; border-top: var(--border-width-1) solid var(--color-border-default); border-bottom: none; }
+.bill-match { display: inline-flex; align-items: center; gap: 6px; color: var(--palette-green-60); font-weight: 600; }
+
+/* Completed task check */
+.project-task-check { cursor: pointer; }
+.project-task-check.done { background: var(--palette-green-40); border-color: var(--palette-green-40); color: var(--palette-white); }
+
+/* ── Invoice ─────────────────────────────────────────────────────── */
+.inv-overlay { display: none; position: fixed; inset: 0; z-index: 760; background: rgba(11,15,31,0.45); padding: var(--spacing-5); }
+.inv-overlay.open { display: flex; }
+.inv-modal {
+  flex: 1; min-width: 0; display: flex; flex-direction: column;
+  background: var(--palette-white); border-radius: var(--border-rounded-lg);
+  box-shadow: 0 24px 70px rgba(11,15,31,0.28); overflow: hidden;
+}
+.inv-head {
+  flex-shrink: 0; display: flex; align-items: center; gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-5);
+  border-bottom: var(--border-width-1) solid var(--color-border-separator);
+}
+.inv-title { font-size: 17px; font-weight: 700; color: var(--color-text-default); }
+.inv-head-right { margin-left: auto; display: flex; align-items: center; gap: var(--spacing-2); }
+.inv-meta {
+  flex-shrink: 0; display: flex; align-items: center; gap: var(--spacing-7);
+  padding: var(--spacing-3) var(--spacing-5);
+  border-bottom: var(--border-width-1) solid var(--color-border-separator);
+}
+.inv-meta-lbl { font-size: 12px; color: var(--color-text-subtle); }
+.inv-meta-val { font-size: 14px; font-weight: 600; color: var(--color-text-default); margin-top: 3px; }
+.inv-body { flex: 1; min-height: 0; overflow-y: auto; padding: 0 var(--spacing-5) var(--spacing-6); }
+.inv-section-title {
+  font-size: 15px; font-weight: 700; color: var(--color-text-default);
+  margin: var(--spacing-5) 0 var(--spacing-2);
+}
+.inv-note { font-size: 12px; font-weight: 500; color: var(--color-text-subtle); }
+.inv-table { width: 100%; border-collapse: collapse; }
+.inv-table th {
+  text-align: left; font-size: 12px; font-weight: 500; color: var(--color-text-subtle);
+  padding: var(--spacing-2) var(--spacing-3);
+  border-bottom: var(--border-width-1) solid var(--color-border-separator); white-space: nowrap;
+}
+.inv-table th.num, .inv-table td.num { text-align: right; }
+.inv-table td {
+  padding: var(--spacing-4) var(--spacing-3); font-size: 14px; color: var(--color-text-default);
+  border-bottom: var(--border-width-1) solid var(--color-border-separator);
+}
+.inv-table.muted td { color: var(--color-text-subtle); }
+.inv-table.muted td.num { color: var(--color-text-subtle); }
+.inv-sub { font-size: 12px; color: var(--color-text-subtle); margin-top: 2px; }
+.inv-muted { color: var(--color-text-disabled); }
+.inv-box {
+  display: inline-block; width: 16px; height: 16px; border-radius: var(--border-rounded-sm);
+  border: 1.5px solid var(--color-border-default); background: var(--palette-white);
+}
+.inv-subtotal { text-align: right; padding: var(--spacing-3) var(--spacing-3) 0; font-size: 14px; color: var(--color-text-subtle); }
+.inv-subtotal strong { color: var(--color-text-default); font-weight: 700; }
+.inv-foot {
+  flex-shrink: 0; display: flex; justify-content: flex-end; gap: var(--spacing-6);
+  padding: var(--spacing-4) var(--spacing-5);
+  border-top: var(--border-width-1) solid var(--color-border-separator);
+  font-size: 14px; color: var(--color-text-subtle);
+}
+.inv-foot strong { color: var(--color-text-default); font-weight: 700; }
+
 /*
  * ─────────────────────────────────────────────────────────────────
  * 🧩 Client — Halcyon Logistics
@@ -7376,6 +7459,11 @@ textarea.cv-input { height: auto; min-height: 84px; padding: var(--spacing-3); l
   <div class="cv-modal" id="cvModal"></div>
 </div>
 
+<!-- ── 🧩 Milestone invoice ────────────────────────────────────── -->
+<div class="inv-overlay" id="invOverlay" onclick="if(event.target===this) closeInvoice()">
+  <div class="inv-modal" id="invModal"></div>
+</div>
+
 <script>
 /* ── Data ───────────────────────────────────────────────────────── */
 // Avatar bg colors use palette/decorative tokens from Foundations
@@ -8604,7 +8692,7 @@ function renderProjectBody() {
       </div>
       ${list.tasks.map((t, ti) => `
         <div class="project-task-row" onclick="openTaskDrawer(${li}, ${ti})">
-          <span class="project-task-check" onclick="event.stopPropagation()">${check}</span>
+          <span class="project-task-check${t.tag && t.tag.label === 'Done' ? ' done' : ''}" onclick="toggleTaskDone(${li}, ${ti}, event)">${check}</span>
           ${t.assignee
             ? `<span class="project-task-assignee" style="background:${t.assignee.bg}">${t.assignee.initials}</span>`
             : `<span class="project-task-assignee empty">${userIcon}</span>`}
@@ -10092,10 +10180,216 @@ function _budPanelBody() {
       </div>`;
   }
 
+  if (budPanelTab === 'billing') return _billScheduleHTML();
+
   if (budPanelTab === 'expenses') {
     return `<div class="bud-empty">No expenses recorded against this budget.</div>`;
   }
   return `<div class="bud-empty">Budget notifications are stubbed in this prototype.</div>`;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────
+ * 🧩 Billing schedule — milestones against the fixed fee
+ * Five equal milestones across the $150,000: a deposit on signature,
+ * one per phase sign-off, and the balance at the end. Completing
+ * Phase 1 in the task list raises its invoice.
+ * ───────────────────────────────────────────────────────────────── */
+const BILLING = [
+  { name: 'Deposit',          amount: 30000, trigger: 'On signature',                     status: 'paid',      po: '4471', invoice: 'INV-2026-081' },
+  { name: 'Phase 1 sign-off', amount: 30000, trigger: 'Readiness & Discovery complete',   status: 'scheduled', po: '4471', invoice: null, phase: 0 },
+  { name: 'Phase 2 sign-off', amount: 30000, trigger: 'Roadmap & business case approved', status: 'scheduled', po: '4471', invoice: null, phase: 1 },
+  { name: 'Phase 3 sign-off', amount: 30000, trigger: 'Governance & enablement complete', status: 'scheduled', po: '4472', invoice: null, phase: 2 },
+  { name: 'Final payment',    amount: 30000, trigger: '25 Dec 2026',                      status: 'scheduled', po: '4472', invoice: null, phase: 3 },
+];
+
+const INVOICES = {};   /* milestone name -> invoice record */
+
+function _billTotals() {
+  const contract = BILLING.reduce((n, m) => n + m.amount, 0);
+  const invoiced = BILLING.filter(m => m.status === 'paid' || m.status === 'invoiced').reduce((n, m) => n + m.amount, 0);
+  const ready    = BILLING.filter(m => m.status === 'ready').reduce((n, m) => n + m.amount, 0);
+  return { contract, invoiced, ready, left: contract - invoiced - ready };
+}
+
+function _billScheduleHTML() {
+  const T = _billTotals();
+  const tick = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px"><polyline points="20 6 9 17 4 12"/></svg>`;
+  const label = { paid: 'Paid', ready: 'Ready to bill', invoiced: 'Invoiced', scheduled: 'Scheduled' };
+
+  return `
+    <div class="bill-summary">
+      ${[['Contract value', T.contract], ['Invoiced', T.invoiced], ['Ready to bill', T.ready], ['Left to bill', T.left]]
+        .map(([l, v]) => `<div class="bill-sum">
+            <div class="bill-sum-lbl">${l}</div>
+            <div class="bill-sum-val">${v.toLocaleString()}</div>
+          </div>`).join('')}
+    </div>
+    <table class="bud-table bill-table">
+      <thead><tr>
+        <th>Milestone</th><th class="num">Amount</th><th>Trigger</th>
+        <th>Status</th><th>PO</th><th>Invoice</th>
+      </tr></thead>
+      <tbody>
+        ${BILLING.map(m => `
+          <tr${m.invoice && m.status === 'invoiced' ? ` class="bill-row" onclick="openInvoice('${m.name}')"` : ''}>
+            <td class="bill-name">${m.name}</td>
+            <td class="num">${m.amount.toLocaleString()}</td>
+            <td>${m.trigger}</td>
+            <td>${m.status === 'scheduled'
+              ? '<span class="bill-plain">Scheduled</span>'
+              : `<span class="bill-pill ${m.status}">${label[m.status]}</span>`}</td>
+            <td>${m.po}</td>
+            <td>${m.invoice
+              ? `<span class="bill-inv">${m.invoice}</span>`
+              : '<span class="bill-muted">Not raised</span>'}</td>
+          </tr>`).join('')}
+        <tr class="bill-total">
+          <td>Schedule total</td>
+          <td class="num">${T.contract.toLocaleString()}</td>
+          <td colspan="4"><span class="bill-match">${tick} Matches contract value</span></td>
+        </tr>
+      </tbody>
+    </table>`;
+}
+
+/* ── Completing a phase raises its milestone invoice ─────────────── */
+function toggleTaskDone(li, ti, ev) {
+  if (ev) ev.stopPropagation();
+  const t = projectTaskLists[li].tasks[ti];
+  const done = t.tag && t.tag.label === 'Done';
+  t.tag = done ? TODO_TAG
+    : { label: 'Done', dot: 'var(--palette-green-40)', bg: 'var(--palette-green-10)', color: 'var(--palette-green-60)' };
+  renderProjectBody();
+  if (!done) _checkPhaseComplete(li);
+}
+
+function _checkPhaseComplete(li) {
+  const list = projectTaskLists[li];
+  if (!list.tasks.every(t => t.tag && t.tag.label === 'Done')) return;
+  const m = BILLING.find(x => x.phase === li);
+  if (!m || m.status !== 'scheduled') return;
+
+  m.status = 'invoiced';
+  m.invoice = 'INV-2026-0' + (94 + li);
+  INVOICES[m.name] = {
+    id: m.invoice, issued: _billToday(), po: m.po, milestone: m,
+    phase: list.name, items: QUOTE_SECTIONS[li].items,
+  };
+  if (financeTab === 'budgets' && projectTab === 'finance') renderFinance();
+
+  showActionToast('Invoice created',
+    `${list.name} is complete, so the <strong>${m.name}</strong> milestone of $${m.amount.toLocaleString()} has been invoiced as ${m.invoice}.`
+      .replace(/<[^>]+>/g, ''),
+    'View invoice', () => openInvoice(m.name));
+}
+
+function _billToday() {
+  /* the prototype's clock — day one of the engagement plus Phase 1 */
+  return '26 Oct 2026';
+}
+
+
+/* ── Milestone invoice ───────────────────────────────────────────── */
+function openInvoice(milestoneName) {
+  const inv = INVOICES[milestoneName];
+  if (!inv) return;
+  renderInvoice(inv);
+  document.getElementById('invOverlay').classList.add('open');
+}
+function closeInvoice() { document.getElementById('invOverlay').classList.remove('open'); }
+
+function renderInvoice(inv) {
+  const back  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="11 18 5 12 11 6"/></svg>`;
+  const info  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round"/></svg>`;
+  const clock = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`;
+  const pen   = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>`;
+  const sum   = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg>`;
+  const plus  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`;
+  const kebab = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>`;
+  const dots  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:14px;height:14px"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>`;
+  const box   = `<span class="inv-box"></span>`;
+
+  /* Hours delivered in the phase, priced at rate card. On a fixed fee
+     they are not what gets billed — the milestone is — so they are
+     shown for reference and excluded from the total. */
+  let hrs = 0, rate = 0;
+  inv.items.forEach(i => { hrs += i.hours; rate += i.hours * i.bill; });
+
+  document.getElementById('invModal').innerHTML = `
+    <div class="inv-head">
+      <button class="qd-back" onclick="closeInvoice()" title="Back">${back}</button>
+      <span class="inv-title">Edit invoice</span>
+      <span class="qd-autosave">${info} Changes are saved automatically</span>
+      <div class="inv-head-right">
+        <button class="qd-btn ghost">${sum} Summarize invoice</button>
+        <button class="qd-btn accent">${plus} Add expense</button>
+        <button class="qd-btn primary">${plus} Add unbilled time</button>
+        <button class="qd-btn ghost" style="padding:0 6px">${kebab}</button>
+      </div>
+    </div>
+
+    <div class="inv-meta">
+      <div class="inv-meta-cell"><div class="inv-meta-lbl">Invoice no./ID</div><div class="inv-meta-val">${inv.id}</div></div>
+      <div class="inv-meta-cell"><div class="inv-meta-lbl">Issue date</div><div class="inv-meta-val">${inv.issued}</div></div>
+      <div class="inv-meta-cell"><div class="inv-meta-lbl">PO / Reference no.</div><div class="inv-meta-val">${inv.po}</div></div>
+      <div class="inv-meta-cell"><div class="inv-meta-lbl">Status</div>
+        <div class="inv-meta-val"><span class="q-status open">${clock} Open</span></div></div>
+      <button class="qd-edit">${pen} Edit details</button>
+    </div>
+
+    <div class="inv-body">
+      <div class="inv-section-title">Milestone</div>
+      <table class="inv-table">
+        <thead><tr>
+          <th style="width:34px"></th><th>Date</th><th>Who</th><th>Description</th>
+          <th class="num">Quantity</th><th class="num">Rate</th><th class="num">Amount</th><th style="width:34px"></th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>${box}</td>
+            <td>${inv.issued}</td>
+            <td>Priya Raman</td>
+            <td><div>${inv.milestone.name}</div><div class="inv-sub">${inv.phase} &mdash; ${inv.milestone.trigger}</div></td>
+            <td class="num">1.00</td>
+            <td class="num">${_cm(inv.milestone.amount)}</td>
+            <td class="num">${_cm(inv.milestone.amount)}</td>
+            <td class="inv-muted">${dots}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="inv-subtotal">Sub-total: <strong>${_cm(inv.milestone.amount)}</strong></div>
+
+      <div class="inv-section-title">Time delivered this phase <span class="inv-note">not charged &mdash; fixed fee</span></div>
+      <table class="inv-table muted">
+        <thead><tr>
+          <th style="width:34px"></th><th>Dates</th><th>Who</th><th>Description</th>
+          <th class="num">Hours</th><th class="num">Rate</th><th class="num">Value</th><th style="width:34px"></th>
+        </tr></thead>
+        <tbody>
+          ${inv.items.map(i => `
+            <tr>
+              <td>${box}</td>
+              <td>${i.date}</td>
+              <td>${_cName(i.who)}</td>
+              <td>${i.item}</td>
+              <td class="num">${i.hours.toFixed(2)}</td>
+              <td class="num">${_cm(i.bill)}</td>
+              <td class="num">${_cm(i.hours * i.bill)}</td>
+              <td class="inv-muted">${dots}</td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+      <div class="inv-subtotal">Hours: <strong>${hrs.toFixed(2)} (${hrs}h)</strong> &nbsp;&nbsp; Value at rate card: <strong>${_cm(rate)}</strong></div>
+
+      <div class="inv-section-title">Expenses</div>
+      <div class="bud-empty" style="padding:var(--spacing-5)">No expenses recorded against this invoice.</div>
+    </div>
+
+    <div class="inv-foot">
+      Total hours: <strong>${hrs.toFixed(2)} (${hrs}h)</strong>
+      <span class="inv-foot-total">Total: <strong>${_cm(inv.milestone.amount)}</strong></span>
+    </div>`;
 }
 
 function switchBudPanel(tab, el) {
@@ -10230,6 +10524,7 @@ function _budgetsHTML() {
         <button class="bud-panel-tab" onclick="switchBudPanel('expenses', this)">Expenses</button>
         <button class="bud-panel-tab" onclick="switchBudPanel('notifications', this)">Notifications</button>
         <button class="bud-panel-tab" onclick="switchBudPanel('timelogs', this)">Time logs</button>
+        <button class="bud-panel-tab" onclick="switchBudPanel('billing', this)">Billing schedule</button>
         <div class="bud-panel-right">
           <button class="bud-panel-btn">${filter} Filter</button>
           <button class="bud-panel-btn">Billable time ${caret}</button>
