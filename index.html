@@ -5191,7 +5191,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 .qd-section-icon svg { width: 14px; height: 14px; }
 
 .qd-scroll { overflow-x: auto; }
-.qd-table { border-collapse: collapse; min-width: 1180px; width: 100%; }
+.qd-table { border-collapse: collapse; table-layout: fixed; width: 1620px; }
 .qd-table th {
   text-align: left; font-size: 11px; font-weight: 600; color: var(--color-text-subtle);
   padding: var(--spacing-2) var(--spacing-3); white-space: nowrap;
@@ -5206,6 +5206,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 }
 .qd-table tbody tr:hover td { background: var(--color-background-hover); }
 .qd-table td:first-child, .qd-table th:first-child { padding-left: var(--spacing-6); }
+.qd-table td:first-child { white-space: normal; }
 .qd-shade { background: var(--palette-neutral-05); }
 .qd-type {
   display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
@@ -9127,6 +9128,15 @@ function _renderQuoteDetail() {
   const kb    = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>`;
   const taskIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8.5 12.5 11 15 16 9.5"/></svg>`;
 
+  /* Fixed column widths, shared by every phase table, so the four line
+     up down the page instead of each auto-sizing to its own content. */
+  const cols = `<colgroup>
+      <col style="width:300px"><col style="width:110px"><col style="width:132px">
+      <col style="width:150px"><col style="width:160px"><col style="width:84px">
+      <col style="width:92px"><col style="width:110px"><col style="width:104px">
+      <col style="width:132px"><col style="width:120px"><col style="width:126px">
+    </colgroup>`;
+
   const head = `<thead><tr>
       <th>Item</th><th>Description</th><th>Type</th><th>Date(s)</th><th>Who</th>
       <th class="num">Quantity</th><th class="num">Cost rate</th><th class="num">Cost amount</th>
@@ -9150,6 +9160,7 @@ function _renderQuoteDetail() {
           </div>
           <div class="qd-scroll">
             <table class="qd-table">
+              ${cols}
               ${head}
               <tbody>
                 ${sec.items.map(i => {
