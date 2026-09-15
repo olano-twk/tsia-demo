@@ -4103,6 +4103,8 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 
 /* ── Rates table ─────────────────────────────────────────────────── */
 .fin-body { flex: 1; min-height: 0; overflow: auto; padding: 0 var(--spacing-6) var(--spacing-8); }
+/* the invoice owns the page, so its sticky footer sits flush with the bottom */
+.fin-body.invoice-open { padding-bottom: 0; }
 .fin-table { width: 100%; min-width: 720px; border-collapse: collapse; }
 .fin-table thead th {
   position: sticky; top: 0; z-index: 2; background: var(--color-background-default);
@@ -4927,27 +4929,22 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 .project-task-check.done { background: var(--palette-green-40); border-color: var(--palette-green-40); color: var(--palette-white); }
 
 /* ── Invoice ─────────────────────────────────────────────────────── */
-.inv-page {
-  display: flex; flex-direction: column;
-  border: var(--border-width-1) solid var(--color-border-separator);
-  border-radius: var(--border-rounded-lg); background: var(--palette-white);
-  overflow: hidden;
-}
+.inv-page { display: flex; flex-direction: column; min-height: 100%; }
 .inv-head {
   flex-shrink: 0; display: flex; align-items: center; gap: var(--spacing-3);
-  padding: var(--spacing-3) var(--spacing-5);
+  padding: var(--spacing-3) 0;
   border-bottom: var(--border-width-1) solid var(--color-border-separator);
 }
 .inv-title { font-size: 17px; font-weight: 700; color: var(--color-text-default); }
 .inv-head-right { margin-left: auto; display: flex; align-items: center; gap: var(--spacing-2); }
 .inv-meta {
   flex-shrink: 0; display: flex; align-items: center; gap: var(--spacing-7);
-  padding: var(--spacing-3) var(--spacing-5);
+  padding: var(--spacing-3) 0;
   border-bottom: var(--border-width-1) solid var(--color-border-separator);
 }
 .inv-meta-lbl { font-size: 12px; color: var(--color-text-subtle); }
 .inv-meta-val { font-size: 14px; font-weight: 600; color: var(--color-text-default); margin-top: 3px; }
-.inv-body { padding: 0 var(--spacing-5) var(--spacing-6); }
+.inv-body { padding: 0 0 var(--spacing-6); }
 .inv-section-title {
   font-size: 15px; font-weight: 700; color: var(--color-text-default);
   margin: var(--spacing-5) 0 var(--spacing-2);
@@ -4974,9 +4971,15 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 }
 .inv-subtotal { text-align: right; padding: var(--spacing-3) var(--spacing-3) 0; font-size: 14px; color: var(--color-text-subtle); }
 .inv-subtotal strong { color: var(--color-text-default); font-weight: 700; }
+/* Sticky to the foot of the page — it bleeds through the finance body's
+   padding so it spans the full width and sits flush with the bottom. */
 .inv-foot {
-  flex-shrink: 0; display: flex; justify-content: flex-end; gap: var(--spacing-6);
-  padding: var(--spacing-4) var(--spacing-5);
+  position: sticky; bottom: 0; z-index: 2; margin-top: auto;
+  display: flex; justify-content: flex-end; gap: var(--spacing-6);
+  margin-left: calc(-1 * var(--spacing-6));
+  margin-right: calc(-1 * var(--spacing-6));
+  padding: var(--spacing-4) var(--spacing-6);
+  background: var(--color-background-default);
   border-top: var(--border-width-1) solid var(--color-border-separator);
   font-size: 14px; color: var(--color-text-subtle);
 }
@@ -9937,6 +9940,7 @@ function renderFinance() {
   /* an open invoice takes over the page — only the project tabs stay above */
   const subnav = document.getElementById('finSubnav');
   if (subnav) subnav.style.display = openInvoiceName ? 'none' : '';
+  body.classList.toggle('invoice-open', !!openInvoiceName);
   /* keep the sub-nav in step when the tab is changed in code */
   const labels = { budgets: 'Budgets', rates: 'Rates', time: 'Time', expenses: 'Expenses', invoices: 'Invoices' };
   document.querySelectorAll('#projectFinance .fin-subtab').forEach(b =>
