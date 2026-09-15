@@ -5136,6 +5136,195 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 
 @media (max-width: 1200px) { .cw-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
+
+/*
+ * ─────────────────────────────────────────────────────────────────
+ * 🧩 Convert quote to project — three steps
+ * ref: figma.com/design/4XFgZGSEN0NnkGk2rk9L1z node 44-26758
+ * ─────────────────────────────────────────────────────────────────
+ */
+.cv-overlay {
+  display: none; position: fixed; inset: 0; z-index: 740;
+  background: rgba(11,15,31,0.45); padding: var(--spacing-6);
+  align-items: flex-start; justify-content: center; overflow-y: auto;
+}
+.cv-overlay.open { display: flex; }
+.cv-modal {
+  width: 100%; max-width: 620px; margin: auto;
+  background: var(--palette-white); border-radius: var(--border-rounded-lg);
+  box-shadow: 0 24px 70px rgba(11,15,31,0.28); display: flex; flex-direction: column;
+}
+.cv-head { display: flex; align-items: center; gap: var(--spacing-3); padding: var(--spacing-5) var(--spacing-5) 0; }
+.cv-title { font-size: 18px; font-weight: 700; color: var(--color-text-default); }
+.cv-head-right { margin-left: auto; display: flex; align-items: center; gap: var(--spacing-2); }
+.cv-close { width: 28px; height: 28px; border: none; background: none; cursor: pointer; color: var(--color-text-default); border-radius: var(--border-rounded-md); display: flex; align-items: center; justify-content: center; }
+.cv-close:hover { background: var(--color-background-hover); }
+.cv-close svg { width: 16px; height: 16px; }
+
+/* Stepper */
+.cv-steps { display: flex; align-items: flex-start; justify-content: center; padding: var(--spacing-5) var(--spacing-5) var(--spacing-4); }
+.cv-step { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 120px; }
+.cv-step-dot {
+  width: 24px; height: 24px; border-radius: var(--border-rounded-full);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  border: 1.5px solid var(--color-border-default); color: var(--color-text-subtle);
+  background: var(--palette-white);
+}
+.cv-step.on .cv-step-dot { border-color: var(--palette-indigo-40); color: var(--color-text-primary); }
+.cv-step.done .cv-step-dot { background: var(--palette-indigo-40); border-color: var(--palette-indigo-40); color: var(--palette-white); }
+.cv-step-dot svg { width: 12px; height: 12px; }
+.cv-step-label { font-size: 12px; color: var(--color-text-subtle); white-space: nowrap; }
+.cv-step.on .cv-step-label, .cv-step.done .cv-step-label { color: var(--color-text-primary); font-weight: 600; }
+.cv-step-line { flex: 1; height: 1px; background: var(--color-border-default); margin-top: 12px; }
+.cv-step-line.done { background: var(--palette-indigo-40); }
+
+.cv-body { padding: 0 var(--spacing-5) var(--spacing-5); display: flex; flex-direction: column; gap: var(--spacing-4); }
+.cv-body.scroll { max-height: 54vh; overflow-y: auto; }
+
+/* Choice cards */
+.cv-choices { display: grid; gap: var(--spacing-3); }
+.cv-choices.two { grid-template-columns: 1fr 1fr; }
+.cv-choices.four { grid-template-columns: repeat(4, 1fr); }
+.cv-choice {
+  position: relative; text-align: left; cursor: pointer;
+  padding: var(--spacing-3); border-radius: var(--border-rounded-md);
+  border: 1.5px solid var(--color-border-default); background: var(--palette-white);
+}
+.cv-choice:hover { border-color: var(--palette-indigo-30); }
+.cv-choice.on { border-color: var(--palette-indigo-40); background: var(--palette-indigo-10); }
+.cv-choice-title { font-size: 13px; font-weight: 600; color: var(--color-text-default); }
+.cv-choice.on .cv-choice-title { color: var(--color-text-primary); }
+.cv-choice-desc { font-size: 12px; color: var(--color-text-subtle); line-height: 1.45; margin-top: 3px; }
+.cv-choice-tick { position: absolute; top: 8px; right: 8px; color: var(--palette-indigo-40); display: none; }
+.cv-choice.on .cv-choice-tick { display: flex; }
+.cv-choice-tick svg { width: 14px; height: 14px; }
+
+/* Fields */
+.cv-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-3); }
+.cv-field { position: relative; }
+.cv-field label {
+  position: absolute; top: -7px; left: 10px; padding: 0 5px; background: var(--palette-white);
+  font-size: 11px; color: var(--color-text-subtle);
+}
+.cv-input {
+  width: 100%; height: 40px; padding: 0 var(--spacing-3);
+  border: var(--border-width-1) solid var(--color-border-default);
+  border-radius: var(--border-rounded-md); background: var(--palette-white);
+  font: inherit; font-size: 14px; color: var(--color-text-default);
+  display: flex; align-items: center; gap: 8px;
+}
+.cv-input:focus { outline: none; border-color: var(--palette-indigo-40); }
+textarea.cv-input { height: auto; min-height: 84px; padding: var(--spacing-3); line-height: 1.55; resize: vertical; }
+.cv-input-icon { color: var(--color-text-subtle); display: flex; flex-shrink: 0; }
+.cv-input-icon svg { width: 14px; height: 14px; }
+.cv-input .grow { flex: 1; min-width: 0; }
+.cv-input .caret { color: var(--color-text-subtle); display: flex; }
+.cv-input .caret svg { width: 14px; height: 14px; }
+.cv-inline { display: flex; align-items: center; gap: var(--spacing-3); }
+.cv-inline-label { font-size: 13px; color: var(--color-text-subtle); width: 60px; flex-shrink: 0; }
+.cv-avatars { display: flex; align-items: center; }
+.cv-avatars .q-avatar { margin-left: -6px; border: 2px solid var(--palette-white); }
+.cv-avatars .q-avatar:first-child { margin-left: 0; }
+.cv-add-btn {
+  width: 26px; height: 26px; border-radius: var(--border-rounded-full); margin-left: var(--spacing-2);
+  border: var(--border-width-1) dashed var(--color-border-default); background: none; cursor: pointer;
+  color: var(--color-text-subtle); display: flex; align-items: center; justify-content: center;
+}
+.cv-add-btn svg { width: 12px; height: 12px; }
+.cv-tags { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.cv-tag { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: var(--border-rounded-full); }
+.cv-check { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--color-text-default); cursor: pointer; }
+.cv-box {
+  width: 16px; height: 16px; border-radius: var(--border-rounded-sm); flex-shrink: 0;
+  border: 1.5px solid var(--color-border-default); background: var(--palette-white);
+  display: flex; align-items: center; justify-content: center;
+}
+.cv-box.on { background: var(--palette-indigo-40); border-color: var(--palette-indigo-40); }
+.cv-box svg { width: 11px; height: 11px; color: var(--palette-white); opacity: 0; }
+.cv-box.on svg { opacity: 1; }
+
+/* Step 2 */
+.cv-banner {
+  display: flex; align-items: flex-start; gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-4); border-radius: var(--border-rounded-md);
+  background: var(--palette-indigo-10); font-size: 13px; line-height: 1.5; color: var(--color-text-default);
+}
+.cv-banner svg { width: 15px; height: 15px; color: var(--color-text-subtle); flex-shrink: 0; margin-top: 2px; }
+.cv-phase { margin-top: var(--spacing-2); }
+.cv-phase-head { display: flex; align-items: center; gap: var(--spacing-2); padding: var(--spacing-2) 0; }
+.cv-phase-name { font-size: 13px; font-weight: 700; color: var(--color-text-default); }
+.cv-phase-count { font-size: 11px; font-weight: 600; color: var(--color-text-subtle); background: var(--color-surface-default); border-radius: var(--border-rounded-full); padding: 2px 8px; }
+.cv-phase-icon { color: var(--color-text-disabled); display: flex; }
+.cv-phase-icon svg { width: 13px; height: 13px; }
+.cv-task {
+  display: flex; align-items: center; gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-2);
+  border-top: var(--border-width-1) solid var(--color-border-separator);
+  font-size: 13px; color: var(--color-text-default);
+}
+.cv-task-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cv-task-meta { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--color-text-subtle); white-space: nowrap; }
+.cv-task-meta svg { width: 13px; height: 13px; }
+.cv-task-btn { width: 26px; height: 26px; border: var(--border-width-1) solid var(--color-border-separator); border-radius: var(--border-rounded-full); background: var(--palette-white); cursor: pointer; color: var(--color-text-subtle); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.cv-task-btn svg { width: 12px; height: 12px; }
+
+/* Step 3 */
+.cv-targets {
+  border: var(--border-width-1) solid var(--color-border-separator);
+  border-radius: var(--border-rounded-md); padding: var(--spacing-4);
+  background: var(--palette-neutral-05);
+}
+.cv-targets-title { font-size: 13px; font-weight: 700; color: var(--color-text-default); }
+.cv-targets-sub { font-size: 12px; color: var(--color-text-subtle); margin: 2px 0 var(--spacing-3); }
+.cv-targets-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-2); }
+
+.cv-foot {
+  display: flex; align-items: center; gap: var(--spacing-2);
+  padding: var(--spacing-4) var(--spacing-5);
+  border-top: var(--border-width-1) solid var(--color-border-separator);
+}
+.cv-foot-right { margin-left: auto; display: flex; align-items: center; gap: var(--spacing-2); }
+.cv-btn {
+  height: 36px; padding: 0 var(--spacing-4); border-radius: var(--border-rounded-full);
+  border: var(--border-width-1) solid var(--palette-indigo-40);
+  background: var(--palette-white); color: var(--color-text-primary);
+  font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.cv-btn:hover { background: var(--palette-indigo-10); }
+.cv-btn.plain { border: none; color: var(--color-text-default); font-weight: 500; }
+.cv-btn.plain:hover { background: var(--color-background-hover); }
+.cv-btn.primary { border: none; background: var(--color-action-primary-default); color: var(--palette-white); border-radius: var(--border-rounded-md); }
+.cv-btn.primary:hover { background: var(--color-action-primary-hover); }
+
+/* Action toast — bottom right, with a link */
+.toast-action {
+  position: fixed; right: 24px; bottom: 24px; z-index: 820;
+  display: flex; align-items: flex-start; gap: var(--spacing-3);
+  max-width: 420px; padding: var(--spacing-4);
+  background: var(--palette-white); border-radius: var(--border-rounded-lg);
+  border: var(--border-width-1) solid var(--color-border-separator);
+  box-shadow: 0 16px 44px rgba(11,15,31,0.22);
+  opacity: 0; transform: translateY(12px); pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.34, 1.3, 0.5, 1);
+}
+.toast-action.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.toast-action-icon {
+  width: 28px; height: 28px; border-radius: var(--border-rounded-full); flex-shrink: 0;
+  background: var(--palette-green-20); color: var(--palette-green-70);
+  display: flex; align-items: center; justify-content: center;
+}
+.toast-action-icon svg { width: 16px; height: 16px; }
+.toast-action-title { font-size: 14px; font-weight: 700; color: var(--color-text-default); }
+.toast-action-text { font-size: 13px; color: var(--color-text-subtle); line-height: 1.5; margin-top: 2px; }
+.toast-action-link {
+  margin-top: var(--spacing-2); border: none; background: none; padding: 0; cursor: pointer;
+  font-size: 13px; font-weight: 700; color: var(--color-text-primary);
+}
+.toast-action-link:hover { text-decoration: underline; }
+.toast-action-close { margin-left: var(--spacing-2); border: none; background: none; cursor: pointer; color: var(--color-text-disabled); display: flex; padding: 2px; }
+.toast-action-close svg { width: 14px; height: 14px; }
+
 /*
  * ─────────────────────────────────────────────────────────────────
  * 🧩 Agent builder — full-screen create / edit modal
@@ -7169,6 +7358,12 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
   </div>
 </div>
 
+<!-- ── 🧩 Convert quote to project ─────────────────────────────────
+     ref: figma.com/design/4XFgZGSEN0NnkGk2rk9L1z node 44-26758 -->
+<div class="cv-overlay" id="cvOverlay" onclick="if(event.target===this) closeConvertDialog()">
+  <div class="cv-modal" id="cvModal"></div>
+</div>
+
 <script>
 /* ── Data ───────────────────────────────────────────────────────── */
 // Avatar bg colors use palette/decorative tokens from Foundations
@@ -8762,7 +8957,7 @@ function _renderQuoteDetail() {
       <span class="qd-autosave">${info} Changes are saved automatically</span>
       <div class="qd-head-right">
         <button class="qd-btn ghost">${eye} Quote preview</button>
-        <button class="qd-btn accent">${conv} Convert to project</button>
+        <button class="qd-btn accent" onclick="openConvertDialog()">${conv} Convert to project</button>
         <button class="qd-btn primary">${down} Export quote</button>
         <button class="qd-btn ghost" style="padding:0 6px">${kebab}</button>
       </div>
@@ -8856,6 +9051,241 @@ function _renderQuoteDetail() {
 
   const crumb = document.getElementById('clientCrumbTab');
   if (crumb) crumb.textContent = 'Quotes';
+}
+
+
+/* ─────────────────────────────────────────────────────────────────
+ * 🧩 Convert quote to project — three steps
+ * ref: figma.com/design/4XFgZGSEN0NnkGk2rk9L1z node 44-26758
+ * Every field is pre-filled from the quote, so the project it creates
+ * is the Enterprise AI Rollout already in the prototype.
+ * ───────────────────────────────────────────────────────────────── */
+let cvStep = 1;
+let cvKind = 'confirmed';     /* tentative | confirmed */
+let cvBudget = 'fixed';       /* none | fixed | tm | retainer */
+let cvBillable = true;
+let cvNotify = true;
+
+const CV_STEPS = ['Project details', 'Task preview', 'Budget'];
+
+function openConvertDialog() { cvStep = 1; renderConvert(); document.getElementById('cvOverlay').classList.add('open'); }
+function closeConvertDialog() { document.getElementById('cvOverlay').classList.remove('open'); }
+function cvGo(n) { cvStep = n; renderConvert(); }
+function cvSetKind(k) { cvKind = k; renderConvert(); }
+function cvSetBudget(b) { cvBudget = b; renderConvert(); }
+function cvToggle(what) {
+  if (what === 'billable') cvBillable = !cvBillable; else cvNotify = !cvNotify;
+  renderConvert();
+}
+
+function _cvStepper() {
+  const tick = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+  return `<div class="cv-steps">${CV_STEPS.map((label, i) => {
+    const n = i + 1;
+    const cls = cvStep === n ? 'on' : cvStep > n ? 'done' : '';
+    return (i ? `<div class="cv-step-line${cvStep > i ? ' done' : ''}"></div>` : '') +
+      `<div class="cv-step ${cls}">
+         <span class="cv-step-dot">${cvStep > n ? tick : n}</span>
+         <span class="cv-step-label">${label}</span>
+       </div>`;
+  }).join('')}</div>`;
+}
+
+function renderConvert() {
+  const T = _qTotals();
+  const q = CLIENT_QUOTES[0];
+  const close = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+  const chat  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
+  const caret = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
+  const cal   = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`;
+  const tick  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+  const info  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round"/></svg>`;
+  const plus  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`;
+  const pen   = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>`;
+  const trash = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>`;
+  const tag   = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0l-7.2-7.2a2 2 0 0 1-.6-1.4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 1.4.6l6.4 6.4a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor"/></svg>`;
+  const hour  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14M5 2h14M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4a2 2 0 0 0 .6-1.4V2"/></svg>`;
+  const clock = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`;
+
+  let body = '', foot = '';
+
+  if (cvStep === 1) {
+    const people = ['PR', 'TO', 'EM', 'SD', 'RA'];
+    body = `
+      <div class="cv-choices two">
+        <button class="cv-choice${cvKind === 'tentative' ? ' on' : ''}" onclick="cvSetKind('tentative')">
+          <span class="cv-choice-tick">${tick}</span>
+          <div class="cv-choice-title">Tentative project</div>
+          <div class="cv-choice-desc">Continue planning this project with allocations without notifying assignees</div>
+        </button>
+        <button class="cv-choice${cvKind === 'confirmed' ? ' on' : ''}" onclick="cvSetKind('confirmed')">
+          <span class="cv-choice-tick">${tick}</span>
+          <div class="cv-choice-title">Confirmed project</div>
+          <div class="cv-choice-desc">A standard project with tasks and assignees</div>
+        </button>
+      </div>
+      <div class="cv-field"><label>Project name</label>
+        <input class="cv-input" value="Enterprise AI Rollout"></div>
+      <div class="cv-row">
+        <div class="cv-field"><label>Client</label>
+          <div class="cv-input"><span class="grow">Halcyon Logistics</span><span class="caret">${caret}</span></div></div>
+        <div class="cv-field"><label>Category</label>
+          <div class="cv-input"><span class="grow">Transformation consulting</span><span class="caret">${caret}</span></div></div>
+      </div>
+      <div class="cv-row">
+        <div class="cv-field"><label>Start date</label>
+          <div class="cv-input"><span class="cv-input-icon">${cal}</span><span class="grow">5 Oct 2026</span></div></div>
+        <div class="cv-field"><label>End date</label>
+          <div class="cv-input"><span class="cv-input-icon">${cal}</span><span class="grow">25 Dec 2026</span></div></div>
+      </div>
+      <div class="cv-inline">
+        <span class="cv-inline-label">People</span>
+        <span class="cv-avatars">${people.map(p => _cAvatar(p)).join('')}</span>
+        <button class="cv-add-btn">${plus}</button>
+      </div>
+      <div class="cv-inline">
+        <span class="cv-inline-label">Tags</span>
+        <span class="cv-tags">
+          <span class="cv-tag" style="background:var(--palette-purple-15);color:var(--palette-purple-60)">AI readiness</span>
+          <span class="cv-tag" style="background:var(--palette-green-20);color:var(--palette-green-60)">Fixed fee</span>
+          <span class="cv-tag" style="background:var(--palette-blue-20);color:var(--palette-blue-60)">Logistics</span>
+          <button class="cv-add-btn">${plus}</button>
+        </span>
+      </div>
+      <div class="cv-inline">
+        <span class="cv-inline-label">Time</span>
+        <span class="cv-check" onclick="cvToggle('billable')">
+          <span class="cv-box${cvBillable ? ' on' : ''}">${tick}</span> Billable
+        </span>
+      </div>
+      <div class="cv-field"><label>Project description</label>
+        <textarea class="cv-input">A 12-week AI readiness and rollout engagement for Halcyon Logistics, delivered by Meridian Transformation Partners. Four phases — readiness and discovery, roadmap and business case, governance and enablement, then rollout and adoption — against a fixed fee of $150,000 and 820 planned hours.</textarea></div>`;
+    foot = `<button class="cv-btn plain" onclick="closeConvertDialog()">Cancel</button>
+      <div class="cv-foot-right"><button class="cv-btn" onclick="cvGo(2)">Next</button></div>`;
+
+  } else if (cvStep === 2) {
+    body = `
+      <div class="cv-banner">${info}
+        <span>Expenses will be added to the project's <strong>Finance</strong> area and allocated hours will be added to the <strong>Schedule</strong>.</span>
+      </div>
+      ${projectTaskLists.map(list => `
+        <div class="cv-phase">
+          <div class="cv-phase-head">
+            <span class="cv-phase-name">${list.name}</span>
+            <span class="cv-phase-icon">${pen}</span>
+            <span class="cv-phase-count">${list.tasks.length} tasks</span>
+          </div>
+          ${list.tasks.map(t => `
+            <div class="cv-task">
+              ${t.assignee ? _cAvatar(t.assignee.initials) : ''}
+              <span class="cv-task-name">${t.name}</span>
+              <span class="cv-task-meta">${cal} ${t.dates ? t.dates.start.replace(/^\\w+, /, '') : '—'}</span>
+              <span class="cv-task-meta">${hour} ${t.estimate.replace(' estimated', '')}</span>
+              <button class="cv-task-btn">${tag}</button>
+              <button class="cv-task-btn">${trash}</button>
+            </div>`).join('')}
+        </div>`).join('')}
+      <div class="cv-task" style="border:none;color:var(--color-text-subtle);cursor:pointer">${plus} Add</div>`;
+    foot = `<button class="cv-btn plain" onclick="closeConvertDialog()">Cancel</button>
+      <div class="cv-foot-right">
+        <button class="cv-btn plain" onclick="cvGo(1)">Back</button>
+        <button class="cv-btn" onclick="cvGo(3)">Next</button>
+      </div>`;
+
+  } else {
+    const margin = ((q.total - T.cost) / q.total * 100).toFixed(1);
+    body = `
+      <div class="cv-choices four">
+        ${[['none', 'No budget', 'A budget can be created later'],
+           ['fixed', 'Fixed fee', 'Bill a fixed amount regardless of time spent'],
+           ['tm', 'Time & materials', 'Bill the time spent based on billable rates'],
+           ['retainer', 'Retainer', 'A monthly or quarterly recurring budget']]
+          .map(([k, title, desc]) => `
+            <button class="cv-choice${cvBudget === k ? ' on' : ''}" onclick="cvSetBudget('${k}')">
+              <span class="cv-choice-tick">${tick}</span>
+              <div class="cv-choice-title">${title}</div>
+              <div class="cv-choice-desc">${desc}</div>
+            </button>`).join('')}
+      </div>
+      <div class="cv-row">
+        <div class="cv-field"><label>Project fee</label>
+          <div class="cv-input"><span class="cv-input-icon">$</span><span class="grow">${q.total.toLocaleString()}</span><span class="caret">${info}</span></div></div>
+        <div class="cv-field"><label>Budgeted hours</label>
+          <div class="cv-input"><span class="cv-input-icon">${clock}</span><span class="grow">${T.hours}h</span><span class="caret">${info}</span></div></div>
+      </div>
+      <div class="cv-field"><label>Budget repeats</label>
+        <div class="cv-input"><span class="grow">Never</span><span class="caret">${caret}</span></div></div>
+      <div class="cv-row" style="grid-template-columns:1fr 0.8fr 1fr">
+        <div class="cv-field"><label>Start date *</label>
+          <div class="cv-input"><span class="cv-input-icon">${cal}</span><span class="grow">5 Oct 2026</span></div></div>
+        <div class="cv-field"><label>Budget ends</label>
+          <div class="cv-input"><span class="grow">on</span><span class="caret">${caret}</span></div></div>
+        <div class="cv-field"><label>End date</label>
+          <div class="cv-input"><span class="cv-input-icon">${cal}</span><span class="grow">25 Dec 2026</span></div></div>
+      </div>
+      <div class="cv-targets">
+        <div class="cv-targets-title">Set financial targets</div>
+        <div class="cv-targets-sub">Keep track of your budget's profitability throughout your project</div>
+        <div class="cv-targets-row">
+          <div class="cv-input"><span class="cv-input-icon">%</span><span class="grow">${margin}</span></div>
+          <div class="cv-input"><span class="cv-input-icon">$</span><span class="grow">${(q.total - T.cost).toLocaleString()}</span></div>
+          <div class="cv-input"><span class="cv-input-icon">$</span><span class="grow">${T.cost.toLocaleString()}</span></div>
+        </div>
+      </div>
+      <span class="cv-check" onclick="cvToggle('notify')">
+        <span class="cv-box${cvNotify ? ' on' : ''}">${tick}</span> Enable notifications
+      </span>`;
+    foot = `<button class="cv-btn plain" onclick="closeConvertDialog()">Cancel</button>
+      <div class="cv-foot-right">
+        <button class="cv-btn plain" onclick="cvGo(2)">Back</button>
+        <button class="cv-btn primary" onclick="cvCreateProject()">Create project</button>
+      </div>`;
+  }
+
+  document.getElementById('cvModal').innerHTML = `
+    <div class="cv-head">
+      <span class="cv-title">Convert quote to project</span>
+      <div class="cv-head-right">
+        <button class="qd-btn ghost" style="height:28px">${chat} Send feedback</button>
+        <button class="cv-close" onclick="closeConvertDialog()">${close}</button>
+      </div>
+    </div>
+    ${_cvStepper()}
+    <div class="cv-body${cvStep === 2 ? ' scroll' : ''}">${body}</div>
+    <div class="cv-foot">${foot}</div>`;
+}
+
+function cvCreateProject() {
+  closeConvertDialog();
+  showActionToast(
+    'Project created',
+    'Enterprise AI Rollout is set up for Halcyon Logistics with 11 tasks across 4 phases and a $150,000 fixed-fee budget.',
+    'Open project', () => { switchProjectTab('list'); showProject(); });
+}
+
+/* Toast with an action, bottom right */
+function showActionToast(title, text, linkLabel, onClick) {
+  let t = document.getElementById('actionToast');
+  if (!t) { t = document.createElement('div'); t.id = 'actionToast'; t.className = 'toast-action'; document.body.appendChild(t); }
+  const tick = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+  const x = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+  t.innerHTML = `
+    <span class="toast-action-icon">${tick}</span>
+    <div>
+      <div class="toast-action-title">${title}</div>
+      <div class="toast-action-text">${text}</div>
+      <button class="toast-action-link" id="actionToastLink">${linkLabel}</button>
+    </div>
+    <button class="toast-action-close" id="actionToastClose">${x}</button>`;
+  t.querySelector('#actionToastLink').onclick = () => { hideActionToast(); onClick(); };
+  t.querySelector('#actionToastClose').onclick = hideActionToast;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(hideActionToast, 9000);
+}
+function hideActionToast() {
+  const t = document.getElementById('actionToast');
+  if (t) { t.classList.remove('show'); clearTimeout(t._timer); }
 }
 
 /* ── Project tabs ──────────────────────────────────────────────────
