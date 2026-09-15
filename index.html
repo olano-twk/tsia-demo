@@ -3377,6 +3377,15 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 
 /* Subtask rows */
 .task-subtask { display: flex; align-items: center; gap: var(--spacing-3); padding: 7px 4px; border-top: var(--border-width-1) solid var(--color-border-separator); }
+.task-subtask-who {
+  width: 22px; height: 22px; border-radius: var(--border-rounded-full); flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 700; color: var(--palette-white);
+}
+.task-timelog-empty {
+  padding: var(--spacing-5) 0; text-align: center;
+  font-size: 13px; color: var(--color-text-subtle);
+}
 .task-subtask-check {
   width: 18px; height: 18px; flex-shrink: 0; border-radius: var(--border-rounded-sm);
   border: 1.5px solid var(--color-border-default); display: inline-flex; align-items: center; justify-content: center;
@@ -11256,9 +11265,10 @@ function renderTaskDrawerBody(t, list, listIdx, taskIdx) {
       </span>`;
   }).join('');
 
-  const timeHtml = (t.timeLogged || t.estimate)
-    ? `${[t.timeLogged, t.estimate].filter(Boolean).join(' · ')}`
-    : '0h logged · no estimate';
+  /* Logged comes from the task's time logs, so it moves as work lands */
+  const loggedH = (taskTimeLogs[t.name] || []).reduce((n, l) => n + l.hours, 0);
+  const timeHtml = `${loggedH ? loggedH + 'h logged' : (t.timeLogged || '0h logged')}`
+    + (t.estimate ? ' · ' + t.estimate : '');
 
   const descHtml = t.description
     ? t.description
@@ -11270,6 +11280,7 @@ function renderTaskDrawerBody(t, list, listIdx, taskIdx) {
     ? subtasks.map(s => `
         <div class="task-subtask ${s.done ? 'done' : ''}">
           <span class="task-subtask-check">${s.done ? `<svg viewBox="0 0 24 24" fill="none" stroke="var(--palette-white)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>` : ''}</span>
+          ${t.assignee ? `<span class="task-subtask-who" style="background:${t.assignee.bg}">${t.assignee.initials}</span>` : ''}
           <span class="task-subtask-name">${s.name}</span>
         </div>`).join('')
     : '';
@@ -11324,28 +11335,9 @@ function renderTaskDrawerBody(t, list, listIdx, taskIdx) {
         <svg class="task-block-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         <span class="task-block-title">Time logs</span>
       </div>
-      <div class="task-timelog-summary">
-        <span class="task-timelog-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Logged <strong>1h (1.00)</strong></span>
-        <span class="task-timelog-stat">Billable <strong>1h (1.00)</strong></span>
-        <span class="task-timelog-stat muted">Non-billable <strong>0h (0.00)</strong></span>
-        <span class="task-timelog-stat muted">Estimated <strong>0h (0.00)</strong></span>
-      </div>
-      <div class="task-timelog-table">
-        <div class="task-timelog-row task-timelog-header">
-          <span>Who</span><span>Description</span><span>Date</span><span>Start</span><span>Time</span><span>Hours</span><span>Billable</span>
-        </div>
-        <div class="task-timelog-row">
-          <span><span class="task-tl-avatar">OO</span></span>
-          <span>storage 3</span>
-          <span>1 Jun 2026</span>
-          <span>22:…</span>
-          <span>1h</span>
-          <span>1.00</span>
-          <span><span class="task-tl-check"><svg viewBox="0 0 24 24" fill="none" stroke="var(--palette-white)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></span>
-        </div>
-      </div>
+      ${_taskTimeLogsHTML(t)}
       <button class="task-add-link">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
         Log more time
       </button>
     </div>
@@ -11500,6 +11492,51 @@ function gdConfirm() {
   if (_gdTaskKey === ASSESS_TASK) setTimeout(agentFilesReceived, 700);
 }
 
+/* Time logged against a task, keyed by task name. Empty until work is
+   actually done — the agent adds an entry as it finishes each subtask. */
+const taskTimeLogs = {};
+
+function _taskTimeLogsHTML(t) {
+  const logs = taskTimeLogs[t && t.name] || [];
+  const total = logs.reduce((n, l) => n + l.hours, 0);
+  const est = t && t.estimate ? t.estimate.replace(' estimated', '') : '0h';
+  const clock = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+  const tick = `<svg viewBox="0 0 24 24" fill="none" stroke="var(--palette-white)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+  const summary = `<div class="task-timelog-summary">
+      <span class="task-timelog-stat">${clock} Logged <strong>${total}h (${total.toFixed(2)})</strong></span>
+      <span class="task-timelog-stat">Billable <strong>${total}h (${total.toFixed(2)})</strong></span>
+      <span class="task-timelog-stat muted">Non-billable <strong>0h (0.00)</strong></span>
+      <span class="task-timelog-stat muted">Estimated <strong>${est}</strong></span>
+    </div>`;
+
+  if (!logs.length) {
+    return summary + `<div class="task-timelog-empty">No time logged against this task yet.</div>`;
+  }
+
+  return summary + `<div class="task-timelog-table">
+      <div class="task-timelog-row task-timelog-header">
+        <span>Who</span><span>Description</span><span>Date</span><span>Start</span><span>Time</span><span>Hours</span><span>Billable</span>
+      </div>
+      ${logs.map(l => {
+        const p = schedPeople.find(x => x.initials === l.who) || {};
+        return `<div class="task-timelog-row">
+          <span><span class="task-tl-avatar" style="background:${p.bg || 'var(--palette-neutral-30)'}">${l.who}</span></span>
+          <span>${l.desc}</span>
+          <span>${l.date}</span>
+          <span>${l.start}</span>
+          <span>${l.hours}h</span>
+          <span>${l.hours.toFixed(2)}</span>
+          <span><span class="task-tl-check">${tick}</span></span>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function _logTime(taskName, who, desc, date, start, hours) {
+  (taskTimeLogs[taskName] = taskTimeLogs[taskName] || []).push({ who, desc, date, start, hours });
+}
+
 /* Markup for the Files block of the open task */
 function _taskFilesHTML(t) {
   const files = taskFiles[t && t.name] || [];
@@ -11587,12 +11624,19 @@ function agentFilesReceived() {
   _agentWorkSubtasks();
 }
 
+/* The agent's 200 planned hours spread evenly across its four subtasks,
+   logged as each one finishes. Dates walk through the task's window. */
+const AGENT_LOG_DATES = ['7 Oct 2026', '12 Oct 2026', '16 Oct 2026', '21 Oct 2026'];
+
 function _agentWorkSubtasks() {
   const t = _agentTask();
   if (!t) return;
+  const alloc = (t.allocations || []).find(a => a.initials === 'RA');
+  const each = alloc ? alloc.hours / t.subtasks.length : 50;
   t.subtasks.forEach((st, i) => {
     _agentTimer(() => {
       st.done = true;
+      _logTime(ASSESS_TASK, 'RA', st.name, AGENT_LOG_DATES[i] || AGENT_LOG_DATES[0], '09:00', each);
       _refreshAssessTask();
       if (i === t.subtasks.length - 1) _agentTimer(agentDeliverDraft, 1400);
     }, 1600 * (i + 1));
@@ -11618,6 +11662,7 @@ function agentResetFlow() {
   agentStage = 'idle';
   delete taskComments[ASSESS_TASK];
   delete taskFiles[ASSESS_TASK];
+  delete taskTimeLogs[ASSESS_TASK];
   const t = _agentTask();
   if (t) { t.subtasks.forEach(st => st.done = false); t.tag = TODO_TAG; }
   ASSESS_DOC.dims[2].score = 1;
@@ -11740,6 +11785,8 @@ function docApprove() {
   renderDocModal();
   const t = _agentTask();
   if (t) t.tag = { label: 'Done', dot: 'var(--palette-green-40)', bg: 'var(--palette-green-10)', color: 'var(--palette-green-60)' };
+  const review = (t && (t.allocations || []).find(a => a.initials === 'TO'));
+  _logTime(ASSESS_TASK, 'TO', 'Senior review of the assessment', '22 Oct 2026', '10:00', review ? review.hours : 16);
   _personSay('Tom Okafor', 'TO', 'var(--palette-blue-40)', 'Senior Consultant',
     `Reviewed and approved. One change — governance moves to a 2, the August draft AUP counts as evidence.
      Overall readiness <strong>${_docScore()}</strong>/5. Good to go to Halcyon.`);
