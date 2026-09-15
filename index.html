@@ -4606,6 +4606,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 
 .remi-panel-body { flex: 1; min-height: 0; overflow-y: auto; padding: var(--spacing-5); }
 .remi-suggest-banner {
+  max-width: 760px; margin-left: auto; margin-right: auto;
   display: flex; gap: var(--spacing-3); padding: var(--spacing-4);
   border-radius: var(--border-rounded-lg);
   background: linear-gradient(100deg, var(--palette-indigo-10) 0%, var(--palette-purple-10) 45%, var(--palette-pink-10) 100%);
@@ -4614,6 +4615,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 .remi-suggest-banner .ai-spark { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; }
 
 .remi-alloc {
+  max-width: 760px; margin-left: auto; margin-right: auto;
   display: flex; align-items: center; gap: var(--spacing-3);
   margin-top: var(--spacing-4); padding: var(--spacing-4);
   border: var(--border-width-1) solid var(--color-border-separator);
@@ -4633,16 +4635,21 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 }
 .remi-alloc-link:hover { text-decoration: underline; }
 
+/* Hold the comparison to a readable measure — full-modal width pushed
+   each label and its value to opposite edges of the card. */
 .remi-compare {
-  margin-top: var(--spacing-4); display: grid;
-  grid-template-columns: 1fr 34px 1fr; align-items: stretch; gap: 0;
+  margin: var(--spacing-4) auto 0; max-width: 760px;
+  display: grid; grid-template-columns: 1fr 34px 1fr; align-items: stretch; gap: 0;
 }
 .remi-card {
   border: var(--border-width-1) solid var(--color-border-separator);
   border-radius: var(--border-rounded-lg); background: var(--palette-white);
   display: flex; flex-direction: column; overflow: hidden;
 }
-.remi-card-inner { padding: var(--spacing-4); flex: 1; }
+.remi-card-inner { padding: var(--spacing-5); flex: 1; display: flex; flex-direction: column; }
+/* The Before card is shorter than the After card, so centre its body
+   rather than leaving a void beneath it. */
+.remi-card-body { margin: auto 0; }
 .remi-card-label { font-size: 14px; font-weight: 700; color: var(--color-text-default); margin-bottom: var(--spacing-3); }
 .remi-badge {
   display: inline-block; margin-bottom: var(--spacing-3);
@@ -4680,7 +4687,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 }
 .remi-card-foot {
   display: flex; justify-content: space-between; align-items: baseline;
-  padding: var(--spacing-3) var(--spacing-4);
+  padding: var(--spacing-3) var(--spacing-5);
   background: var(--color-surface-default);
   font-size: 14px; font-weight: 700; color: var(--color-text-default);
 }
@@ -4693,6 +4700,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 }
 .remi-arrow svg { width: 14px; height: 14px; }
 .remi-saving {
+  max-width: 760px; margin-left: auto; margin-right: auto;
   margin-top: var(--spacing-4); padding: var(--spacing-3) var(--spacing-4);
   border-radius: var(--border-rounded-lg);
   background: var(--palette-green-10); color: var(--palette-green-70);
@@ -7299,6 +7307,7 @@ textarea.cv-input { height: auto; min-height: 84px; padding: var(--spacing-3); l
             <div class="remi-card">
               <div class="remi-card-inner">
                 <div class="remi-card-label">Before</div>
+                <div class="remi-card-body">
                 <div class="remi-who">
                   <span class="remi-who-avatar" style="background:var(--palette-green-40)">SD</span>
                   <div>
@@ -7309,6 +7318,7 @@ textarea.cv-input { height: auto; min-height: 84px; padding: var(--spacing-3); l
                 <div class="remi-line">Hours <b>200h</b></div>
                 <div class="remi-line">Rate <b>$90/h</b></div>
                 <div class="remi-line">Cost <b>$18,000</b></div>
+                </div>
               </div>
               <div class="remi-card-foot"><span>Total cost</span><span>$18,000</span></div>
             </div>
@@ -7320,6 +7330,7 @@ textarea.cv-input { height: auto; min-height: 84px; padding: var(--spacing-3); l
             <div class="remi-card">
               <div class="remi-card-inner">
                 <span class="remi-badge">REMI'S SUGGESTION</span>
+                <div class="remi-card-body">
                 <div class="remi-who">
                   <span class="remi-who-avatar agent"><svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg></span>
                   <div>
@@ -7343,6 +7354,7 @@ textarea.cv-input { height: auto; min-height: 84px; padding: var(--spacing-3); l
                 <div class="remi-line">Hours <b>16h</b></div>
                 <div class="remi-line">Rate <b>$150/h</b></div>
                 <div class="remi-line">Cost <b>$2,400</b></div>
+                </div>
               </div>
               <div class="remi-card-foot"><span>Total cost</span><span>$4,400</span></div>
             </div>
