@@ -4924,12 +4924,11 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 .project-task-check.done { background: var(--palette-green-40); border-color: var(--palette-green-40); color: var(--palette-white); }
 
 /* ── Invoice ─────────────────────────────────────────────────────── */
-.inv-overlay { display: none; position: fixed; inset: 0; z-index: 760; background: rgba(11,15,31,0.45); padding: var(--spacing-5); }
-.inv-overlay.open { display: flex; }
-.inv-modal {
-  flex: 1; min-width: 0; display: flex; flex-direction: column;
-  background: var(--palette-white); border-radius: var(--border-rounded-lg);
-  box-shadow: 0 24px 70px rgba(11,15,31,0.28); overflow: hidden;
+.inv-page {
+  display: flex; flex-direction: column;
+  border: var(--border-width-1) solid var(--color-border-separator);
+  border-radius: var(--border-rounded-lg); background: var(--palette-white);
+  overflow: hidden;
 }
 .inv-head {
   flex-shrink: 0; display: flex; align-items: center; gap: var(--spacing-3);
@@ -4945,7 +4944,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 }
 .inv-meta-lbl { font-size: 12px; color: var(--color-text-subtle); }
 .inv-meta-val { font-size: 14px; font-weight: 600; color: var(--color-text-default); margin-top: 3px; }
-.inv-body { flex: 1; min-height: 0; overflow-y: auto; padding: 0 var(--spacing-5) var(--spacing-6); }
+.inv-body { padding: 0 var(--spacing-5) var(--spacing-6); }
 .inv-section-title {
   font-size: 15px; font-weight: 700; color: var(--color-text-default);
   margin: var(--spacing-5) 0 var(--spacing-2);
@@ -7459,11 +7458,6 @@ textarea.cv-input { height: auto; min-height: 84px; padding: var(--spacing-3); l
   <div class="cv-modal" id="cvModal"></div>
 </div>
 
-<!-- ── 🧩 Milestone invoice ────────────────────────────────────── -->
-<div class="inv-overlay" id="invOverlay" onclick="if(event.target===this) closeInvoice()">
-  <div class="inv-modal" id="invModal"></div>
-</div>
-
 <script>
 /* ── Data ───────────────────────────────────────────────────────── */
 // Avatar bg colors use palette/decorative tokens from Foundations
@@ -9937,7 +9931,16 @@ function _finMoney(n) { return '$' + n.toLocaleString(); }
 
 function renderFinance() {
   const body = document.getElementById('finBody');
-  if (financeTab === 'budgets') { body.innerHTML = _budgetsHTML(); return; }
+  /* keep the sub-nav in step when the tab is changed in code */
+  const labels = { budgets: 'Budgets', rates: 'Rates', time: 'Time', expenses: 'Expenses', invoices: 'Invoices' };
+  document.querySelectorAll('#projectFinance .fin-subtab').forEach(b =>
+    b.classList.toggle('active', b.textContent.trim() === labels[financeTab]));
+  if (financeTab === 'budgets') {
+    body.innerHTML = openInvoiceName && INVOICES[openInvoiceName]
+      ? _invoiceHTML(INVOICES[openInvoiceName])
+      : _budgetsHTML();
+    return;
+  }
   if (financeTab !== 'rates') {
     body.innerHTML = `<div class="fin-foot-note">${financeTab[0].toUpperCase() + financeTab.slice(1)} is stubbed in this prototype.</div>`;
     return;
@@ -10291,15 +10294,22 @@ function _billToday() {
 
 
 /* ── Milestone invoice ───────────────────────────────────────────── */
-function openInvoice(milestoneName) {
-  const inv = INVOICES[milestoneName];
-  if (!inv) return;
-  renderInvoice(inv);
-  document.getElementById('invOverlay').classList.add('open');
-}
-function closeInvoice() { document.getElementById('invOverlay').classList.remove('open'); }
+let openInvoiceName = null;
 
-function renderInvoice(inv) {
+function openInvoice(milestoneName) {
+  if (!INVOICES[milestoneName]) return;
+  openInvoiceName = milestoneName;
+  financeTab = 'budgets';
+  budPanelTab = 'billing';
+  showProject();
+  /* switchProjectTab owns showing/hiding the view bodies, so go through it */
+  const tab = [...document.querySelectorAll('#projectPage .project-tabs .project-tab')]
+    .find(b => b.textContent.trim().startsWith('Finance'));
+  switchProjectTab('finance', tab);
+}
+function closeInvoice() { openInvoiceName = null; renderFinance(); }
+
+function _invoiceHTML(inv) {
   const back  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="11 18 5 12 11 6"/></svg>`;
   const info  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round"/></svg>`;
   const clock = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`;
@@ -10316,7 +10326,8 @@ function renderInvoice(inv) {
   let hrs = 0, rate = 0;
   inv.items.forEach(i => { hrs += i.hours; rate += i.hours * i.bill; });
 
-  document.getElementById('invModal').innerHTML = `
+  return `
+    <div class="inv-page">
     <div class="inv-head">
       <button class="qd-back" onclick="closeInvoice()" title="Back">${back}</button>
       <span class="inv-title">Edit invoice</span>
@@ -10339,32 +10350,11 @@ function renderInvoice(inv) {
     </div>
 
     <div class="inv-body">
-      <div class="inv-section-title">Milestone</div>
+      <div class="inv-section-title">Billable time</div>
       <table class="inv-table">
         <thead><tr>
-          <th style="width:34px"></th><th>Date</th><th>Who</th><th>Description</th>
-          <th class="num">Quantity</th><th class="num">Rate</th><th class="num">Amount</th><th style="width:34px"></th>
-        </tr></thead>
-        <tbody>
-          <tr>
-            <td>${box}</td>
-            <td>${inv.issued}</td>
-            <td>Priya Raman</td>
-            <td><div>${inv.milestone.name}</div><div class="inv-sub">${inv.phase} &mdash; ${inv.milestone.trigger}</div></td>
-            <td class="num">1.00</td>
-            <td class="num">${_cm(inv.milestone.amount)}</td>
-            <td class="num">${_cm(inv.milestone.amount)}</td>
-            <td class="inv-muted">${dots}</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="inv-subtotal">Sub-total: <strong>${_cm(inv.milestone.amount)}</strong></div>
-
-      <div class="inv-section-title">Time delivered this phase <span class="inv-note">not charged &mdash; fixed fee</span></div>
-      <table class="inv-table muted">
-        <thead><tr>
           <th style="width:34px"></th><th>Dates</th><th>Who</th><th>Description</th>
-          <th class="num">Hours</th><th class="num">Rate</th><th class="num">Value</th><th style="width:34px"></th>
+          <th class="num">Hours</th><th style="width:34px"></th>
         </tr></thead>
         <tbody>
           ${inv.items.map(i => `
@@ -10374,13 +10364,11 @@ function renderInvoice(inv) {
               <td>${_cName(i.who)}</td>
               <td>${i.item}</td>
               <td class="num">${i.hours.toFixed(2)}</td>
-              <td class="num">${_cm(i.bill)}</td>
-              <td class="num">${_cm(i.hours * i.bill)}</td>
               <td class="inv-muted">${dots}</td>
             </tr>`).join('')}
         </tbody>
       </table>
-      <div class="inv-subtotal">Hours: <strong>${hrs.toFixed(2)} (${hrs}h)</strong> &nbsp;&nbsp; Value at rate card: <strong>${_cm(rate)}</strong></div>
+      <div class="inv-subtotal">Hours: <strong>${hrs.toFixed(2)} (${hrs}h)</strong></div>
 
       <div class="inv-section-title">Expenses</div>
       <div class="bud-empty" style="padding:var(--spacing-5)">No expenses recorded against this invoice.</div>
@@ -10388,7 +10376,8 @@ function renderInvoice(inv) {
 
     <div class="inv-foot">
       Total hours: <strong>${hrs.toFixed(2)} (${hrs}h)</strong>
-      <span class="inv-foot-total">Total: <strong>${_cm(inv.milestone.amount)}</strong></span>
+      <span class="inv-foot-total">Total: <strong>${_cm(BUD.fee)}</strong></span>
+    </div>
     </div>`;
 }
 
@@ -10537,6 +10526,7 @@ function _budgetsHTML() {
 
 function switchFinanceTab(tab, el) {
   financeTab = tab;
+  openInvoiceName = null;
   document.querySelectorAll('#projectFinance .fin-subtab').forEach(b => b.classList.remove('active'));
   if (el) el.classList.add('active');
   renderFinance();
