@@ -4620,7 +4620,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 .remi-approve {
   border: none; cursor: pointer; width: 100%;
   padding: var(--spacing-3) var(--spacing-5); border-radius: var(--border-rounded-md);
-  background: linear-gradient(100deg, #4461d7 0%, #895ef7 35%, #ff22b1 70%, #ff7641 100%);
+  background: linear-gradient(219deg, #ff7641 7.2%, #c21083 30.19%, #4da2f8 102.97%);
   color: var(--palette-white); font-size: 15px; font-weight: 700;
   box-shadow: 0 6px 16px rgba(109,72,189,0.28);
 }
@@ -4783,7 +4783,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 .remi-opt-strong { font-size: 14px; font-weight: 600; color: var(--color-text-default); }
 .remi-opt-faint { font-size: 12px; color: var(--color-text-subtle); margin-top: 1px; }
 .remi-opt-foot {
-  margin-top: auto; display: flex; align-items: flex-end; gap: var(--spacing-5);
+  margin-top: auto; display: flex; align-items: flex-start; gap: var(--spacing-6);
   border-top: var(--border-width-1) solid var(--color-border-separator);
   padding-top: var(--spacing-4);
 }
@@ -4793,7 +4793,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
   text-transform: uppercase; color: var(--color-text-subtle);
 }
 .remi-metric-value { font-size: 20px; font-weight: 700; color: var(--color-text-default); }
-.remi-opt-deltas { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+.remi-metric-delta { font-size: 13px; font-weight: 700; color: var(--palette-green-70); margin-top: 4px; }
 .remi-note { font-size: 13px; color: var(--color-text-subtle); text-align: center; }
 
 @media (max-width: 1240px) {
@@ -9982,8 +9982,15 @@ function _remiRow(r) {
     </div>`;
 }
 
-function _remiMetrics(m) {
-  return m.map(([l, v]) => `<div><div class="remi-metric-label">${l}</div><div class="remi-metric-value">${v}</div></div>`).join('');
+/* Deltas line up with the metrics they move, so each sits under its own
+   figure rather than in a block of its own. */
+function _remiMetrics(m, deltas) {
+  return m.map(([l, v], n) => `
+    <div>
+      <div class="remi-metric-label">${l}</div>
+      <div class="remi-metric-value">${v}</div>
+      ${deltas && deltas[n] ? `<div class="remi-metric-delta">${deltas[n]}</div>` : ''}
+    </div>`).join('');
 }
 
 function renderRemi() {
@@ -10083,10 +10090,7 @@ function renderRemi() {
             <div class="remi-opt-sub">${r.plan.sub}</div>
           </div>
           <div class="remi-opt-rows">${r.plan.rows.map(_remiRow).join('')}</div>
-          <div class="remi-opt-foot">
-            ${_remiMetrics(r.plan.metrics)}
-            <span class="remi-opt-deltas">${r.plan.deltas.map(d => `<span class="remi-tag good">${d}</span>`).join('')}</span>
-          </div>
+          <div class="remi-opt-foot">${_remiMetrics(r.plan.metrics, r.plan.deltas)}</div>
           <button class="remi-approve" id="remiApprove" onclick="approveRemiRec(${i})">Approve suggestion</button>
         </div>
       </div>
