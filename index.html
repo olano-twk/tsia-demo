@@ -74,6 +74,12 @@
   --palette-pink-40:    #ff61c7;
   --palette-pink-45:    #ff22b1;
 
+  /* palette/salmon */
+  --palette-salmon-10:  #fff1ed;
+  --palette-salmon-30:  #ffb3a0;
+  --palette-salmon-40:  #ff8a72;
+  --palette-salmon-60:  #b9482e;
+
   /* palette/teal */
   --palette-teal-10:    #edfbfc;
   --palette-teal-40:    #4cd5e3;
@@ -5208,7 +5214,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 .qd-section-icon svg { width: 14px; height: 14px; }
 
 .qd-scroll { overflow-x: auto; }
-.qd-table { border-collapse: collapse; table-layout: fixed; width: 1620px; }
+.qd-table { border-collapse: collapse; table-layout: fixed; width: 1676px; }
 .qd-table th {
   text-align: left; font-size: 11px; font-weight: 600; color: var(--color-text-subtle);
   padding: var(--spacing-2) var(--spacing-3); white-space: nowrap;
@@ -5230,8 +5236,16 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
   border-radius: var(--border-rounded-md); font-size: 12px; font-weight: 500; white-space: nowrap;
 }
 .qd-type.task  { background: var(--palette-blue-10);  color: var(--palette-blue-60); }
-.qd-type.alloc { background: var(--palette-pink-10);  color: var(--palette-pink-45); }
+.qd-type.alloc { background: var(--palette-salmon-10); color: var(--palette-salmon-60); }
 .qd-type svg { width: 13px; height: 13px; }
+/* A role stands in for a person on a quote — nobody is booked yet. */
+.qd-role-av {
+  width: 26px; height: 26px; border-radius: var(--border-rounded-full); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--palette-neutral-10); color: var(--color-text-subtle);
+  border: var(--border-width-1) dashed var(--palette-grey-40);
+}
+.qd-role-av svg { width: 13px; height: 13px; }
 .qd-totals td { font-weight: 700; background: var(--color-background-default); border-top: var(--border-width-1) solid var(--color-border-default); }
 .qd-total-sub { display: block; font-size: 10px; font-weight: 500; color: var(--color-text-subtle); }
 .qd-add {
@@ -8809,6 +8823,8 @@ function _cAvatar(init, cls) {
   return `<span class="${cls || 'q-avatar'}" style="background:${p.bg}">${init}</span>`;
 }
 function _cName(init) { return PEOPLE_BY_INITIALS[init] || init; }
+/* Quotes are costed by role, not by named person. */
+function _cRole(init) { const p = schedPeople.find(x => x.initials === init); return p ? p.role : init; }
 
 /* ── Page ────────────────────────────────────────────────────────── */
 function showClient(tab) {
@@ -9161,13 +9177,14 @@ function _renderQuoteDetail() {
   const caret = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
   const plus  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`;
   const kb    = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>`;
-  const taskIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8.5 12.5 11 15 16 9.5"/></svg>`;
+  const allocIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>`;
+  const roleIcon  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 19.5a6.5 6.5 0 0 1 13 0"/></svg>`;
 
   /* Fixed column widths, shared by every phase table, so the four line
      up down the page instead of each auto-sizing to its own content. */
   const cols = `<colgroup>
-      <col style="width:300px"><col style="width:110px"><col style="width:132px">
-      <col style="width:150px"><col style="width:160px"><col style="width:84px">
+      <col style="width:300px"><col style="width:110px"><col style="width:176px">
+      <col style="width:150px"><col style="width:172px"><col style="width:84px">
       <col style="width:92px"><col style="width:110px"><col style="width:104px">
       <col style="width:132px"><col style="width:120px"><col style="width:126px">
     </colgroup>`;
@@ -9204,9 +9221,9 @@ function _renderQuoteDetail() {
                   return `<tr>
                     <td>${i.item}</td>
                     <td class="q-muted">—</td>
-                    <td><span class="qd-type task">${taskIcon} Task (hours)</span></td>
+                    <td><span class="qd-type alloc">${allocIcon} Allocation (hours)</span></td>
                     <td>${i.date}</td>
-                    <td><span class="q-who">${_cAvatar(i.who)} ${_cName(i.who)}</span></td>
+                    <td><span class="q-who"><span class="qd-role-av">${roleIcon}</span> ${_cRole(i.who)}</span></td>
                     <td class="num">${i.hours}</td>
                     <td class="num">${_cm(i.cost)}</td>
                     <td class="num qd-shade">${_cm(cost)}</td>
