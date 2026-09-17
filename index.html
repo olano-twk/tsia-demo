@@ -4598,137 +4598,19 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 .remi-composer-icon:hover { background: var(--color-background-hover); }
 .remi-composer-icon svg { width: 16px; height: 16px; }
 
-/* Right: the suggestion */
-.remi-panel { flex: 1; min-width: 0; display: flex; flex-direction: column; background: var(--palette-neutral-05); }
-.remi-panel-head {
-  flex-shrink: 0; display: flex; align-items: center; gap: var(--spacing-2);
-  padding: var(--spacing-4) var(--spacing-5);
-  border-bottom: var(--border-width-1) solid var(--color-border-separator);
-  background: var(--palette-white);
-}
-.remi-panel-title { font-size: 14px; font-weight: 600; color: var(--color-text-default); }
-.remi-count {
-  font-size: 11px; font-weight: 700; color: var(--color-text-subtle);
-  background: var(--color-surface-default); border-radius: var(--border-rounded-full);
-  min-width: 20px; height: 20px; padding: 0 6px;
-  display: inline-flex; align-items: center; justify-content: center;
-}
-.remi-attention {
-  margin-left: auto; display: flex; align-items: center; gap: 6px;
-  font-size: 13px; color: var(--color-text-default);
-}
-.remi-attention svg { width: 15px; height: 15px; color: var(--palette-orange-50); }
-
-.remi-panel-body { flex: 1; min-height: 0; overflow-y: auto; padding: var(--spacing-5); }
-.remi-suggest-banner {
-  max-width: 760px; margin-left: auto; margin-right: auto;
-  display: flex; gap: var(--spacing-3); padding: var(--spacing-4);
-  border-radius: var(--border-rounded-lg);
-  background: linear-gradient(100deg, var(--palette-indigo-10) 0%, var(--palette-purple-10) 45%, var(--palette-pink-10) 100%);
-  font-size: 14px; line-height: 1.6; color: var(--color-text-default);
-}
-.remi-suggest-banner .ai-spark { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; }
-
-.remi-alloc {
-  max-width: 760px; margin-left: auto; margin-right: auto;
-  display: flex; align-items: center; gap: var(--spacing-3);
-  margin-top: var(--spacing-4); padding: var(--spacing-4);
-  border: var(--border-width-1) solid var(--color-border-separator);
-  border-radius: var(--border-rounded-lg); background: var(--palette-white);
-}
-.remi-alloc-icon {
-  width: 32px; height: 32px; border-radius: var(--border-rounded-full); flex-shrink: 0;
-  background: var(--palette-purple-10); color: var(--palette-purple-50);
-  display: flex; align-items: center; justify-content: center;
-}
-.remi-alloc-icon svg { width: 17px; height: 17px; }
-.remi-alloc-name { font-size: 14px; font-weight: 600; color: var(--color-text-default); }
-.remi-alloc-meta { font-size: 12px; color: var(--color-text-subtle); margin-top: 2px; }
-.remi-alloc-link {
-  margin-left: auto; border: none; background: none; cursor: pointer;
-  font-size: 13px; font-weight: 600; color: var(--color-text-primary); white-space: nowrap;
-}
-.remi-alloc-link:hover { text-decoration: underline; }
-
-/* Hold the comparison to a readable measure — full-modal width pushed
-   each label and its value to opposite edges of the card. */
-.remi-compare {
-  margin: var(--spacing-4) auto 0; max-width: 760px;
-  display: grid; grid-template-columns: 1fr 34px 1fr; align-items: stretch; gap: 0;
-}
-.remi-card {
-  border: var(--border-width-1) solid var(--color-border-separator);
-  border-radius: var(--border-rounded-lg); background: var(--palette-white);
-  display: flex; flex-direction: column; overflow: hidden;
-}
-.remi-card-inner { padding: var(--spacing-5); flex: 1; display: flex; flex-direction: column; }
-/* The Before card is shorter than the After card, so centre its body
-   rather than leaving a void beneath it. */
-.remi-card-body { margin: auto 0; }
-.remi-card-label { font-size: 14px; font-weight: 700; color: var(--color-text-default); margin-bottom: var(--spacing-3); }
-.remi-badge {
-  display: inline-block; align-self: flex-start; margin-bottom: var(--spacing-3);
-  font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
-  color: var(--palette-purple-60); background: var(--palette-purple-15);
-  padding: 3px 8px; border-radius: var(--border-rounded-sm);
-}
-.remi-who { display: flex; align-items: center; gap: var(--spacing-3); margin-bottom: var(--spacing-3); }
+/* Shared with the assessment-review modal, which borrows this frame. */
 .remi-who-avatar {
   width: 36px; height: 36px; border-radius: var(--border-rounded-full); flex-shrink: 0;
   display: flex; align-items: center; justify-content: center; overflow: hidden;
   font-size: 12px; font-weight: 700; color: var(--palette-white);
 }
 .remi-who-avatar.agent {
-  background: var(--palette-white);
   border: 1.5px solid transparent;
   background:
     linear-gradient(var(--palette-white), var(--palette-white)) padding-box,
     linear-gradient(135deg, #4da2f8, #ff22b1, #ff7641) border-box;
 }
-.remi-who-avatar.agent .ai-spark { width: 17px; height: 17px; }
-.remi-who-name { font-size: 14px; font-weight: 700; color: var(--color-text-default); }
-.remi-who-role { font-size: 13px; color: var(--color-text-subtle); }
-.remi-line {
-  display: flex; justify-content: space-between; align-items: baseline;
-  font-size: 14px; color: var(--color-text-subtle); padding: 5px 0;
-}
-.remi-line b { color: var(--color-text-default); font-weight: 700; }
-.remi-plus {
-  display: flex; align-items: center; gap: var(--spacing-2);
-  margin: var(--spacing-3) 0; color: var(--color-text-disabled);
-}
-.remi-plus::before, .remi-plus::after {
-  content: ''; flex: 1; height: 1px; background: var(--color-border-separator);
-}
-.remi-card-foot {
-  display: flex; justify-content: space-between; align-items: baseline;
-  padding: var(--spacing-3) var(--spacing-5);
-  background: var(--color-surface-default);
-  font-size: 14px; font-weight: 700; color: var(--color-text-default);
-}
-.remi-arrow { display: flex; align-items: center; justify-content: center; }
-.remi-arrow span {
-  width: 28px; height: 28px; border-radius: var(--border-rounded-full);
-  border: var(--border-width-1) solid var(--color-border-separator);
-  background: var(--palette-white); color: var(--color-text-subtle);
-  display: flex; align-items: center; justify-content: center;
-}
-.remi-arrow svg { width: 14px; height: 14px; }
-.remi-saving {
-  max-width: 760px; margin-left: auto; margin-right: auto;
-  margin-top: var(--spacing-4); padding: var(--spacing-3) var(--spacing-4);
-  border-radius: var(--border-rounded-lg);
-  background: var(--palette-green-10); color: var(--palette-green-70);
-  font-size: 13px; line-height: 1.6;
-}
-.remi-saving strong { font-weight: 700; }
-
-.remi-foot {
-  flex-shrink: 0; display: flex; align-items: center;
-  padding: var(--spacing-4) var(--spacing-5);
-  border-top: var(--border-width-1) solid var(--color-border-separator);
-  background: var(--palette-white);
-}
+.remi-who-avatar.agent .ai-spark { width: 16px; height: 16px; }
 .remi-cancel {
   border: none; background: none; cursor: pointer;
   font-size: 14px; font-weight: 600; color: var(--color-text-default);
@@ -4736,18 +4618,186 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 }
 .remi-cancel:hover { background: var(--color-background-hover); }
 .remi-approve {
-  margin-left: auto; border: none; cursor: pointer;
-  padding: var(--spacing-3) var(--spacing-5); border-radius: var(--border-rounded-full);
+  border: none; cursor: pointer; width: 100%;
+  padding: var(--spacing-3) var(--spacing-5); border-radius: var(--border-rounded-md);
   background: linear-gradient(100deg, #4461d7 0%, #895ef7 35%, #ff22b1 70%, #ff7641 100%);
-  color: var(--palette-white); font-size: 14px; font-weight: 700;
+  color: var(--palette-white); font-size: 15px; font-weight: 700;
+  box-shadow: 0 6px 16px rgba(109,72,189,0.28);
 }
 .remi-approve:hover { filter: brightness(1.05); }
-.remi-approve:disabled { opacity: 0.55; cursor: default; filter: none; }
+.remi-approve:disabled { opacity: 0.55; cursor: default; filter: none; box-shadow: none; }
+.remi-keep {
+  border: var(--border-width-1) solid var(--color-border-default); cursor: pointer; width: 100%;
+  padding: var(--spacing-3) var(--spacing-5); border-radius: var(--border-rounded-md);
+  background: var(--palette-white); color: var(--color-text-default);
+  font-size: 15px; font-weight: 700;
+}
+.remi-keep:hover { background: var(--color-background-hover); }
 
-@media (max-width: 1080px) {
-  .remi-chat { width: 320px; }
-  .remi-compare { grid-template-columns: 1fr; }
-  .remi-arrow { padding: var(--spacing-2) 0; }
+/* Back arrow — only shown once a recommendation is open. */
+.remi-back {
+  width: 30px; height: 30px; flex-shrink: 0; display: none;
+  align-items: center; justify-content: center; margin-right: -4px;
+  border: none; background: none; cursor: pointer;
+  color: var(--color-text-subtle); border-radius: var(--border-rounded-md);
+}
+.remi-back.show { display: flex; }
+.remi-back:hover { background: var(--color-background-hover); color: var(--color-text-default); }
+.remi-back svg { width: 18px; height: 18px; }
+.remi-pager {
+  display: none; align-items: center; gap: var(--spacing-1);
+  border: var(--border-width-1) solid var(--color-border-default);
+  border-radius: var(--border-rounded-full); padding: 3px 5px; margin-right: var(--spacing-2);
+}
+.remi-pager.show { display: flex; }
+.remi-pager-label { font-size: 13px; font-weight: 600; color: var(--color-text-subtle); padding: 0 var(--spacing-2); }
+.remi-pager-btn {
+  width: 26px; height: 26px; border: none; background: none; cursor: pointer;
+  border-radius: var(--border-rounded-full); color: var(--color-text-default);
+  display: flex; align-items: center; justify-content: center;
+}
+.remi-pager-btn:hover:not(:disabled) { background: var(--color-background-hover); }
+.remi-pager-btn:disabled { color: var(--color-text-disabled); cursor: default; }
+.remi-pager-btn svg { width: 15px; height: 15px; }
+
+/* ── Home: the full-width chat, with the recommendations as cards ── */
+.remi-home { flex: 1; min-width: 0; display: flex; flex-direction: column; padding: var(--spacing-6); }
+.remi-home-inner { flex: 1; min-height: 0; overflow-y: auto; max-width: 1180px; width: 100%; margin: 0 auto; }
+.remi-home .remi-composer { max-width: 1180px; width: 100%; margin: var(--spacing-5) auto 0; }
+.remi-rec-grid {
+  margin-top: var(--spacing-5); display: grid; gap: var(--spacing-4);
+  grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: stretch;
+}
+.remi-rec-card {
+  text-align: left; cursor: pointer; font: inherit;
+  display: flex; flex-direction: column; gap: var(--spacing-3);
+  padding: var(--spacing-5);
+  border: var(--border-width-1) solid var(--color-border-default);
+  border-radius: var(--border-rounded-lg); background: var(--palette-white);
+  transition: border-color 0.12s, box-shadow 0.12s, transform 0.12s;
+}
+.remi-rec-card:hover {
+  border-color: var(--palette-purple-30);
+  box-shadow: 0 10px 26px rgba(109,72,189,0.12);
+  transform: translateY(-2px);
+}
+.remi-rec-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px; align-self: flex-start;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--palette-purple-60); background: var(--palette-purple-15);
+  padding: 4px 9px; border-radius: var(--border-rounded-full);
+}
+.remi-rec-eyebrow .ai-spark { width: 11px; height: 11px; }
+.remi-rec-title { font-size: 16px; font-weight: 700; line-height: 1.35; color: var(--color-text-default); }
+.remi-rec-text { font-size: 13px; line-height: 1.6; color: var(--color-text-subtle); }
+.remi-rec-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: var(--spacing-2); }
+.remi-tag {
+  font-size: 12px; font-weight: 600; white-space: nowrap;
+  padding: 3px 9px; border-radius: var(--border-rounded-full);
+  background: var(--color-surface-default); color: var(--color-text-subtle);
+}
+.remi-tag.good { background: var(--palette-green-10); color: var(--palette-green-70); }
+.remi-rec-go {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 600; color: var(--color-text-primary);
+}
+.remi-rec-go svg { width: 14px; height: 14px; }
+
+/* ── Detail: chat rail beside the recommendation ── */
+.remi-rail {
+  width: 372px; flex-shrink: 0; display: flex; flex-direction: column;
+  border-right: var(--border-width-1) solid var(--color-border-separator);
+  background: var(--palette-neutral-05); padding: var(--spacing-5);
+}
+.remi-rail .remi-chips { margin-top: var(--spacing-4); }
+.remi-rail .remi-composer { background: var(--palette-white); }
+
+.remi-rec-panel {
+  flex: 1; min-width: 0; overflow-y: auto;
+  padding: var(--spacing-6) var(--spacing-7);
+  display: flex; flex-direction: column; gap: var(--spacing-5);
+  background: linear-gradient(180deg, var(--palette-purple-10) 0%, var(--palette-white) 300px);
+}
+.remi-rec-top { display: flex; align-items: center; gap: var(--spacing-3); flex-wrap: wrap; }
+.remi-rec-context { margin-left: auto; font-size: 13px; color: var(--color-text-subtle); }
+.remi-alloc-link {
+  border: none; background: none; cursor: pointer;
+  font-size: 13px; font-weight: 600; color: var(--color-text-primary); white-space: nowrap;
+}
+.remi-alloc-link:hover { text-decoration: underline; }
+
+.remi-headline { max-width: 820px; display: flex; flex-direction: column; gap: var(--spacing-3); }
+.remi-headline h2 {
+  margin: 0; font-size: 30px; line-height: 1.22; font-weight: 800;
+  letter-spacing: -0.4px; color: var(--color-text-default);
+}
+.remi-benefit {
+  display: flex; align-items: flex-start; gap: var(--spacing-2);
+  font-size: 16px; line-height: 1.5; color: var(--color-text-subtle);
+}
+.remi-benefit svg { width: 19px; height: 19px; flex-shrink: 0; margin-top: 3px; }
+.remi-benefit strong { font-weight: 700; color: var(--color-text-default); }
+.remi-benefit strong.good { color: var(--palette-green-70); }
+
+.remi-decision-label {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--color-text-subtle);
+}
+.remi-choice {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--spacing-5); align-items: stretch;
+}
+.remi-opt {
+  position: relative; box-sizing: border-box;
+  border: var(--border-width-1) solid var(--color-border-default);
+  border-radius: var(--border-rounded-lg); background: var(--palette-white);
+  padding: var(--spacing-5); display: flex; flex-direction: column; gap: var(--spacing-4);
+}
+.remi-opt.pick {
+  border: 2px solid var(--palette-purple-40); background: #fdfcff;
+  box-shadow: 0 12px 32px rgba(109,72,189,0.10);
+}
+.remi-opt-flag {
+  position: absolute; top: -12px; left: var(--spacing-5);
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--palette-purple-60); color: var(--palette-white);
+  border-radius: var(--border-rounded-full); padding: 4px 11px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+}
+.remi-opt-flag .ai-spark { width: 11px; height: 11px; }
+.remi-opt-name { font-size: 17px; font-weight: 700; color: var(--color-text-default); }
+.remi-opt-sub { font-size: 13px; color: var(--color-text-subtle); margin-top: 3px; }
+.remi-opt-rows { display: flex; flex-direction: column; gap: var(--spacing-2); }
+.remi-opt-row {
+  display: flex; align-items: center; gap: var(--spacing-3);
+  border: var(--border-width-1) solid var(--color-border-separator);
+  border-radius: var(--border-rounded-md); padding: var(--spacing-3) var(--spacing-4);
+  background: var(--palette-white);
+}
+.remi-opt-row .remi-who-avatar { width: 34px; height: 34px; }
+.remi-opt-who { flex: 1; min-width: 0; }
+.remi-opt-hours { text-align: right; flex-shrink: 0; }
+.remi-opt-strong { font-size: 14px; font-weight: 600; color: var(--color-text-default); }
+.remi-opt-faint { font-size: 12px; color: var(--color-text-subtle); margin-top: 1px; }
+.remi-opt-foot {
+  margin-top: auto; display: flex; align-items: flex-end; gap: var(--spacing-5);
+  border-top: var(--border-width-1) solid var(--color-border-separator);
+  padding-top: var(--spacing-4);
+}
+.remi-opt.pick .remi-opt-foot { border-top-color: var(--palette-purple-20); }
+.remi-metric-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--color-text-subtle);
+}
+.remi-metric-value { font-size: 20px; font-weight: 700; color: var(--color-text-default); }
+.remi-opt-deltas { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+.remi-note { font-size: 13px; color: var(--color-text-subtle); text-align: center; }
+
+@media (max-width: 1240px) {
+  .remi-rec-grid { grid-template-columns: 1fr; }
+  .remi-rail { width: 320px; }
+  .remi-rec-panel { padding: var(--spacing-5); }
+  .remi-choice { grid-template-columns: 1fr; }
 }
 /*
  * ─────────────────────────────────────────────────────────────────
@@ -6550,8 +6600,8 @@ textarea.cv-input { height: auto; min-height: 84px; padding: var(--spacing-3); l
                   <span class="remi-coach-title">Remi spotted something</span>
                 </div>
                 <div class="remi-coach-body">
-                  You can lift the margin on <strong>Halcyon Logistics</strong> by <strong>9 points</strong> by
-                  rebalancing one allocation. Want to see it?
+                  I have <strong>3 recommendations</strong> for this project &mdash; margin, seniority
+                  mix and bench capacity. Want to look through them?
                 </div>
                 <div class="remi-coach-actions">
                   <button class="remi-coach-cta" onclick="openRemiModal()">Show me</button>
@@ -7247,9 +7297,13 @@ textarea.cv-input { height: auto; min-height: 84px; padding: var(--spacing-3); l
   <div class="remi-modal">
 
     <div class="remi-head">
+      <button class="remi-back" id="remiBack" onclick="remiHome()" title="Back to recommendations">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="11 18 5 12 11 6"/></svg>
+      </button>
       <svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg>
       <span class="remi-head-title">Resource your project with Remi</span>
       <div class="remi-head-right">
+        <div class="remi-pager" id="remiPager"></div>
         <button class="remi-head-btn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           Send feedback
@@ -7260,142 +7314,9 @@ textarea.cv-input { height: auto; min-height: 84px; padding: var(--spacing-3); l
       </div>
     </div>
 
-    <div class="remi-body">
-
-      <div class="remi-chat">
-        <div class="remi-chat-msg">
-          <img src="avatars/remi-md.png" alt="">
-          <div class="remi-chat-text" id="remiChatText">
-            Here's the suggestion to increase the margin by <strong>9 points</strong> for the Halcyon
-            project. The AI Readiness Assessment allocation is <strong>200 junior hours</strong> and
-            it's your most repeatable deliverable.
-          </div>
-        </div>
-        <div class="remi-chips" id="remiChips">
-          <button class="remi-chip" onclick="remiChip('replace')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg>
-            Replace Sam with Readiness agent
-          </button>
-          <button class="remi-chip" onclick="remiChip('more')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg>
-            Show me more recommendations
-          </button>
-        </div>
-        <div class="remi-composer">
-          <textarea rows="2" placeholder="Ask me to find, create or update anything relating to resourcing or scheduling."></textarea>
-          <div class="remi-composer-bar">
-            <button class="remi-composer-icon" title="Attach">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
-            </button>
-            <button class="remi-composer-icon" title="Dictate">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
-            </button>
-            <span class="spacer"></span>
-            <button class="remi-composer-icon" title="Send">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/></svg>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="remi-panel">
-        <div class="remi-panel-head">
-          <span class="remi-panel-title">Remi's suggestion</span>
-          <span class="remi-count">3</span>
-          <span class="remi-attention">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01"/></svg>
-            1 needs attention
-          </span>
-        </div>
-
-        <div class="remi-panel-body">
-          <div class="remi-suggest-banner">
-            <svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg>
-            <span>Replace Sam's 200h of initial assessment work with the Readiness Agent, with 16 hours of
-            senior review from Tom. This reduces cost, improves margin and frees up team capacity.</span>
-          </div>
-
-          <div class="remi-alloc">
-            <span class="remi-alloc-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8.5 12.5 11 15 16 9.5"/></svg>
-            </span>
-            <div>
-              <div class="remi-alloc-name">AI Readiness Assessment</div>
-              <div class="remi-alloc-meta">Halcyon Logistics &nbsp;•&nbsp; 200h Junior work &nbsp;•&nbsp; 5 – 23 Oct 2026</div>
-            </div>
-            <button class="remi-alloc-link">View allocation</button>
-          </div>
-
-          <div class="remi-compare">
-            <div class="remi-card">
-              <div class="remi-card-inner">
-                <div class="remi-card-label">Before</div>
-                <div class="remi-card-body">
-                <div class="remi-who">
-                  <span class="remi-who-avatar" style="background:var(--palette-green-40)">SD</span>
-                  <div>
-                    <div class="remi-who-name">Sam Delaney</div>
-                    <div class="remi-who-role">Junior Consultant</div>
-                  </div>
-                </div>
-                <div class="remi-line">Hours <b>200h</b></div>
-                <div class="remi-line">Rate <b>$90/h</b></div>
-                <div class="remi-line">Cost <b>$18,000</b></div>
-                </div>
-              </div>
-              <div class="remi-card-foot"><span>Total cost</span><span>$18,000</span></div>
-            </div>
-
-            <div class="remi-arrow">
-              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span>
-            </div>
-
-            <div class="remi-card">
-              <div class="remi-card-inner">
-                <span class="remi-badge">REMI'S SUGGESTION</span>
-                <div class="remi-card-body">
-                <div class="remi-who">
-                  <span class="remi-who-avatar agent"><svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg></span>
-                  <div>
-                    <div class="remi-who-name">Readiness Agent</div>
-                    <div class="remi-who-role">AI Agent</div>
-                  </div>
-                </div>
-                <div class="remi-line">Hours <b>200h</b></div>
-                <div class="remi-line">Rate <b>$10/h</b></div>
-                <div class="remi-line">Cost <b>$2,000</b></div>
-
-                <div class="remi-plus">+</div>
-
-                <div class="remi-who">
-                  <span class="remi-who-avatar" style="background:var(--palette-blue-40)">TO</span>
-                  <div>
-                    <div class="remi-who-name">Tom Okafor</div>
-                    <div class="remi-who-role">Senior Consultant</div>
-                  </div>
-                </div>
-                <div class="remi-line">Hours <b>16h</b></div>
-                <div class="remi-line">Rate <b>$150/h</b></div>
-                <div class="remi-line">Cost <b>$2,400</b></div>
-                </div>
-              </div>
-              <div class="remi-card-foot"><span>Total cost</span><span>$4,400</span></div>
-            </div>
-          </div>
-
-          <div class="remi-saving">
-            Saves <strong>$13,600</strong> of planned cost on a $150,000 fixed fee — margin moves from
-            <strong>35.2%</strong> to <strong>44.3%</strong>, and Sam gets 200 hours back, which also
-            clears the Phase 1 capacity problem.
-          </div>
-        </div>
-
-        <div class="remi-foot">
-          <button class="remi-cancel" onclick="closeRemiModal()">Cancel</button>
-          <button class="remi-approve" id="remiApprove" onclick="approveRemiSuggestion()">Approve suggestion</button>
-        </div>
-      </div>
-    </div>
+    <!-- Home (the three recommendations) and the opened recommendation
+         both render in here — see renderRemi(). -->
+    <div class="remi-body" id="remiBody"></div>
   </div>
 </div>
 
@@ -9468,7 +9389,10 @@ function cvCreateProject() {
   showActionToast(
     'Project created',
     'Enterprise AI Rollout is set up for Halcyon Logistics with 11 tasks across 4 phases and a $150,000 fixed-fee budget.',
-    'Open project', () => { switchProjectTab('list'); showProject(); });
+    'Open project', () => {
+      switchProjectTab('schedule', _projectTabBtn('schedule'));
+      showProject();
+    });
 }
 
 /* Toast with an action, bottom right */
@@ -9500,6 +9424,12 @@ function hideActionToast() {
    Only List and Schedule are built out; the rest stay decorative. */
 let projectTab = 'list';
 const PROJECT_TAB_LABELS = { list: 'List', schedule: 'Schedule', finance: 'Finance' };
+/* The tab buttons carry badges inside their labels, so find them by the
+   tab they switch to rather than by their text. */
+function _projectTabBtn(tab) {
+  return [...document.querySelectorAll('#projectPage .project-tabs .project-tab')]
+    .find(b => (b.getAttribute('onclick') || '').includes(`'${tab}'`));
+}
 function switchProjectTab(tab, el) {
   projectTab = tab;
   document.querySelectorAll('#projectPage .project-tabs .project-tab').forEach(b => b.classList.remove('active'));
@@ -9904,25 +9834,261 @@ function hideRemiCoach() {
 }
 function dismissRemiCoach() { _remiCoachSeen = true; clearTimeout(_remiCoachTimer); hideRemiCoach(); }
 
+/* ── Remi's recommendations ───────────────────────────────────────
+   Three of them. The modal opens on the list; picking one opens the
+   full recommendation, where the decision is two option cards rather
+   than a before/after table. Only the first rewrites the prototype's
+   data — the other two are there to show the shape of the queue. */
+const REMI_RECS = [
+  {
+    tag: 'Margin',
+    headline: 'Hand the AI Readiness Assessment to the Readiness Agent',
+    card: `Sam is booked for 200h on the AI Readiness Assessment — your most repeatable
+           deliverable. Move it to the Readiness Agent and keep Tom on 16h of senior review.`,
+    chips: [['&minus; $13,600', 1], ['+ 9.1 pts margin', 0], ['Sam freed for Phase 1', 0]],
+    context: 'AI Readiness Assessment &middot; Halcyon Logistics &middot; 5 – 23 Oct 2026',
+    benefit: `Saves <strong class="good">$13,600</strong> on a $150,000 fixed fee, lifts margin from
+              <strong>35.2% to 44.3%</strong>, and frees Sam's 200 hours for Phase 1.`,
+    chat: `I found a way to lift Halcyon's margin. The AI Readiness Assessment is 200h of junior work
+           and your most repeatable deliverable — the best fit for the Readiness Agent.`,
+    chatChips: ['Why the Readiness Agent?', "What happens to Sam's 200 hours?"],
+    keep: {
+      name: 'Keep the current plan', sub: 'Sam does the assessment himself',
+      rows: [{ av: 'SD', bg: 'var(--palette-green-40)', name: 'Sam Delaney', role: 'Junior Consultant', hours: '200h', rate: '$90/h' }],
+      metrics: [['Cost', '$18,000'], ['Margin', '35.2%']],
+    },
+    plan: {
+      name: "Approve Remi's plan", sub: "The agent does the work, Tom reviews it",
+      rows: [
+        { agent: true, name: 'Readiness Agent', role: 'Does the assessment work', hours: '200h', rate: '$10/h' },
+        { av: 'TO', bg: 'var(--palette-blue-40)', name: 'Tom Okafor', role: "Senior review of the agent's output", hours: '16h', rate: '$150/h' },
+      ],
+      metrics: [['Cost', '$4,400'], ['Margin', '44.3%']],
+      deltas: ['&minus; $13,600', '+ 9.1 pts'],
+    },
+  },
+  {
+    tag: 'Seniority mix',
+    headline: 'Rebalance the seniority mix on Phase 2',
+    card: `Tom is booked for 60h of documentation and data prep — work at a junior level. Move 48h to
+           Sam (now free after Phase 1) and keep Tom on 12h of review.`,
+    chips: [['&minus; $2,880', 1], ['+ 1.9 pts margin', 0], ['Tom freed for the Meridian pitch', 0]],
+    context: 'Phase 2 &middot; Roadmap &amp; Business Case &middot; 26 Oct – 13 Nov 2026',
+    benefit: `Saves <strong class="good">$2,880</strong> of planned cost and lifts margin from
+              <strong>35.2% to 37.1%</strong>, with Tom still signing off the output.`,
+    chat: `Phase 2 is carrying senior hours on junior work. Sam clears Phase 1 on 23 October, so he can
+           take the documentation and data prep without touching the critical path.`,
+    chatChips: ['What does Tom still own?', 'Show me Sam’s availability'],
+    keep: {
+      name: 'Keep the current plan', sub: 'Tom does the prep and the documentation',
+      rows: [{ av: 'TO', bg: 'var(--palette-blue-40)', name: 'Tom Okafor', role: 'Senior Consultant', hours: '60h', rate: '$150/h' }],
+      metrics: [['Cost', '$9,000'], ['Margin', '35.2%']],
+    },
+    plan: {
+      name: "Approve Remi's plan", sub: 'Sam takes the prep, Tom keeps the review',
+      rows: [
+        { av: 'SD', bg: 'var(--palette-green-40)', name: 'Sam Delaney', role: 'Documentation and data prep', hours: '48h', rate: '$90/h' },
+        { av: 'TO', bg: 'var(--palette-blue-40)', name: 'Tom Okafor', role: 'Review and sign-off only', hours: '12h', rate: '$150/h' },
+      ],
+      metrics: [['Cost', '$6,120'], ['Margin', '37.1%']],
+      deltas: ['&minus; $2,880', '+ 1.9 pts'],
+    },
+  },
+  {
+    tag: 'Capacity',
+    headline: 'Fill the gap with bench capacity, not a contractor',
+    card: `Priya has 80h unassigned between 12 – 30 Oct. Assign her to the integration workstream
+           instead of extending the DataBridge contractor at $120/h.`,
+    chips: [['&minus; $4,600', 1], ['Utilisation 71% &rarr; 78%', 0], ['No new PO needed', 0]],
+    context: 'Integration workstream &middot; Halcyon Logistics &middot; 12 – 30 Oct 2026',
+    benefit: `Saves <strong class="good">$4,600</strong> of external spend, lifts utilisation from
+              <strong>71% to 78%</strong>, and needs no new purchase order.`,
+    chat: `You are about to buy capacity you already have. Priya is unassigned for 80h across the same
+           three weeks the DataBridge extension would cover.`,
+    chatChips: ['What is Priya booked on after this?', 'Show the contractor’s current PO'],
+    keep: {
+      name: 'Extend the contractor', sub: 'DataBridge stays on the integration workstream',
+      rows: [{ av: 'DB', bg: 'var(--palette-grey-50)', name: 'DataBridge', role: 'External contractor', hours: '80h', rate: '$120/h' }],
+      metrics: [['Cost', '$9,600'], ['Utilisation', '71%']],
+    },
+    plan: {
+      name: "Approve Remi's plan", sub: 'Priya covers it from the bench',
+      rows: [{ av: 'PR', bg: 'var(--palette-purple-40)', name: 'Priya Raman', role: '80h unassigned, 12 – 30 Oct', hours: '80h', rate: 'Bench time' }],
+      metrics: [['Cost', '$5,000'], ['Utilisation', '78%']],
+      deltas: ['&minus; $4,600', '+ 7 pts'],
+    },
+  },
+];
+
+let remiView = 'home';   /* 'home', or the index of the open recommendation */
+
 function openRemiModal() {
   dismissRemiCoach();
+  remiView = 'home';
   document.getElementById('remiOverlay').classList.add('open');
+  renderRemi();
 }
 function closeRemiModal() { document.getElementById('remiOverlay').classList.remove('open'); }
+function remiHome() { remiView = 'home'; renderRemi(); }
+function openRemiRec(i) { remiView = i; renderRemi(); }
+function remiStep(d) {
+  const n = Math.min(REMI_RECS.length - 1, Math.max(0, remiView + d));
+  remiView = n; renderRemi();
+}
 
-function remiChip(kind) {
-  const text = document.getElementById('remiChatText');
-  const chips = document.getElementById('remiChips');
-  if (kind === 'replace') {
-    text.innerHTML = `Done — the swap is staged on the right. Approving it moves the 200 assessment
-      hours to the Readiness Agent and books <strong>16h</strong> of Tom's time for review, so the
-      deliverable still gets a senior sign-off before it reaches Halcyon.`;
-  } else {
-    text.innerHTML = `Two more worth a look. <strong>Elena is at 12h/day</strong> on Thursday and Friday
-      across the governance policy and the champion playbook — Tom has 31h free this week. And
-      <strong>Phase 4's adoption dashboard</strong> is another repeatable build the agent could draft.`;
+const _remiSpark = `<svg class="ai-spark" viewBox="0 0 16 16"><use href="#aiSparkIcon"/></svg>`;
+
+function _remiComposer() {
+  return `
+    <div class="remi-composer">
+      <textarea rows="2" placeholder="Ask me to find, create or update anything relating to resourcing or scheduling."></textarea>
+      <div class="remi-composer-bar">
+        <button class="remi-composer-icon" title="Attach">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        </button>
+        <button class="remi-composer-icon" title="Dictate">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+        </button>
+        <span class="spacer"></span>
+        <button class="remi-composer-icon" title="Send">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+        </button>
+      </div>
+    </div>`;
+}
+
+function _remiTags(chips) {
+  return chips.map(([t, good]) => `<span class="remi-tag${good ? ' good' : ''}">${t}</span>`).join('');
+}
+
+function _remiRow(r) {
+  const av = r.agent
+    ? `<span class="remi-who-avatar agent">${_remiSpark}</span>`
+    : `<span class="remi-who-avatar" style="background:${r.bg}">${r.av}</span>`;
+  return `
+    <div class="remi-opt-row">
+      ${av}
+      <div class="remi-opt-who">
+        <div class="remi-opt-strong">${r.name}</div>
+        <div class="remi-opt-faint">${r.role}</div>
+      </div>
+      <div class="remi-opt-hours">
+        <div class="remi-opt-strong">${r.hours}</div>
+        <div class="remi-opt-faint">${r.rate}</div>
+      </div>
+    </div>`;
+}
+
+function _remiMetrics(m) {
+  return m.map(([l, v]) => `<div><div class="remi-metric-label">${l}</div><div class="remi-metric-value">${v}</div></div>`).join('');
+}
+
+function renderRemi() {
+  const body  = document.getElementById('remiBody');
+  const back  = document.getElementById('remiBack');
+  const pager = document.getElementById('remiPager');
+  const home  = remiView === 'home';
+
+  back.classList.toggle('show', !home);
+  pager.classList.toggle('show', !home);
+
+  if (home) {
+    body.innerHTML = `
+      <div class="remi-home">
+        <div class="remi-home-inner">
+          <div class="remi-chat-msg">
+            <img src="avatars/remi-md.png" alt="">
+            <div class="remi-chat-text">
+              I have looked across the Halcyon engagement and found <strong>three changes</strong>
+              worth making — one on margin, one on your seniority mix and one on capacity.
+              Open any of them to see the numbers and decide.
+            </div>
+          </div>
+          <div class="remi-rec-grid">
+            ${REMI_RECS.map((r, i) => `
+              <button class="remi-rec-card" onclick="openRemiRec(${i})">
+                <span class="remi-rec-eyebrow">${_remiSpark} ${r.tag}</span>
+                <span class="remi-rec-title">${r.headline}</span>
+                <span class="remi-rec-text">${r.card}</span>
+                <span class="remi-rec-chips">${_remiTags(r.chips)}</span>
+                <span class="remi-rec-go">View recommendation
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+                </span>
+              </button>`).join('')}
+          </div>
+        </div>
+        ${_remiComposer()}
+      </div>`;
+    return;
   }
-  chips.style.display = 'none';
+
+  const i = remiView, r = REMI_RECS[i];
+  pager.innerHTML = `
+    <button class="remi-pager-btn" onclick="remiStep(-1)" ${i === 0 ? 'disabled' : ''} title="Previous">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 6 9 12 15 18"/></svg>
+    </button>
+    <span class="remi-pager-label">Recommendation ${i + 1} of ${REMI_RECS.length}</span>
+    <button class="remi-pager-btn" onclick="remiStep(1)" ${i === REMI_RECS.length - 1 ? 'disabled' : ''} title="Next">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+    </button>`;
+
+  const tick = `<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="var(--palette-green-10)"/><path d="M8.5 12.2l2.4 2.4 4.6-5" stroke="var(--palette-green-70)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+  body.innerHTML = `
+    <div class="remi-rail">
+      <div class="remi-chat-msg">
+        <img src="avatars/remi-md.png" alt="">
+        <div class="remi-chat-text">${r.chat} Your options are on the right.</div>
+      </div>
+      <div class="remi-chips">
+        ${r.chatChips.map(c => `<button class="remi-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg>
+          ${c}</button>`).join('')}
+      </div>
+      ${_remiComposer()}
+    </div>
+
+    <div class="remi-rec-panel">
+      <div class="remi-rec-top">
+        <span class="remi-rec-eyebrow">${_remiSpark} Remi's recommendation</span>
+        <span class="remi-rec-context">${r.context}</span>
+        <button class="remi-alloc-link">View allocation</button>
+      </div>
+
+      <div class="remi-headline">
+        <h2>${r.headline}</h2>
+        <div class="remi-benefit">${tick}<div>${r.benefit}</div></div>
+      </div>
+
+      <div class="remi-decision-label">Your decision</div>
+      <div class="remi-choice">
+        <div class="remi-opt">
+          <div>
+            <div class="remi-opt-name">${r.keep.name}</div>
+            <div class="remi-opt-sub">${r.keep.sub}</div>
+          </div>
+          <div class="remi-opt-rows">${r.keep.rows.map(_remiRow).join('')}</div>
+          <div class="remi-opt-foot">${_remiMetrics(r.keep.metrics)}</div>
+          <button class="remi-keep" onclick="closeRemiModal()">${r.keep.name}</button>
+        </div>
+
+        <div class="remi-opt pick">
+          <span class="remi-opt-flag">${_remiSpark} Recommended</span>
+          <div>
+            <div class="remi-opt-name">${r.plan.name}</div>
+            <div class="remi-opt-sub">${r.plan.sub}</div>
+          </div>
+          <div class="remi-opt-rows">${r.plan.rows.map(_remiRow).join('')}</div>
+          <div class="remi-opt-foot">
+            ${_remiMetrics(r.plan.metrics)}
+            <span class="remi-opt-deltas">${r.plan.deltas.map(d => `<span class="remi-tag good">${d}</span>`).join('')}</span>
+          </div>
+          <button class="remi-approve" id="remiApprove" onclick="approveRemiRec(${i})">Approve suggestion</button>
+        </div>
+      </div>
+
+      <div class="remi-note">Nothing changes on the schedule until you approve.</div>
+    </div>`;
 }
 
 /* Applying Remi's suggestion rewrites the AI Readiness Assessment across
@@ -9970,26 +10136,28 @@ function _applyRemiSuggestion() {
   else                               renderProjectBody();
 }
 
-function approveRemiSuggestion() {
+function approveRemiRec(i) {
   const btn = document.getElementById('remiApprove');
   btn.textContent = 'Approved';
   btn.disabled = true;
-  _applyRemiSuggestion();
+  if (i === 0) _applyRemiSuggestion();
   setTimeout(() => {
     closeRemiModal();
-    btn.textContent = 'Approve suggestion';
-    btn.disabled = false;
-    showActionToast(
-      'Allocation updated',
-      'The AI Readiness Assessment is now the Readiness Agent for 200h, with 16h of senior review from Tom Okafor. Planned margin moves from 35.2% to 44.3%.',
-      'Open task',
-      () => {
-        const ti = projectTaskLists[0].tasks.findIndex(t => t.name === ASSESS_TASK);
-        const tab = [...document.querySelectorAll('#projectPage .project-tabs .project-tab')]
-          .find(b => b.textContent.trim() === 'List');
-        switchProjectTab('list', tab);
-        if (ti > -1) openTaskDrawer(0, ti);
-      });
+    if (i === 0) {
+      showActionToast(
+        'Allocation updated',
+        'The AI Readiness Assessment is now the Readiness Agent for 200h, with 16h of senior review from Tom Okafor. Planned margin moves from 35.2% to 44.3%.',
+        'Open task',
+        () => {
+          const ti = projectTaskLists[0].tasks.findIndex(t => t.name === ASSESS_TASK);
+          switchProjectTab('list', _projectTabBtn('list'));
+          if (ti > -1) openTaskDrawer(0, ti);
+        });
+    } else {
+      const r = REMI_RECS[i];
+      showActionToast('Recommendation approved', r.headline + '.', 'Back to recommendations',
+        () => { openRemiModal(); openRemiRec(i); });
+    }
   }, 1200);
 }
 
