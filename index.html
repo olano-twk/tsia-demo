@@ -4783,7 +4783,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 .remi-opt-strong { font-size: 14px; font-weight: 600; color: var(--color-text-default); }
 .remi-opt-faint { font-size: 12px; color: var(--color-text-subtle); margin-top: 1px; }
 .remi-opt-foot {
-  margin-top: auto; display: flex; align-items: flex-start; gap: var(--spacing-6);
+  margin-top: auto; display: flex; align-items: flex-start; gap: var(--spacing-5);
   border-top: var(--border-width-1) solid var(--color-border-separator);
   padding-top: var(--spacing-4);
 }
@@ -4792,8 +4792,9 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
   font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
   text-transform: uppercase; color: var(--color-text-subtle);
 }
+.remi-metric-figure { display: flex; align-items: baseline; gap: var(--spacing-2); }
 .remi-metric-value { font-size: 20px; font-weight: 700; color: var(--color-text-default); }
-.remi-metric-delta { font-size: 13px; font-weight: 700; color: var(--palette-green-70); margin-top: 4px; }
+.remi-metric-delta { font-size: 13px; font-weight: 700; color: var(--palette-green-70); white-space: nowrap; }
 .remi-note { font-size: 13px; color: var(--color-text-subtle); text-align: center; }
 
 @media (max-width: 1240px) {
@@ -9982,14 +9983,16 @@ function _remiRow(r) {
     </div>`;
 }
 
-/* Deltas line up with the metrics they move, so each sits under its own
-   figure rather than in a block of its own. */
+/* Deltas line up with the metrics they move, each sitting on the baseline
+   beside its own figure so the footer stays one line tall. */
 function _remiMetrics(m, deltas) {
   return m.map(([l, v], n) => `
     <div>
       <div class="remi-metric-label">${l}</div>
-      <div class="remi-metric-value">${v}</div>
-      ${deltas && deltas[n] ? `<div class="remi-metric-delta">${deltas[n]}</div>` : ''}
+      <div class="remi-metric-figure">
+        <span class="remi-metric-value">${v}</span>
+        ${deltas && deltas[n] ? `<span class="remi-metric-delta">${deltas[n]}</span>` : ''}
+      </div>
     </div>`).join('');
 }
 
