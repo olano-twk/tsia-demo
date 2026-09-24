@@ -3400,6 +3400,18 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 .task-subtask.done .task-subtask-check { background: var(--color-action-primary-default); border-color: var(--color-action-primary-default); }
 .task-subtask-name { font-size: 14px; color: var(--color-text-default); }
 .task-subtask.done .task-subtask-name { color: var(--color-text-subtle); text-decoration: line-through; }
+.task-subtask.working .task-subtask-check { border-color: transparent; }
+.task-subtask-spin {
+  width: 15px; height: 15px; border-radius: var(--border-rounded-full); box-sizing: border-box;
+  border: 2px solid var(--palette-indigo-20);
+  border-top-color: var(--color-action-primary-default);
+  animation: taskSubtaskSpin 0.7s linear infinite;
+}
+@keyframes taskSubtaskSpin { to { transform: rotate(360deg); } }
+.task-subtask-status {
+  margin-left: auto; font-size: 12px; font-weight: 600;
+  color: var(--color-text-primary); white-space: nowrap;
+}
 
 .task-timelog-summary {
   display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-4);
@@ -7296,7 +7308,7 @@ textarea.cv-input { height: auto; min-height: 84px; padding: var(--spacing-3); l
 <!-- ── 🧩 Resource your project with Remi ─────────────────────────
      ref: figma.com/design/4XFgZGSEN0NnkGk2rk9L1z node 30-18292
      Before / after on one allocation: 200 junior hours moved to the
-     Readiness Agent with senior review kept in place. -->
+     Junior Consultant Agent with senior review kept in place. -->
 <div class="remi-overlay" id="remiOverlay" onclick="if(event.target===this) closeRemiModal()">
   <div class="remi-modal">
 
@@ -7417,7 +7429,7 @@ textarea.cv-input { height: auto; min-height: 84px; padding: var(--spacing-3); l
 
     <div class="doc-foot">
       <button class="remi-cancel" onclick="closeAssessDoc()">Close</button>
-      <button class="doc-approve" id="docApproveBtn" onclick="docApprove()">Approve &amp; send to Halcyon</button>
+      <button class="doc-approve" id="docApproveBtn" onclick="docApprove()">Approve</button>
     </div>
   </div>
 </div>
@@ -8495,7 +8507,7 @@ const projectTaskLists = [
         dates: { start: 'Mon, 5 Oct 2026', end: 'Fri, 23 Oct 2026', due: false },
         priority: HIGH_PRI, timeLogged: '0h logged', estimate: '200h estimated',
         /* The deliverable Remi's suggestion acts on. Approving it swaps
-           Sam out for the Readiness Agent plus senior review from Tom. */
+           Sam out for the Junior Consultant Agent plus senior review from Tom. */
         allocations: [{ initials: 'SD', hours: 200 }],
         description: `<p>Assess Halcyon against the readiness framework across data, technology, people and governance, producing a baseline score the engagement can be measured against at close.</p>
       <p><strong>Assessment covers</strong></p>
@@ -8576,7 +8588,7 @@ const projectTaskLists = [
         description: `<p>Role-based curriculum plus a starter prompt library grounded in Halcyon's actual work — despatch notes, claims correspondence, maintenance records — rather than generic examples.</p>
       <p><strong>Curriculum tracks</strong></p>
       <ul><li>All-staff foundation (60 mins)</li><li>Operations &amp; despatch deep-dive</li><li>Customer service &amp; claims</li><li>Managers — oversight, review and escalation</li></ul>
-      <p>The Readiness Agent will draft first-pass prompt entries from the Phase 1 use-case write-ups, with Sam editing and Tom reviewing before anything enters the library.</p>`,
+      <p>The Junior Consultant Agent will draft first-pass prompt entries from the Phase 1 use-case write-ups, with Sam editing and Tom reviewing before anything enters the library.</p>`,
         subtasks: [
           { name: 'Define role-based tracks', done: false },
           { name: 'Agent first-pass prompt drafting', done: false },
@@ -9243,7 +9255,7 @@ function renderConvert() {
   let body = '', foot = '';
 
   if (cvStep === 1) {
-    const people = ['PR', 'TO', 'EM', 'SD', 'RA'];
+    const people = ['PR', 'TO', 'EM', 'SD', 'JA'];
     body = `
       <div class="cv-choices two">
         <button class="cv-choice${cvKind === 'tentative' ? ' on' : ''}" onclick="cvSetKind('tentative')">
@@ -9415,13 +9427,13 @@ function showActionToast(title, text, linkLabel, onClick) {
     <button class="toast-action-close" id="actionToastClose">${x}</button>`;
   t.querySelector('#actionToastLink').onclick = () => { hideActionToast(); onClick(); };
   t.querySelector('#actionToastClose').onclick = hideActionToast;
+  /* No auto-dismiss: the toast carries an action, so it waits for the
+     link to be followed or the close button to be pressed. */
   t.classList.add('show');
-  clearTimeout(t._timer);
-  t._timer = setTimeout(hideActionToast, 9000);
 }
 function hideActionToast() {
   const t = document.getElementById('actionToast');
-  if (t) { t.classList.remove('show'); clearTimeout(t._timer); }
+  if (t) t.classList.remove('show');
 }
 
 /* ── Project tabs ──────────────────────────────────────────────────
@@ -9464,7 +9476,7 @@ const SCHED_FEE          = 150000;     /* fixed fee for the engagement */
 let   SCHED_TIME_BUDGET  = 820;        /* planned hours               */
 
 /* Meridian's delivery team on the Halcyon engagement. Billable and cost
-   rates come from the engagement plan; the Readiness Agent is modelled
+   rates come from the engagement plan; the Junior Consultant Agent is modelled
    as a resource user with its own job role and a manually entered cost
    rate, so Scheduler and profitability reporting treat it like any
    other resource. */
@@ -9473,7 +9485,7 @@ const schedPeople = [
   { name: 'Tom Okafor',  initials: 'TO', bg: 'var(--palette-blue-40)',   role: 'Senior Consultant',  rate: 250, cost: 150 },
   { name: 'Elena Marsh', initials: 'EM', bg: 'var(--palette-pink-40)',   role: 'Change Manager',     rate: 200, cost: 120 },
   { name: 'Sam Delaney', initials: 'SD', bg: 'var(--palette-green-40)',  role: 'Junior Consultant',  rate: 150, cost: 90  },
-  { name: 'Readiness Agent', initials: 'RA', bg: 'var(--palette-indigo-40)', role: 'Delivery Agent (AI)', rate: 150, cost: 10, agent: true },
+  { name: 'Junior Consultant Agent', initials: 'JA', bg: 'var(--palette-indigo-40)', role: 'Delivery Agent (AI)', rate: 150, cost: 10, agent: true },
 ];
 
 /* Allocation is planned at phase level by role, so each entry is a
@@ -9496,7 +9508,7 @@ const schedAllocations = [
   { person: 'EM', name: 'Champion programme playbook',        start: '2026-11-19', end: '2026-12-01', perDay: 5, color: 'yellow' },
   { person: 'SD', name: 'Training curriculum & prompt library', start: '2026-11-18', end: '2026-12-04', perDay: 5, color: 'blue' },
   { person: 'TO', name: 'Curriculum & prompt review',         start: '2026-11-18', end: '2026-12-04', perDay: 3, color: 'teal'   },
-  { person: 'RA', name: 'Prompt library first-pass drafting', start: '2026-11-18', end: '2026-12-04', perDay: 4, color: 'purple' },
+  { person: 'JA', name: 'Prompt library first-pass drafting', start: '2026-11-18', end: '2026-12-04', perDay: 4, color: 'purple' },
 
   /* Phase 4 · Rollout & Adoption — Change 60h · Junior 60h · Senior 40h · Partner 28h */
   { person: 'EM', name: 'Launch communication plan',          start: '2026-12-07', end: '2026-12-15', perDay: 8, color: 'pink'   },
@@ -9805,7 +9817,7 @@ function toggleSchedInsights(btn) {
 }
 
 /* Open the first few people so the bars are visible straight away. */
-['EM', 'SD', 'RA'].forEach(k => schedExpanded[k] = true);
+['EM', 'SD', 'JA'].forEach(k => schedExpanded[k] = true);
 
 
 /* ── Ask Remi — button visibility, coach-mark and modal ───────────
@@ -9846,16 +9858,16 @@ function dismissRemiCoach() { _remiCoachSeen = true; clearTimeout(_remiCoachTime
 const REMI_RECS = [
   {
     tag: 'Margin',
-    headline: 'Hand the AI Readiness Assessment to the Readiness Agent',
+    headline: 'Hand the AI Readiness Assessment to the Junior Consultant Agent',
     card: `Sam is booked for 200h on the AI Readiness Assessment — your most repeatable
-           deliverable. Move it to the Readiness Agent and keep Tom on 16h of senior review.`,
+           deliverable. Move it to the Junior Consultant Agent and keep Tom on 16h of senior review.`,
     chips: [['&minus; $13,600', 1], ['+ 9.1 pts margin', 0], ['Sam freed for Phase 1', 0]],
     context: 'AI Readiness Assessment &middot; Halcyon Logistics &middot; 5 – 23 Oct 2026',
     benefit: `Saves <strong class="good">$13,600</strong> on a $150,000 fixed fee, lifts margin from
               <strong>35.2% to 44.3%</strong>, and frees Sam's 200 hours for Phase 1.`,
     chat: `I found a way to lift Halcyon's margin. The AI Readiness Assessment is 200h of junior work
-           and your most repeatable deliverable — the best fit for the Readiness Agent.`,
-    chatChips: ['Why the Readiness Agent?', "What happens to Sam's 200 hours?"],
+           and your most repeatable deliverable — the best fit for the Junior Consultant Agent.`,
+    chatChips: ['Why the Junior Consultant Agent?', "What happens to Sam's 200 hours?"],
     keep: {
       name: 'Keep the current plan', sub: 'Sam does the assessment himself',
       rows: [{ av: 'SD', bg: 'var(--palette-green-40)', name: 'Sam Delaney', role: 'Junior Consultant', hours: '200h', rate: '$90/h' }],
@@ -9864,7 +9876,7 @@ const REMI_RECS = [
     plan: {
       name: "Approve Remi's plan", sub: "The agent does the work, Tom reviews it",
       rows: [
-        { agent: true, name: 'Readiness Agent', role: 'Does the assessment work', hours: '200h', rate: '$10/h' },
+        { agent: true, name: 'Junior Consultant Agent', role: 'Does the assessment work', hours: '200h', rate: '$10/h' },
         { av: 'TO', bg: 'var(--palette-blue-40)', name: 'Tom Okafor', role: "Senior review of the agent's output", hours: '16h', rate: '$150/h' },
       ],
       metrics: [['Cost', '$4,400'], ['Margin', '44.3%']],
@@ -10115,16 +10127,16 @@ function _applyRemiSuggestion() {
   // 1. The task itself — Sam out, agent in, senior review added.
   const task = projectTaskLists[0].tasks.find(t => t.name === 'AI Readiness Assessment');
   if (task) {
-    task.assignee = { initials: 'RA', bg: 'var(--palette-indigo-40)' };
+    task.assignee = { initials: 'JA', bg: 'var(--palette-indigo-40)' };
     task.estimate = '216h estimated';
-    task.allocations = [{ initials: 'RA', hours: 200 }, { initials: 'TO', hours: 16 }];
+    task.allocations = [{ initials: 'JA', hours: 200 }, { initials: 'TO', hours: 16 }];
   }
 
   // 2. The Schedule — replace Sam's bar with the agent's, plus Tom's review.
   const i = schedAllocations.findIndex(a => a.id === 'assess-sam');
   if (i > -1) {
     schedAllocations.splice(i, 1,
-      { id: 'assess-agent', person: 'RA', name: 'AI Readiness Assessment', start: '2026-10-05', end: '2026-10-23', perDay: 13.33, color: 'purple' },
+      { id: 'assess-agent', person: 'JA', name: 'AI Readiness Assessment', start: '2026-10-05', end: '2026-10-23', perDay: 13.33, color: 'purple' },
       { id: 'assess-review', person: 'TO', name: 'AI Readiness Assessment — review', start: '2026-10-20', end: '2026-10-23', perDay: 4, color: 'teal' },
     );
   }
@@ -10158,7 +10170,7 @@ function approveRemiRec(i) {
     if (i === 0) {
       showActionToast(
         'Allocation updated',
-        'The AI Readiness Assessment is now the Readiness Agent for 200h, with 16h of senior review from Tom Okafor. Planned margin moves from 35.2% to 44.3%.',
+        'The AI Readiness Assessment is now the Junior Consultant Agent for 200h, with 16h of senior review from Tom Okafor. Planned margin moves from 35.2% to 44.3%.',
         'Open task',
         () => {
           const ti = projectTaskLists[0].tasks.findIndex(t => t.name === ASSESS_TASK);
@@ -10175,7 +10187,7 @@ function approveRemiRec(i) {
 
 /* ─────────────────────────────────────────────────────────────────
  * 🧩 Project › Finance — Rates
- * Rate card from the engagement plan. The Readiness Agent is a
+ * Rate card from the engagement plan. The Junior Consultant Agent is a
  * resource user with its own job role and a manually entered cost
  * rate, so it sits in this table like anyone else.
  * ───────────────────────────────────────────────────────────────── */
@@ -10249,7 +10261,7 @@ function renderFinance() {
       </tbody>
     </table>
     <div class="fin-foot-note">
-      Rates are set per job role for this project. The Readiness Agent's cost rate covers model and
+      Rates are set per job role for this project. The Junior Consultant Agent's cost rate covers model and
       platform spend, so profitability reporting treats it like any other resource.
     </div>`;
 }
@@ -11188,7 +11200,7 @@ const _mentionPeople = [
 /* Single source for initials -> display name across the project views. */
 const PEOPLE_BY_INITIALS = {
   DW: 'Dana Whitfield', PR: 'Priya Raman', TO: 'Tom Okafor',
-  EM: 'Elena Marsh', SD: 'Sam Delaney', RA: 'Readiness Agent',
+  EM: 'Elena Marsh', SD: 'Sam Delaney', JA: 'Junior Consultant Agent',
 };
 const _mentionTeams = [
   { name: 'Design',      sub: '3 members' },
@@ -11493,7 +11505,7 @@ function renderTaskDrawerBody(t, list, listIdx, taskIdx) {
     : `<span style="color:var(--color-text-subtle)">None</span>`;
 
   /* Who is booked on the task and for how many hours. A task can carry
-     more than one resource — the Readiness Agent plus a senior reviewer,
+     more than one resource — the Junior Consultant Agent plus a senior reviewer,
      for instance — so this is a list rather than a single assignee. */
   const allocHtml = (t.allocations || []).map(a => {
     const p = schedPeople.find(x => x.initials === a.initials) || {};
@@ -11517,10 +11529,14 @@ function renderTaskDrawerBody(t, list, listIdx, taskIdx) {
   const subDone = subtasks.filter(s => s.done).length;
   const subtasksHtml = subtasks.length
     ? subtasks.map(s => `
-        <div class="task-subtask ${s.done ? 'done' : ''}">
-          <span class="task-subtask-check">${s.done ? `<svg viewBox="0 0 24 24" fill="none" stroke="var(--palette-white)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>` : ''}</span>
+        <div class="task-subtask ${s.done ? 'done' : ''}${s.working ? ' working' : ''}">
+          <span class="task-subtask-check">${
+            s.working ? `<span class="task-subtask-spin"></span>`
+            : s.done ? `<svg viewBox="0 0 24 24" fill="none" stroke="var(--palette-white)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
+            : ''}</span>
           ${t.assignee ? `<span class="task-subtask-who" style="background:${t.assignee.bg}">${t.assignee.initials}</span>` : ''}
           <span class="task-subtask-name">${s.name}</span>
+          ${s.working ? `<span class="task-subtask-status">Working on subtask</span>` : ''}
         </div>`).join('')
     : '';
 
@@ -11800,7 +11816,7 @@ function gdRemoveFile(id) {
 
 
 /* ─────────────────────────────────────────────────────────────────
- * 🧩 Readiness Agent — the delivery flow on the AI Readiness Assessment
+ * 🧩 Junior Consultant Agent — the delivery flow on the AI Readiness Assessment
  *   1. assigned      → agent asks Dana for the source files
  *   2. files added   → agent confirms it has started
  *   3. working       → subtasks complete one at a time
@@ -11811,7 +11827,7 @@ const ASSESS_TASK = 'AI Readiness Assessment';
 let agentStage = 'idle';
 let _agentTimers = [];
 
-const AGENT = { author: 'Readiness Agent', initials: 'RA', bg: 'var(--palette-indigo-40)', role: 'Delivery Agent (AI)' };
+const AGENT = { author: 'Junior Consultant Agent', initials: 'JA', bg: 'var(--palette-indigo-40)', role: 'Delivery Agent (AI)' };
 
 function _agentTask() {
   return projectTaskLists[0].tasks.find(t => t.name === ASSESS_TASK);
@@ -11867,19 +11883,43 @@ function agentFilesReceived() {
    logged as each one finishes. Dates walk through the task's window. */
 const AGENT_LOG_DATES = ['7 Oct 2026', '12 Oct 2026', '16 Oct 2026', '21 Oct 2026'];
 
+/* Keep the open drawer on whichever subtask the agent is working, so the
+   progress is visible without anyone having to scroll. */
+function _scrollToSubtask(i) {
+  requestAnimationFrame(() => {
+    const el = document.querySelectorAll('#taskDrawerBody .task-subtask')[i];
+    if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  });
+}
+
+/* The agent takes the subtasks one at a time: each spins for a few
+   seconds before it lands, so the flow can be narrated as it runs. */
+const AGENT_WORKING_MS = 3200;   /* spinner held on a subtask */
+const AGENT_SETTLE_MS  = 800;    /* beat after it lands, before the next */
+
 function _agentWorkSubtasks() {
   const t = _agentTask();
   if (!t) return;
-  const alloc = (t.allocations || []).find(a => a.initials === 'RA');
+  const alloc = (t.allocations || []).find(a => a.initials === 'JA');
   const each = alloc ? alloc.hours / t.subtasks.length : 50;
-  t.subtasks.forEach((st, i) => {
+
+  const step = i => {
+    const st = t.subtasks[i];
+    if (!st) return;
+    st.working = true;
+    _refreshAssessTask();
+    _scrollToSubtask(i);
     _agentTimer(() => {
+      st.working = false;
       st.done = true;
-      _logTime(ASSESS_TASK, 'RA', st.name, AGENT_LOG_DATES[i] || AGENT_LOG_DATES[0], '09:00', each);
+      _logTime(ASSESS_TASK, 'JA', st.name, AGENT_LOG_DATES[i] || AGENT_LOG_DATES[0], '09:00', each);
       _refreshAssessTask();
+      _scrollToSubtask(i);
       if (i === t.subtasks.length - 1) _agentTimer(agentDeliverDraft, 1400);
-    }, 1600 * (i + 1));
-  });
+      else _agentTimer(() => step(i + 1), AGENT_SETTLE_MS);
+    }, AGENT_WORKING_MS);
+  };
+  step(0);
 }
 
 /* 3 ─ the draft lands as a document on the task, for Tom to review */
@@ -11903,7 +11943,7 @@ function agentResetFlow() {
   delete taskFiles[ASSESS_TASK];
   delete taskTimeLogs[ASSESS_TASK];
   const t = _agentTask();
-  if (t) { t.subtasks.forEach(st => st.done = false); t.tag = TODO_TAG; }
+  if (t) { t.subtasks.forEach(st => { st.done = false; st.working = false; }); t.tag = TODO_TAG; }
   ASSESS_DOC.dims[2].score = 1;
   ASSESS_DOC.approved = false;
   _docChat = [];
@@ -11916,7 +11956,7 @@ function agentResetFlow() {
    Remi's resourcing modal. Tom edits a score through the chat. */
 const ASSESS_DOC = {
   title: 'AI Readiness Assessment — Halcyon Logistics',
-  sub: 'Prepared by the Readiness Agent · Meridian Transformation Partners · Draft for senior review',
+  sub: 'Prepared by the Junior Consultant Agent · Meridian Transformation Partners · Draft for senior review',
   coverage: 86,
   approved: false,
   dims: [
@@ -11958,7 +11998,7 @@ function renderDocModal() {
   tag.textContent = ASSESS_DOC.approved ? 'APPROVED' : 'DRAFT FOR REVIEW';
   tag.classList.toggle('approved', ASSESS_DOC.approved);
   const btn = document.getElementById('docApproveBtn');
-  btn.textContent = ASSESS_DOC.approved ? 'Approved' : 'Approve & send to Halcyon';
+  btn.textContent = ASSESS_DOC.approved ? 'Approved' : 'Approve';
   btn.disabled = ASSESS_DOC.approved;
   document.getElementById('docChips').style.display = ASSESS_DOC.approved ? 'none' : '';
 }
@@ -14931,7 +14971,7 @@ function _projectScopedReply(text) {
   <li><strong>820 hours</strong> are planned across the four phases</li>
   <li><strong>Sam Delaney</strong> carries 400 of them, just under half the engagement</li>
   <li><strong>Tom Okafor</strong> 200h, <strong>Elena Marsh</strong> 160h, <strong>Priya Raman</strong> 60h</li>
-  <li>The <strong>Readiness Agent</strong> is at zero at baseline — nothing is allocated to it yet</li>
+  <li>The <strong>Junior Consultant Agent</strong> is at zero at baseline — nothing is allocated to it yet</li>
 </ul>
 <p>Week one is light: Sam on stakeholder interviews and Priya on discovery oversight. I'll flag anyone drifting from plan once time starts landing.</p>`;
   }
@@ -14950,7 +14990,7 @@ function _projectScopedReply(text) {
 <ul>
   <li><strong>Planned cost to serve:</strong> $97,200</li>
   <li><strong>Planned margin:</strong> $52,800 — <strong>35.2%</strong></li>
-  <li>The <strong>Readiness Agent</strong> carries a $10/hr cost rate against $150/hr equivalent billable, and has no hours allocated at baseline — every hour moved to it is roughly $80 of margin the plan doesn't yet count.</li>
+  <li>The <strong>Junior Consultant Agent</strong> carries a $10/hr cost rate against $150/hr equivalent billable, and has no hours allocated at baseline — every hour moved to it is roughly $80 of margin the plan doesn't yet count.</li>
 </ul>
 <p>The live risk is Phase 1: 200 junior hours in three weeks exceeds one consultant's capacity, and covering the overflow at senior rates would take this to 33.8%.</p>`;
   }
@@ -14985,7 +15025,7 @@ function _financeReply(text) {
     const rows = agent
       ? [['Tom Okafor', 'Stakeholder interviews & workshop synthesis', 40, 150],
          ['Priya Raman', 'Use-case discovery', 12, 200],
-         ['Readiness Agent', 'AI Readiness Assessment', 200, 10],
+         ['Junior Consultant Agent', 'AI Readiness Assessment', 200, 10],
          ['Tom Okafor', 'AI Readiness Assessment — senior review', 16, 150]]
       : [['Tom Okafor', 'Stakeholder interviews & workshop synthesis', 40, 150],
          ['Priya Raman', 'Use-case discovery', 12, 200],
@@ -15011,7 +15051,7 @@ function _financeReply(text) {
   <li><strong>Billed to date: ${_budMoney(bill.invoiced)}</strong> of $150,000 — deposit plus the Phase 1 sign-off milestone. ${_budMoney(bill.left)} left to bill.</li>
   <li><strong>Remaining plan: ${_budMoney(BUD.costTarget - spent)}</strong> of cost across Phases 2 to 4.</li>
 </ul>
-${agent ? `<p>Phase 1 came in at <strong>${_budMoney(spent)}</strong> against the <strong>$26,400</strong> it would have cost before Remi's change — the Readiness Agent's 200 hours at $10 plus Tom's 16 hours of review replaced 200 junior hours at $90. That is the whole of the move from 35.2% to <strong>${margin}%</strong>.</p>`
+${agent ? `<p>Phase 1 came in at <strong>${_budMoney(spent)}</strong> against the <strong>$26,400</strong> it would have cost before Remi's change — the Junior Consultant Agent's 200 hours at $10 plus Tom's 16 hours of review replaced 200 junior hours at $90. That is the whole of the move from 35.2% to <strong>${margin}%</strong>.</p>`
         : `<p>Phase 1 ran on its original plan, with Sam Delaney's 200 hours at $90. Remi's suggestion on the Schedule tab would take the margin from ${margin}% to 44.3% if applied to the phases still to run.</p>`}`;
   }
 
@@ -15022,12 +15062,12 @@ ${agent ? `<p>Phase 1 came in at <strong>${_budMoney(spent)}</strong> against th
   <li>Senior Consultant — 200h × $150 = <strong>$30,000</strong></li>
   <li>Change Manager — 160h × $120 = <strong>$19,200</strong></li>
   <li>Junior Consultant — 400h × $90 = <strong>$36,000</strong></li>
-  <li>Readiness Agent — 0h at baseline × $10 = <strong>$0</strong></li>
+  <li>Junior Consultant Agent — 0h at baseline × $10 = <strong>$0</strong></li>
 </ul>
 <p><strong>Planned margin: $52,800 — 35.2%.</strong></p>
-<p>Two things worth knowing. At rate card those 820 hours would bill at <strong>$163,000</strong>, so the fixed fee already concedes <strong>$13,000</strong>. And the Readiness Agent is at zero at baseline — every hour moved to it from the junior consultant swaps <strong>$90</strong> of cost for <strong>$10</strong>.</p>
+<p>Two things worth knowing. At rate card those 820 hours would bill at <strong>$163,000</strong>, so the fixed fee already concedes <strong>$13,000</strong>. And the Junior Consultant Agent is at zero at baseline — every hour moved to it from the junior consultant swaps <strong>$90</strong> of cost for <strong>$10</strong>.</p>
 <p>Nothing is logged against the engagement yet, so the plan is also the forecast.</p>
-${_remiApplied ? `<p><strong>Since you approved Remi's suggestion</strong>, the AI Readiness Assessment runs on the Readiness Agent with 16h of senior review instead of 200 junior hours — planned cost is now <strong>$83,600</strong> and margin <strong>44.3%</strong>.</p>` : ''}`;
+${_remiApplied ? `<p><strong>Since you approved Remi's suggestion</strong>, the AI Readiness Assessment runs on the Junior Consultant Agent with 16h of senior review instead of 200 junior hours — planned cost is now <strong>$83,600</strong> and margin <strong>44.3%</strong>.</p>` : ''}`;
   }
 
   if (q.includes('phase') && (q.includes('cost') || q.includes('expensive') || q.includes('most'))) {
@@ -15040,7 +15080,7 @@ ${_remiApplied ? `<p><strong>Since you approved Remi's suggestion</strong>, the 
 </ul>
 <p>Phase 1 is the largest block of hours in the engagement, so it tops the list even though it is the most junior-weighted phase.</p>
 <p><strong>It also carries the delivery risk worth watching.</strong> The plan puts <strong>200 junior hours into three weeks</strong> — 67 hours a week against a 40-hour week. As drawn, Sam Delaney cannot deliver it alone, so either the phase stretches or hours get picked up by Tom Okafor at $150 rather than $90. Thirty-five hours moving that way would cost $2,100 and take the margin to 33.8%.</p>
-<p>The cleaner option is the <strong>Readiness Agent</strong> at $10 an hour. Remi has a suggestion staged on the Schedule tab that does exactly that.</p>`;
+<p>The cleaner option is the <strong>Junior Consultant Agent</strong> at $10 an hour. Remi has a suggestion staged on the Schedule tab that does exactly that.</p>`;
   }
 
   if (q.includes('drifting') || (q.includes('margin') && (q.includes('which project') || q.includes('portfolio')))) {
