@@ -6235,7 +6235,9 @@ textarea.cv-input { height: auto; min-height: 84px; padding: var(--spacing-3); l
         <div class="twai-title">Teamwork AI</div>
         <div class="twai-tabs">
           <button class="tab-btn active" id="twaiTabAsk" onclick="switchTeamworkAiTab('ask')">Ask AI</button>
-          <button class="tab-btn" id="twaiTabTeammatesHome" onclick="switchTeamworkAiTab('teammates-home')">AI Teammates</button>
+          <!-- AI Teammates is hidden for this demo; the panel and its wiring stay
+               in place so it can be brought back by removing this style. -->
+          <button class="tab-btn" id="twaiTabTeammatesHome" style="display:none" onclick="switchTeamworkAiTab('teammates-home')">AI Teammates</button>
           <button class="tab-btn" id="twaiTabTeammates" onclick="switchTeamworkAiTab('teammates')">AI Agents</button>
           <button class="tab-btn" id="twaiTabSkills" onclick="switchTeamworkAiTab('skills')">AI Skills</button>
         </div>
@@ -12368,11 +12370,11 @@ function switchTeamworkAiTab(tab) {
   const isTeammates = tab === 'teammates';
   const isTeammate = tab === 'teammate';   // drilled-in teammate workspace
   const isSkills = tab === 'skills';
-  lastTeamworkAiTab = isTeammate ? 'teammates-home' : tab;
+  lastTeamworkAiTab = isTeammate ? 'teammates' : tab;
   document.getElementById('twaiTabAsk').classList.toggle('active', isAsk);
-  // "AI Teammates" stays highlighted for the grid and for a drilled-in teammate
-  document.getElementById('twaiTabTeammatesHome').classList.toggle('active', isTmHome || isTeammate);
-  document.getElementById('twaiTabTeammates').classList.toggle('active', isTeammates);
+  document.getElementById('twaiTabTeammatesHome').classList.toggle('active', isTmHome);
+  // With AI Teammates hidden, a drilled-in teammate reads as AI Agents
+  document.getElementById('twaiTabTeammates').classList.toggle('active', isTeammates || isTeammate);
   document.getElementById('twaiTabSkills').classList.toggle('active', isSkills);
   document.getElementById('twaiPanelAsk').classList.toggle('active', isAsk);
   document.getElementById('twaiPanelTeammatesHome').classList.toggle('active', isTmHome);
