@@ -5346,7 +5346,18 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
   margin-left: auto; font-size: 13px; color: var(--color-text-subtle); white-space: nowrap;
   padding-right: var(--spacing-2);
 }
-.qd-section-fee b { font-weight: 700; color: var(--color-text-default); margin-left: 4px; }
+.qd-fee-input {
+  width: 118px; margin-left: 4px; text-align: right; box-sizing: border-box;
+  padding: 3px var(--spacing-2);
+  border: var(--border-width-1) solid transparent; border-radius: var(--border-rounded-sm);
+  background: transparent; font: inherit; font-size: 13px; font-weight: 700;
+  color: var(--color-text-default);
+}
+.qd-fee-input:hover { border-color: var(--color-border-default); background: var(--palette-white); }
+.qd-fee-input:focus {
+  outline: none; background: var(--palette-white);
+  border-color: var(--color-action-primary-default);
+}
 
 /* The end of the quote: notes on the left, what it comes to on the right. */
 .qd-end {
@@ -5369,7 +5380,7 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 }
 .qd-notes-box::placeholder { color: var(--color-text-placeholder); }
 .qd-notes-box:focus { outline: none; border-color: var(--color-action-primary-default); }
-.qd-grand { flex-shrink: 0; min-width: 360px; }
+.qd-grand { flex-shrink: 0; min-width: 360px; margin-left: auto; }
 .qd-grand-row { display: flex; align-items: baseline; justify-content: space-between; gap: var(--spacing-6); }
 .qd-grand-lbl { font-size: 15px; font-weight: 700; color: var(--color-text-default); }
 .qd-grand-val { font-size: 19px; font-weight: 700; color: var(--color-text-default); }
@@ -5381,8 +5392,10 @@ body.ai-task-split .ai-drawer-overlay { background: transparent; }
 .qd-grand-row.sub .qd-grand-lbl svg { width: 13px; height: 13px; }
 .qd-grand-row.sub .qd-grand-val { font-size: 13px; font-weight: 600; color: var(--color-text-subtle); }
 
+/* Hidden for this demo — the totals now live at the end of the quote.
+   Swap `display: none` back to `flex` to bring the jump bar back. */
 .qd-foot {
-  position: sticky; bottom: 0; display: flex; justify-content: flex-end;
+  position: sticky; bottom: 0; display: none; justify-content: flex-end;
   padding: var(--spacing-3) var(--spacing-6);
   background: var(--color-background-default);
   border-top: var(--border-width-1) solid var(--color-border-separator);
@@ -9146,6 +9159,20 @@ function _phaseFee(i) {
   return m ? m.amount : 0;
 }
 
+/* Editing a phase's fee writes back to the billing schedule, so the
+   milestone, its invoice and the quote's total all move together. */
+function setPhaseFee(i, raw) {
+  const m = BILLING.find(x => x.phase === i);
+  if (!m) return;
+  const n = Number(String(raw).replace(/[^0-9.]/g, ''));
+  if (Number.isFinite(n) && n > 0) m.amount = Math.round(n);
+  /* The quote's own header reads off its total, so keep it in step —
+     the project's budget is left alone, it was signed at its own figure. */
+  const q = CLIENT_QUOTES.find(x => x.id === openQuoteId);
+  if (q) q.total = _billTotals().contract;
+  _renderQuoteDetail();
+}
+
 function _renderQuoteDetail() {
   const q = CLIENT_QUOTES.find(x => x.id === openQuoteId) || CLIENT_QUOTES[0];
   const T = _qTotals();
@@ -9223,7 +9250,10 @@ function _renderQuoteDetail() {
             <span class="qd-section-count">${sec.items.length} items</span>
             <span class="qd-section-icon">${kb}</span>
             <span class="qd-section-icon">${plus}</span>
-            <span class="qd-section-fee">Fixed fee <b>${_cm(_phaseFee(si))}</b></span>
+            <span class="qd-section-fee">Fixed fee
+              <input class="qd-fee-input" value="${_cm(_phaseFee(si))}"
+                     onchange="setPhaseFee(${si}, this.value)" aria-label="Fixed fee for this phase">
+            </span>
           </div>
           <div class="qd-scroll">
             <table class="qd-table">
@@ -9272,7 +9302,7 @@ function _renderQuoteDetail() {
         <div class="qd-grand">
           <div class="qd-grand-row">
             <span class="qd-grand-lbl">Fixed fee total</span>
-            <span class="qd-grand-val">${_cm(BUD.fee)}</span>
+            <span class="qd-grand-val">${_cm(_billTotals().contract)}</span>
           </div>
           <div class="qd-grand-row sub">
             <span class="qd-grand-lbl">Potential billable if time &amp; materials ${info}</span>
